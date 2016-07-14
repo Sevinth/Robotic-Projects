@@ -1,0 +1,186 @@
+<VisualMicro>
+  <Program Name="HW3" Ext=".ino" Location="C:\Users\mryhe\OneDrive\Courses\Semester 8\ME-311\HW3">
+    <Compile ReCompileIfSourceIsNewer="1" IsDebugStart="1" CompilerErrors="0" ConfigurationName="Debug" StopOnError="False" OptimiseLibs="True" OptimiseCore="True" BuildPath="C:\Users\mryhe\AppData\Local\Temp\VMicroBuilds\HW3\pololu_pololu_avr_a-star32U4" SketchName="HW3" ReportDigitalPins="0" ReportAnalogPins="0" ReportI2C="0" ReportFreeMemory="0" IncludeDebug="1" LastDebugPreProcessorDefinitions="VM_DEBUG;VM_DEBUG_ENABLE 1;VM_DEBUG_BANDWIDTH_THROTTLE_MS 50;VM_DEBUGGER_TYPE_HARDWARESERIAL 0;VM_DEBUGGER_TYPE_SOFTWARESERIAL 1;VM_DEBUGGER_TYPE_FASTSERIAL 2;VM_DEBUGGER_TYPE_USB 3;VM_DEBUGGER_TYPE_TEENSY 4;VM_DEBUGGER_TYPE_UART 5;VM_DEBUGGER_TYPE_USART 6;VM_DEBUGGER_TYPE_USBSERIAL 7;VM_DEBUGGER_TYPE_TTYUART 8;VM_DEBUGGER_TYPE_NET_CONSOLE 9;VM_DEBUGGER_TYPE_Uart 10;VM_DEBUGGER_TYPE_COSA 11;VM_DEBUGGER_TYPE_CDCSerialClass 12;VM_DEBUGGER_TYPE VM_DEBUGGER_TYPE_USB;VM_DEBUG_BREAKPAUSE;" IncludesDebug="1" IsCompiled="1" />
+    <Platform Name="arduino16x" Package="pololu" Platform="avr" Architecture="avr">
+      <Board Name="pololu_pololu_avr_a-star32U4" Description="Pololu A-Star 32U4" CoreFolder="C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino" VariantFullPath="C:\Program Files (x86)\Arduino\hardware\arduino\avr\variants\leonardo" McuIdePath="C:\Program Files (x86)\Arduino" McuSketchBookPath="C:\Users\mryhe\Documents\Arduino" name="Pololu A-Star 32U4" vid.0="0x1ffb" pid.0="0x0101" vid.1="0x1ffb" pid.1="0x2300" upload.tool="arduino:avrdude" upload.protocol="avr109" upload.maximum_size="28672" upload.maximum_data_size="2560" upload.speed="57600" upload.disable_flushing="true" upload.use_1200bps_touch="true" upload.wait_for_upload_port="true" bootloader.tool="arduino:avrdude" bootloader.low_fuses="0xff" bootloader.high_fuses="0xd0" bootloader.extended_fuses="0xc8" bootloader.file="caterina/Caterina-A-Star.hex" bootloader.unlock_bits="0x3F" bootloader.lock_bits="0x2F" build.mcu="atmega32u4" build.f_cpu="16000000L" build.vid="0x1ffb" build.pid="0x2300" build.usb_product="&quot;Pololu A-Star 32U4&quot;" build.usb_manufacturer="&quot;Pololu Corporation&quot;" build.board="AVR_A_STAR_32U4" build.core="arduino:arduino" build.variant="arduino:leonardo" build.extra_flags="{build.usb_flags}" runtime.ide.path="C:\Program Files (x86)\Arduino" build.system.path="C:\Users\mryhe\Documents\Arduino\hardware\pololu\avr\system" runtime.ide.version="10609" target_package="pololu" target_platform="avr" runtime.hardware.path="C:\Users\mryhe\Documents\Arduino\hardware\pololu" originalid="pololu_avr_a-star32U4" intellisense.tools.path="{runtime.tools.avr-gcc.path}/" intellisense.include.paths="{intellisense.tools.path}avr/include/;{intellisense.tools.path}/avr/include/avr/;{intellisense.tools.path}lib\gcc\avr\4.8.1\include" tools.atprogram.cmd.path="%AVRSTUDIO_EXE_PATH%\atbackend\atprogram" tools.atprogram.cmd.setwinpath="true" tools.atprogram.program.params.verbose="-v" tools.atprogram.program.params.quiet="-q" tools.atprogram.program.pattern="&quot;{cmd.path}&quot; -d {build.mcu} {program.verbose} {program.extra_params} program -c -f &quot;{build.path}\{build.project_name}.hex&quot;" tools.atprogram.program.xpattern="&quot;{cmd.path}&quot; {AVRSTUDIO_BACKEND_CONNECTION} -d {build.mcu} {program.verbose} {program.extra_params} program -c -f &quot;{build.path}\{build.project_name}.hex&quot;" tools.atprogram.erase.params.verbose="-v" tools.atprogram.erase.params.quiet="-q" tools.atprogram.bootloader.params.verbose="-v" tools.atprogram.bootloader.params.quiet="-q" tools.atprogram.bootloader.pattern="&quot;{cmd.path}&quot; -d {build.mcu} {bootloader.verbose}  program -c -f &quot;{runtime.ide.path}/hardware/arduino/avr/bootloaders/{bootloader.file}&quot;" version="1.5.6" compiler.warning_flags="-w" compiler.warning_flags.none="-w" compiler.warning_flags.default="" compiler.warning_flags.more="-Wall" compiler.warning_flags.all="-Wall -Wextra" compiler.path="{runtime.tools.avr-gcc.path}/bin/" compiler.c.cmd="avr-gcc" compiler.c.flags="-c -g -Os {compiler.warning_flags} -std=gnu11 -ffunction-sections -fdata-sections -MMD" compiler.c.elf.flags="{compiler.warning_flags} -Os -Wl,--gc-sections" compiler.c.elf.cmd="avr-gcc" compiler.S.flags="-c -g -x assembler-with-cpp" compiler.cpp.cmd="avr-g++" compiler.cpp.flags="-c -g -Os {compiler.warning_flags} -std=gnu++11 -fno-exceptions -ffunction-sections -fdata-sections -fno-threadsafe-statics -MMD" compiler.ar.cmd="avr-ar" compiler.ar.flags="rcs" compiler.objcopy.cmd="avr-objcopy" compiler.objcopy.eep.flags="-O ihex -j .eeprom --set-section-flags=.eeprom=alloc,load --no-change-warnings --change-section-lma .eeprom=0" compiler.elf2hex.flags="-O ihex -R .eeprom" compiler.elf2hex.cmd="avr-objcopy" compiler.ldflags="" compiler.size.cmd="avr-size" compiler.c.extra_flags="" compiler.c.elf.extra_flags="" compiler.S.extra_flags="" compiler.cpp.extra_flags="" compiler.ar.extra_flags="" compiler.objcopy.eep.extra_flags="" compiler.elf2hex.extra_flags="" recipe.c.o.pattern="&quot;{compiler.path}{compiler.c.cmd}&quot; {compiler.c.flags} -mmcu={build.mcu} -DF_CPU={build.f_cpu} -DARDUINO={runtime.ide.version} -DARDUINO_{build.board} -DARDUINO_ARCH_{build.arch} {compiler.c.extra_flags} {build.extra_flags} {includes} &quot;{source_file}&quot; -o &quot;{object_file}&quot;" recipe.cpp.o.pattern="&quot;{compiler.path}{compiler.cpp.cmd}&quot; {compiler.cpp.flags} -mmcu={build.mcu} -DF_CPU={build.f_cpu} -DARDUINO={runtime.ide.version} -DARDUINO_{build.board} -DARDUINO_ARCH_{build.arch} {compiler.cpp.extra_flags} {build.extra_flags} {includes} &quot;{source_file}&quot; -o &quot;{object_file}&quot;" recipe.S.o.pattern="&quot;{compiler.path}{compiler.c.cmd}&quot; {compiler.S.flags} -mmcu={build.mcu} -DF_CPU={build.f_cpu} -DARDUINO={runtime.ide.version} -DARDUINO_{build.board} -DARDUINO_ARCH_{build.arch} {compiler.S.extra_flags} {build.extra_flags} {includes} &quot;{source_file}&quot; -o &quot;{object_file}&quot;" archive_file_path="C:\Users\mryhe\AppData\Local\Temp\VMicroBuilds\HW3\pololu_pololu_avr_a-star32U4\core.a" recipe.ar.pattern="&quot;{compiler.path}{compiler.ar.cmd}&quot; {compiler.ar.flags} {compiler.ar.extra_flags} &quot;{archive_file_path}&quot; &quot;{object_file}&quot;" recipe.c.combine.pattern="&quot;{compiler.path}{compiler.c.elf.cmd}&quot; {compiler.c.elf.flags} -mmcu={build.mcu} {compiler.c.elf.extra_flags} -o &quot;{build.path}/{build.project_name}.elf&quot; {object_files} &quot;{build.path}/{archive_file}&quot; &quot;-L{build.path}&quot; -lm" recipe.objcopy.eep.pattern="&quot;{compiler.path}{compiler.objcopy.cmd}&quot; {compiler.objcopy.eep.flags} {compiler.objcopy.eep.extra_flags} &quot;{build.path}/{build.project_name}.elf&quot; &quot;{build.path}/{build.project_name}.eep&quot;" recipe.objcopy.hex.pattern="&quot;{compiler.path}{compiler.elf2hex.cmd}&quot; {compiler.elf2hex.flags} {compiler.elf2hex.extra_flags} &quot;{build.path}/{build.project_name}.elf&quot; &quot;{build.path}/{build.project_name}.hex&quot;" recipe.output.tmp_file="{build.project_name}.hex" recipe.output.save_file="{build.project_name}.{build.variant}.hex" recipe.size.pattern="&quot;{compiler.path}{compiler.size.cmd}&quot; -A &quot;{build.path}/{build.project_name}.elf&quot;" recipe.size.regex="^(?:\.text|\.data|\.bootloader)\s+([0-9]+).*" recipe.size.regex.data="^(?:\.data|\.bss|\.noinit)\s+([0-9]+).*" recipe.size.regex.eeprom="^(?:\.eeprom)\s+([0-9]+).*" preproc.includes.flags="-w -x c++ -M -MG -MP" recipe.preproc.includes="&quot;{compiler.path}{compiler.cpp.cmd}&quot; {compiler.cpp.flags} {preproc.includes.flags} -mmcu={build.mcu} -DF_CPU={build.f_cpu} -DARDUINO={runtime.ide.version} -DARDUINO_{build.board} -DARDUINO_ARCH_{build.arch} {compiler.cpp.extra_flags} {build.extra_flags} {includes} &quot;{source_file}&quot;" preproc.macros.flags="-w -x c++ -E -CC" recipe.preproc.macros="&quot;{compiler.path}{compiler.cpp.cmd}&quot; {compiler.cpp.flags} {preproc.macros.flags} -mmcu={build.mcu} -DF_CPU={build.f_cpu} -DARDUINO={runtime.ide.version} -DARDUINO_{build.board} -DARDUINO_ARCH_{build.arch} {compiler.cpp.extra_flags} {build.extra_flags} {includes} &quot;{source_file}&quot; -o &quot;{preprocessed_file_path}&quot;" tools.avrdude.path="{runtime.tools.avrdude.path}" tools.avrdude.cmd.path="{path}/bin/avrdude" tools.avrdude.config.path="{path}/etc/avrdude.conf" tools.avrdude.upload.params.verbose="-v" tools.avrdude.upload.params.quiet="-q -q" tools.avrdude.upload.params.noverify="-V" tools.avrdude.upload.pattern="&quot;{cmd.path}&quot; &quot;-C{config.path}&quot; {upload.verbose} {upload.verify} -p{build.mcu} -c{upload.protocol} -P{serial.port} -b{upload.speed} -D &quot;-Uflash:w:{build.path}/{build.project_name}.hex:i&quot;" tools.avrdude.program.params.verbose="-v" tools.avrdude.program.params.quiet="-q -q" tools.avrdude.program.params.noverify="-V" tools.avrdude.program.pattern="&quot;{cmd.path}&quot; &quot;-C{config.path}&quot; {program.verbose} {program.verify} -p{build.mcu} -c{protocol} {program.extra_params} &quot;-Uflash:w:{build.path}/{build.project_name}.hex:i&quot;" tools.avrdude.erase.params.verbose="-v" tools.avrdude.erase.params.quiet="-q -q" tools.avrdude.erase.pattern="&quot;{cmd.path}&quot; &quot;-C{config.path}&quot; {erase.verbose} -p{build.mcu} -c{protocol} {program.extra_params} -e -Ulock:w:{bootloader.unlock_bits}:m -Uefuse:w:{bootloader.extended_fuses}:m -Uhfuse:w:{bootloader.high_fuses}:m -Ulfuse:w:{bootloader.low_fuses}:m" tools.avrdude.bootloader.params.verbose="-v" tools.avrdude.bootloader.params.quiet="-q -q" tools.avrdude.bootloader.pattern="&quot;{cmd.path}&quot; &quot;-C{config.path}&quot; {bootloader.verbose} -p{build.mcu} -c{protocol} {program.extra_params} &quot;-Uflash:w:{runtime.platform.path}/bootloaders/{bootloader.file}:i&quot; -Ulock:w:{bootloader.lock_bits}:m" tools.avrdude_remote.upload.pattern="/usr/bin/run-avrdude /tmp/sketch.hex {upload.verbose} -p{build.mcu}" build.usb_flags="-DUSB_VID={build.vid} -DUSB_PID={build.pid} '-DUSB_MANUFACTURER={build.usb_manufacturer}' '-DUSB_PRODUCT={build.usb_product}'" vm.platform.root.path="C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\Extensions\dwlje1qk.0gi\Micro Platforms\arduino16x" usbavrpgm.name="Pololu USB AVR Programmer" usbavrpgm.communication="serial" usbavrpgm.protocol="avrispv2" usbavrpgm.program.protocol="avrispv2" usbavrpgm.program.tool="arduino:avrdude" usbavrpgm.program.extra_params="-P{serial.port}" runtime.tools.avrdude.path="C:\Program Files (x86)\Arduino\hardware\tools\avr" runtime.tools.avrdude-6.0.1-arduino5.path="C:\Program Files (x86)\Arduino\hardware\tools\avr" runtime.tools.avr-gcc.path="C:\Program Files (x86)\Arduino\hardware\tools\avr" runtime.tools.avr-gcc-4.8.1-arduino5.path="C:\Program Files (x86)\Arduino\hardware\tools\avr" ide.hint="For use with Arduino.cc 1.6.2+ ide" ide.location.key="Arduino16x" ide.location.ide.winreg="Arduino 1.6.x Application" ide.location.sketchbook.winreg="Arduino 1.6.x Sketchbook" ide.location.sketchbook.preferences="sketchbook.path" ide.default.revision_name="1.6.7" ide.default.version="10607" ide.default.package="arduino" ide.default.platform="avr" ide.multiplatform="true" ide.includes="arduino.h" ide.exe_name="arduino" ide.platformswithoutpackage="false" ide.includes.fallback="wprogram.h" ide.extension="ino" ide.extension.fallback="pde" ide.versionGTEQ="160" ide.exe="arduino.exe" ide.hosts="atmel" ide.url="http://arduino.cc/en/Main/Software" ide.help.reference.path="reference\arduino.cc\en\Reference" ide.help.reference.path2="reference\www.arduino.cc\en\Reference" ide.help.reference.serial="reference\www.arduino.cc\en\Serial" vm.debug="true" software="ARDUINO" ssh.user.name="root" ssh.user.default.password="arduino" ssh.host.wwwfiles.path="/www/sd" build.working_directory="{runtime.ide.path}" ide.location.preferences.portable="{runtime.ide.path}\portable" ide.location.preferences="%VM_APPDATA_LOCAL%\arduino15\preferences.txt" ide.location.preferences_fallback="%VM_APPDATA_ROAMING%\arduino15\preferences.txt" ide.location.contributions="%VM_APPDATA_LOCAL%\arduino15" ide.location.contributions_fallback="%VM_APPDATA_ROAMING%\arduino15" ide.contributions.boards.allow="true" ide.contributions.boards.ignore_unless_rewrite_found="true" ide.contributions.libraries.allow="true" ide.contributions.boards.support.urls.wiki="https://github.com/arduino/Arduino/wiki/Unofficial-list-of-3rd-party-boards-support-urls" ide.create_platforms_from_boardsTXT.teensy="build.core" ide.appid="arduino16x" location.sketchbook="C:\Users\mryhe\Documents\Arduino" build.core.vmresolved="C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino" build.core.parentfolder.vmresolved="C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores" build.core.coresparentfolder.vmresolved="C:\Program Files (x86)\Arduino\hardware\arduino\avr" vm.core.include="arduino.h" vm.boardsource.path="C:\Users\mryhe\Documents\Arduino\hardware\pololu\avr" runtime.platform.path="C:\Users\mryhe\Documents\Arduino\hardware\pololu\avr" vm.platformname.name="avr" build.arch="AVR" build.variant.vmresolved="C:\Program Files (x86)\Arduino\hardware\arduino\avr\variants\leonardo" build.architecture="avr" vmresolved.compiler.path="C:\Program Files (x86)\Arduino\hardware\tools\avr\bin\" vmresolved.tools.path="C:\Program Files (x86)\Arduino\hardware\tools\avr" vm.runtime.compiler.showwarnings="false" vm.runtime.compiler.auto_discover_includes="true" vm.last.buildpath="C:\Users\mryhe\AppData\Local\Temp\VMicroBuilds\HW3\pololu_pololu_avr_a-star32U4" vm.build.verbose_build_properties="false" build.source.path="C:\Users\mryhe\OneDrive\Courses\Semester 8\ME-311\HW3\HW3.ino" build.path="C:\Users\mryhe\AppData\Local\Temp\VMicroBuilds\HW3\pololu_pololu_avr_a-star32U4" PreProcessor.HeaderCount="1" PreProcessor.PrototypeCount="12" vm.last.preproc.file.0.file="HW3.ino" vm.last.preproc.file.0.offset="1" vm.last.preproc.file.0.length="6058" vm.last.preproc.file.0.linecount="231" vm.last.preproc.file.0.linestart="0" vm.last.preproc.file.0.lineend="231" vm.last.preproc.file.0.prefix_lines="0" serial.port.file="COM3" serial.port="COM3" serial.port.num="3" sketch_path="C:\Users\mryhe\OneDrive\Courses\Semester 8\ME-311\HW3" build.project_name="HW3.ino" runtime.vm.ide.platforms.path="C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\Extensions\dwlje1qk.0gi\Micro Platforms" build.variant.path="C:\Program Files (x86)\Arduino\hardware\arduino\avr\variants\leonardo" build.core.path="C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino" archive_file="core.a" extra.time.local="22779595" tools.ctags.path="{runtime.tools.ctags.path}" tools.ctags.cmd.path="{path}/ctags" tools.ctags.pattern="&quot;{cmd.path}&quot; -u --language-force=c++ -f - --c++-kinds=svpf --fields=KSTtzns --line-directives &quot;{source_file}&quot;" vm_all_includes=" -I&quot;C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino&quot;  -I&quot;C:\Program Files (x86)\Arduino\hardware\arduino\avr\variants\leonardo&quot;  -I&quot;C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\Extensions\dwlje1qk.0gi\Micro Platforms\default\debuggers\VM_DBG&quot;  -I&quot;C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\Extensions\dwlje1qk.0gi\Micro Platforms\default\debuggers&quot;  -I&quot;C:\Users\mryhe\Documents\Arduino\libraries\Zumo32U4&quot;  -I&quot;C:\Users\mryhe\Documents\Arduino\libraries&quot;  -I&quot;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries\Wire\src&quot;  -I&quot;C:\Program Files (x86)\Arduino\libraries&quot;  -I&quot;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries&quot;  -I&quot;C:\Users\mryhe\Documents\Arduino\hardware\pololu\avr\libraries&quot; " vm_core_includes=" -I&quot;C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino&quot;  -I&quot;C:\Program Files (x86)\Arduino\hardware\arduino\avr\variants\leonardo&quot; " includes=" -I&quot;C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino&quot;  -I&quot;C:\Program Files (x86)\Arduino\hardware\arduino\avr\variants\leonardo&quot;  -I&quot;C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\Extensions\dwlje1qk.0gi\Micro Platforms\default\debuggers\VM_DBG&quot;  -I&quot;C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\Extensions\dwlje1qk.0gi\Micro Platforms\default\debuggers&quot;  -I&quot;C:\Users\mryhe\Documents\Arduino\libraries\Zumo32U4&quot;  -I&quot;C:\Users\mryhe\Documents\Arduino\libraries&quot;  -I&quot;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries\Wire\src&quot;  -I&quot;C:\Program Files (x86)\Arduino\libraries&quot;  -I&quot;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries&quot;  -I&quot;C:\Users\mryhe\Documents\Arduino\hardware\pololu\avr\libraries&quot; " build.path_sketch="C:\Users\mryhe\AppData\Local\Temp\VMicroBuilds\HW3\pololu_pololu_avr_a-star32U4" build.path_core="C:\Users\mryhe\AppData\Local\Temp\VMicroBuilds\HW3\pololu_pololu_avr_a-star32U4\core" build.path_libraries="C:\Users\mryhe\AppData\Local\Temp\VMicroBuilds\HW3\pololu_pololu_avr_a-star32U4" object_file="C:\Users\mryhe\AppData\Local\Temp\VMicroBuilds\HW3\pololu_pololu_avr_a-star32U4\HW3.cpp.o" source_file="C:\Users\mryhe\AppData\Local\Temp\VMicroBuilds\HW3\pololu_pololu_avr_a-star32U4\HW3.cpp" object_files=" &quot;C:\Users\mryhe\AppData\Local\Temp\VMicroBuilds\HW3\pololu_pololu_avr_a-star32U4\HW3.cpp.o&quot;  &quot;C:\Users\mryhe\AppData\Local\Temp\VMicroBuilds\HW3\pololu_pololu_avr_a-star32U4\Wire\Wire.cpp.o&quot;  &quot;C:\Users\mryhe\AppData\Local\Temp\VMicroBuilds\HW3\pololu_pololu_avr_a-star32U4\Wire\utility\twi.c.o&quot;  &quot;C:\Users\mryhe\AppData\Local\Temp\VMicroBuilds\HW3\pololu_pololu_avr_a-star32U4\VM_DBG\VM_DBG.cpp.o&quot;  &quot;C:\Users\mryhe\AppData\Local\Temp\VMicroBuilds\HW3\pololu_pololu_avr_a-star32U4\Zumo32U4\L3G.cpp.o&quot;  &quot;C:\Users\mryhe\AppData\Local\Temp\VMicroBuilds\HW3\pololu_pololu_avr_a-star32U4\Zumo32U4\LSM303.cpp.o&quot;  &quot;C:\Users\mryhe\AppData\Local\Temp\VMicroBuilds\HW3\pololu_pololu_avr_a-star32U4\Zumo32U4\PololuBuzzer.cpp.o&quot;  &quot;C:\Users\mryhe\AppData\Local\Temp\VMicroBuilds\HW3\pololu_pololu_avr_a-star32U4\Zumo32U4\PololuHD44780.cpp.o&quot;  &quot;C:\Users\mryhe\AppData\Local\Temp\VMicroBuilds\HW3\pololu_pololu_avr_a-star32U4\Zumo32U4\Pushbutton.cpp.o&quot;  &quot;C:\Users\mryhe\AppData\Local\Temp\VMicroBuilds\HW3\pololu_pololu_avr_a-star32U4\Zumo32U4\QTRSensors.cpp.o&quot;  &quot;C:\Users\mryhe\AppData\Local\Temp\VMicroBuilds\HW3\pololu_pololu_avr_a-star32U4\Zumo32U4\Zumo32U4Encoders.cpp.o&quot;  &quot;C:\Users\mryhe\AppData\Local\Temp\VMicroBuilds\HW3\pololu_pololu_avr_a-star32U4\Zumo32U4\Zumo32U4IRPulses.cpp.o&quot;  &quot;C:\Users\mryhe\AppData\Local\Temp\VMicroBuilds\HW3\pololu_pololu_avr_a-star32U4\Zumo32U4\Zumo32U4Motors.cpp.o&quot;  &quot;C:\Users\mryhe\AppData\Local\Temp\VMicroBuilds\HW3\pololu_pololu_avr_a-star32U4\Zumo32U4\Zumo32U4ProximitySensors.cpp.o&quot; " />
+    </Platform>
+    <Debug EnableBreak="1" DebugEnabled="1" IsGdb="0" RemotePortSpeedWrittenToDebugSource="9600" />
+    <VCCodeModel>
+      <VCCodeMacros />
+    </VCCodeModel>
+    <BreakPoints>
+      <BreakPoint Index="1" Name="HW3.ino, line 64" Id="4e861990-a4bf-4049-98d7-7387860822e5" Enabled="1" Message="{rVelCenter}{rVelRight}{rVelLeft}{rVelAng}{timeEllapsed}" MessageTextType="2" PreProcessedMessage="{0}{1}{2}{3}{4}" Condition="" ConditionType="1" CurrentHits="0" File="c:\users\mryhe\onedrive\courses\semester 8\me-311\hw3\hw3.ino" FileLine="64" FileColumn="1" FunctionName="getRVel(float deltaCountsRight, float deltaCountsLeft, float timeEllapsed)" FunctionLineOffset="14" FunctionColumnOffset="1" HitCountTarget="1" HitCountType="1" Language="C++" LocationType="3" Tag="&lt;vmbp Id='4e861990-a4bf-4049-98d7-7387860822e5'/&gt;" Type="1" ToString="System.__ComObject" BreakWhenHit="0">
+        <Source>57		float rVelLeft = deltaCountsLeft*wheelCirc / (timeEllapsed*encoderRes);
+58		float rVelAng = (1.0 / baseWidth)*(rVelRight - rVelLeft);
+59	
+60		rVelocities[0] = rVelCenter;
+61		rVelocities[1] = rVelRight;
+62		rVelocities[2] = rVelLeft;
+63		rVelocities[3] = rVelAng;
+--&gt;64	
+65	
+66	}
+67	
+68	float straightLineCalc(float distance) {
+69	
+70		float time;
+71	
+72		time = distance / rVelocities[0];
+73	
+</Source>
+        <MessageVariables>
+          <MessageVariable Name="rVelCenter" Index="1" />
+          <MessageVariable Name="rVelRight" Index="2" />
+          <MessageVariable Name="rVelLeft" Index="3" />
+          <MessageVariable Name="rVelAng" Index="4" />
+          <MessageVariable Name="timeEllapsed" Index="5" />
+        </MessageVariables>
+      </BreakPoint>
+      <BreakPoint Index="2" Name="HW3.ino, line 97" Id="7396a4fd-d284-41bd-a29b-d142cef4008a" Enabled="1" Message="{encoderLeft}{encoderRight}" MessageTextType="2" PreProcessedMessage="{0}{1}" Condition="" ConditionType="1" CurrentHits="0" File="c:\users\mryhe\onedrive\courses\semester 8\me-311\hw3\hw3.ino" FileLine="97" FileColumn="1" FunctionName="updatePosition()" FunctionLineOffset="7" FunctionColumnOffset="1" HitCountTarget="1" HitCountType="1" Language="C++" LocationType="3" Tag="&lt;vmbp Id='7396a4fd-d284-41bd-a29b-d142cef4008a'/&gt;" Type="1" ToString="System.__ComObject" BreakWhenHit="0">
+        <Source>90	
+91	void updatePosition() {
+92	
+93		timeSinceLast = millis() - prevTime;
+94	
+95		float encoderLeft = encoders.getCountsAndResetLeft();
+96		float encoderRight = encoders.getCountsAndResetRight();
+--&gt;97	
+98		getRVel(encoderRight, encoderLeft, timeSinceLast);
+99	
+100		float gyroAngVel = getZRot(timeSinceLast);
+101	
+102		float gyroEncoderError = fabs(gyroAngVel - rVelocities[3]);
+103	
+104		//Robot Coordinate Frame Pose
+105		rCurrentPose[0] = rPrevPose[0] + rVelocities[0] * timeSinceLast;
+106		rCurrentPose[1] = 0.0;
+</Source>
+        <MessageVariables>
+          <MessageVariable Name="encoderLeft" Index="1" />
+          <MessageVariable Name="encoderRight" Index="2" />
+        </MessageVariables>
+      </BreakPoint>
+      <BreakPoint Index="3" Name="HW3.ino, line 101" Id="8935ab0e-a74d-478d-a332-04f901a9dc4f" Enabled="1" Message="{gyroAngVel}" MessageTextType="2" PreProcessedMessage="{0}" Condition="" ConditionType="1" CurrentHits="0" File="c:\users\mryhe\onedrive\courses\semester 8\me-311\hw3\hw3.ino" FileLine="101" FileColumn="1" FunctionName="updatePosition()" FunctionLineOffset="11" FunctionColumnOffset="1" HitCountTarget="1" HitCountType="1" Language="C++" LocationType="3" Tag="&lt;vmbp Id='8935ab0e-a74d-478d-a332-04f901a9dc4f'/&gt;" Type="1" ToString="System.__ComObject" BreakWhenHit="0">
+        <Source>94	
+95		float encoderLeft = encoders.getCountsAndResetLeft();
+96		float encoderRight = encoders.getCountsAndResetRight();
+97	
+98		getRVel(encoderRight, encoderLeft, timeSinceLast);
+99	
+100		float gyroAngVel = getZRot(timeSinceLast);
+--&gt;101	
+102		float gyroEncoderError = fabs(gyroAngVel - rVelocities[3]);
+103	
+104		//Robot Coordinate Frame Pose
+105		rCurrentPose[0] = rPrevPose[0] + rVelocities[0] * timeSinceLast;
+106		rCurrentPose[1] = 0.0;
+107		rCurrentPose[2] = rPrevPose[2] + rVelocities[3] * timeSinceLast;
+108		
+109	
+110		if (rCurrentPose[2] &lt; 0) {
+</Source>
+        <MessageVariables>
+          <MessageVariable Name="gyroAngVel" Index="1" />
+        </MessageVariables>
+      </BreakPoint>
+      <BreakPoint Index="4" Name="HW3.ino, line 103" Id="05307d3e-506c-4105-9adf-849510222603" Enabled="1" Message="{gyroEncoderError}" MessageTextType="2" PreProcessedMessage="{0}" Condition="" ConditionType="1" CurrentHits="0" File="c:\users\mryhe\onedrive\courses\semester 8\me-311\hw3\hw3.ino" FileLine="103" FileColumn="1" FunctionName="updatePosition()" FunctionLineOffset="13" FunctionColumnOffset="1" HitCountTarget="1" HitCountType="1" Language="C++" LocationType="3" Tag="&lt;vmbp Id='05307d3e-506c-4105-9adf-849510222603'/&gt;" Type="1" ToString="System.__ComObject" BreakWhenHit="0">
+        <Source>96		float encoderRight = encoders.getCountsAndResetRight();
+97	
+98		getRVel(encoderRight, encoderLeft, timeSinceLast);
+99	
+100		float gyroAngVel = getZRot(timeSinceLast);
+101	
+102		float gyroEncoderError = fabs(gyroAngVel - rVelocities[3]);
+--&gt;103	
+104		//Robot Coordinate Frame Pose
+105		rCurrentPose[0] = rPrevPose[0] + rVelocities[0] * timeSinceLast;
+106		rCurrentPose[1] = 0.0;
+107		rCurrentPose[2] = rPrevPose[2] + rVelocities[3] * timeSinceLast;
+108		
+109	
+110		if (rCurrentPose[2] &lt; 0) {
+111			rCurrentPose[2] = 2 * pi;
+112		}
+</Source>
+        <MessageVariables>
+          <MessageVariable Name="gyroEncoderError" Index="1" />
+        </MessageVariables>
+      </BreakPoint>
+      <BreakPoint Index="5" Name="HW3.ino, line 170" Id="f6de858a-d918-4fac-8f75-5215a2435dc7" Enabled="1" Message="{yErr}{rotAngle}{dist}" MessageTextType="2" PreProcessedMessage="{0}{1}{2}" Condition="" ConditionType="1" CurrentHits="0" File="c:\users\mryhe\onedrive\courses\semester 8\me-311\hw3\hw3.ino" FileLine="170" FileColumn="1" FunctionName="courseCorrection(int waypoint)" FunctionLineOffset="22" FunctionColumnOffset="1" HitCountTarget="1" HitCountType="1" Language="C++" LocationType="3" Tag="&lt;vmbp Id='f6de858a-d918-4fac-8f75-5215a2435dc7'/&gt;" Type="1" ToString="System.__ComObject" BreakWhenHit="0">
+        <Source>163	
+164			dist += sqrt(pow(distVec[i], 2));
+165		}
+166	
+167		float angleToWaypoint = atan2(distVec[0], distVec[1]);
+168		float rotAngle = gCurrentPose[2] + angleToWaypoint;
+169		yErr = distVec[1];
+--&gt;170		
+171	
+172	}
+173	
+174	
+175	void moveToLocation(int waypoint) {
+176	
+177	
+178		while (gCurrentPose != gPath[waypoint]) {
+179			updatePosition();
+</Source>
+        <MessageVariables>
+          <MessageVariable Name="yErr" Index="1" />
+          <MessageVariable Name="rotAngle" Index="2" />
+          <MessageVariable Name="dist" Index="3" />
+        </MessageVariables>
+      </BreakPoint>
+      <BreakPoint Index="6" Name="HW3.ino, line 116" Id="bfcde010-ff2e-481a-bad3-c45e1191ec01" Enabled="1" Message="{rCurrentPose[0]}{rCurrentPose[1]}{rCurrentPose[2]}" MessageTextType="2" PreProcessedMessage="{0}{1}{2}" Condition="" ConditionType="1" CurrentHits="0" File="c:\users\mryhe\onedrive\courses\semester 8\me-311\hw3\hw3.ino" FileLine="116" FileColumn="1" FunctionName="updatePosition()" FunctionLineOffset="26" FunctionColumnOffset="1" HitCountTarget="1" HitCountType="1" Language="C++" LocationType="3" Tag="&lt;vmbp Id='bfcde010-ff2e-481a-bad3-c45e1191ec01'/&gt;" Type="1" ToString="System.__ComObject" BreakWhenHit="0">
+        <Source>109	
+110		if (rCurrentPose[2] &lt; 0) {
+111			rCurrentPose[2] = 2 * pi;
+112		}
+113		else if (rCurrentPose[2] &gt; 2 * pi) {
+114			rCurrentPose[2] = 0;
+115		}
+--&gt;116	
+117		
+118		//Global Coordinate Frame Pose
+119		gCurrentPose[0] = gPrevPose[0] + rVelocities[0] * timeSinceLast*cos(rCurrentPose[2]);
+120		gCurrentPose[1] = gPrevPose[1] + rVelocities[0] * timeSinceLast*sin(rCurrentPose[2]);
+121		gCurrentPose[2] = rCurrentPose[2];
+122	
+123	
+124		delay(20);
+125		prevTime = millis();
+</Source>
+        <MessageVariables>
+          <MessageVariable Name="rCurrentPose[0]" Index="1" />
+          <MessageVariable Name="rCurrentPose[1]" Index="2" />
+          <MessageVariable Name="rCurrentPose[2]" Index="3" />
+        </MessageVariables>
+      </BreakPoint>
+      <BreakPoint Index="7" Name="HW3.ino, line 123" Id="bf026d36-82ba-47fe-a06b-712db44460fb" Enabled="1" Message="{gCurrentPose[0]}{gCurrentPose[1]}{gCurrentPose[2]}" MessageTextType="2" PreProcessedMessage="{0}{1}{2}" Condition="" ConditionType="1" CurrentHits="0" File="c:\users\mryhe\onedrive\courses\semester 8\me-311\hw3\hw3.ino" FileLine="123" FileColumn="1" FunctionName="updatePosition()" FunctionLineOffset="33" FunctionColumnOffset="1" HitCountTarget="1" HitCountType="1" Language="C++" LocationType="3" Tag="&lt;vmbp Id='bf026d36-82ba-47fe-a06b-712db44460fb'/&gt;" Type="1" ToString="System.__ComObject" BreakWhenHit="0">
+        <Source>116	
+117		
+118		//Global Coordinate Frame Pose
+119		gCurrentPose[0] = gPrevPose[0] + rVelocities[0] * timeSinceLast*cos(rCurrentPose[2]);
+120		gCurrentPose[1] = gPrevPose[1] + rVelocities[0] * timeSinceLast*sin(rCurrentPose[2]);
+121		gCurrentPose[2] = rCurrentPose[2];
+122	
+--&gt;123	
+124		delay(20);
+125		prevTime = millis();
+126	
+127		for (int i = 0; i &lt; 3; i++) {
+128			gPrevPose[i] = gCurrentPose[i];
+129			rPrevPose[i] = rCurrentPose[i];
+130		}
+131	
+132	}
+</Source>
+        <MessageVariables>
+          <MessageVariable Name="gCurrentPose[0]" Index="1" />
+          <MessageVariable Name="gCurrentPose[1]" Index="2" />
+          <MessageVariable Name="gCurrentPose[2]" Index="3" />
+        </MessageVariables>
+      </BreakPoint>
+    </BreakPoints>
+  </Program>
+</VisualMicro>
