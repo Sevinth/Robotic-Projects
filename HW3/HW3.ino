@@ -5,7 +5,7 @@
 #include <math.h>
 #include <float.h>
 
-#define COMP_F_A 0.05f
+#define COMP_F_A 0.3f
 #define COMP_F_B 0.5f
 
 Zumo32U4Encoders encoders;
@@ -63,16 +63,18 @@ int accXVals[2] = { 0,0 };
 int accYVals[2] = { 0,0 };
 int accZVals[2] = { 0,0 };
 
+
+//Testing
+float encoderCounts = 0;
+
 void getRVel(float deltaCountsRight, float deltaCountsLeft, float timeEllapsed) {
-
-
 
 	
 	float rVelRight = deltaCountsRight*wheelCirc/(timeEllapsed*encoderRes);
 	float rVelLeft = deltaCountsLeft*wheelCirc / (timeEllapsed*encoderRes);
 
 	float rVelCenter = 0.5f*(rVelRight + rVelLeft);
-	float rVelAng = (1.0 / baseWidth)*(rVelRight - rVelLeft);
+	float rVelAng = (1.0f / baseWidth)*(rVelRight - rVelLeft);
 
 	rVelocities[0] = rVelCenter;
 	rVelocities[1] = rVelRight;
@@ -97,12 +99,14 @@ float getZRot(float deltaTime) {
 	gyro.read();
 
 	float gyroZRotRaw = gyro.g.z + gyroZOffest;
-	float gyroZRot = (pi/180.0)*gyroZRotRaw*(1.0 / 8.75);
+	float gyroZRot = (pi/180.0*1000.0)*gyroZRotRaw*(1.0 / 8.75);
 
 	return gyroZRot;
 
 }
 
+
+//Fourth Order Runge-Kutta
 float *rk4(float timeEllapsed) {
 
 	float k1[4] = { 0,0,0,0 };
@@ -125,7 +129,7 @@ float *rk4(float timeEllapsed) {
 
 	k1[3] = rVelocities[0] * cos(gPrevPose[2] + k3[2] * timeEllapsed);
 	k2[3] = rVelocities[0] * sin(gPrevPose[2] + k3[2] * timeEllapsed);
-
+	k3[3] = k3[2];
 
 	posVec[0] = (1.0f / 6.0f)*(k1[0] + 2.0f*(k1[1] + k1[2]) + k1[3]);
 	posVec[1] = (1.0f / 6.0f)*(k2[0] + 2.0f*(k2[1] + k2[2]) + k2[3]);
@@ -138,6 +142,7 @@ float *rk4(float timeEllapsed) {
 //Called durinv movment to update the robots pose
 void updatePosition() {
 
+	float timeBegin = millis();
 	timeSinceLast = millis() - prevTime;
 
 	float encoderLeft = encoders.getCountsAndResetLeft();
@@ -147,9 +152,7 @@ void updatePosition() {
 
 	float gyroAngVel = getZRot(timeSinceLast);
 
-	float gyroEncoderError = fabs(gyroAngVel - rVelocities[3]);
-
-	rVelocities[3] = (rVelocities[3] + gyroAngVel) / 2.0f;
+	//rVelocities[3] = (rVelocities[3] + gyroAngVel) / 2.0f;
 
 	//Robot Coordinate Frame Pose
 	rCurrentPose[0] = rPrevPose[0] + rVelocities[0] * timeSinceLast;
@@ -165,11 +168,13 @@ void updatePosition() {
 	
 	//Global Coordinate Frame Pose
 	
-	float *deltaPosEst = rk4(timeSinceLast);
+	//float rk4Time = millis();
+	//float *deltaPosEst = rk4(timeSinceLast);
+	//float rk4TimeEnd = millis() - rk4Time;
 
-	gCurrentPose[0] = gPrevPose[0] + deltaPosEst[0];
-	gCurrentPose[1] = gPrevPose[1] + deltaPosEst[1];
-	gCurrentPose[2] = gPrevPose[2] + deltaPosEst[2];
+	gCurrentPose[0] = gPrevPose[0] + rVelocities[0] * timeSinceLast*cos(rCurrentPose[2]);
+	gCurrentPose[1] = gPrevPose[1] + rVelocities[0] * timeSinceLast*sin(rCurrentPose[2]);
+	gCurrentPose[2] = rCurrentPose[2];
 
 	if (gCurrentPose[2] < 0.0f) {
 		gCurrentPose[2] = 2.0f * pi;
@@ -185,6 +190,9 @@ void updatePosition() {
 		gPrevPose[i] = gCurrentPose[i];
 		rPrevPose[i] = rCurrentPose[i];
 	}
+
+	float timeEnd = millis() - timeBegin;
+
 }
 //Complimentary filter
 float angCompFilter(float timeEllapsed) {
@@ -193,15 +201,13 @@ float angCompFilter(float timeEllapsed) {
 	getAccValues();
 
 	//Calculate the angle between Y and X accel values
-	float rotAcc = atan2f(accYVals[0], accXVals[0]) + pi;
+	float rotAcc = atan2(accYVals[0], accXVals[0]);
 	//Gyro rotation about Z axis
 	float zGyro = getZRot(timeEllapsed);
 	//Apply computational filter to gyrosocope and accelerometer values
 	float imuAngVal = COMP_F_A*(rPrevPose[2] + zGyro*timeEllapsed) + (1.0f - COMP_F_A)*(rotAcc);
 
-	float angVal = COMP_F_B*(rPrevPose[2] + rVelocities[3]*timeEllapsed) + (1.0f - COMP_F_B)*imuAngVal;
-
-	return angVal;
+	return imuAngVal;
 
 }
 
@@ -327,7 +333,6 @@ void accCalibrate() {
 	accReadY /= (float)nSamples;
 	accReadZ /= (float)nSamples;
 
-
 	accXOffset =  accReadX;
 	accYOffset =  accReadY;
 	accZOffset =  accReadZ; 
@@ -339,11 +344,11 @@ void getAccValues() {
 	acc.read();
 	int nSamples;
 
-		accXVals[0] = (acc.a.x)*0.61f/1000.0f;
+		accXVals[0] = ((float)acc.a.x + accXOffset)*0.61f;
 
-		accYVals[0] = (acc.a.y)*0.61f/1000.0f;
+		accYVals[0] = ((float)acc.a.y + accYOffset)*0.61f;
 
-		accZVals[0] = (acc.a.z)*0.61f/1000.0f;
+		accZVals[0] = ((float)acc.a.z + accZOffset)*0.61f;
 	
 }
 
@@ -362,7 +367,7 @@ void setup()
 
 	acc.init();
 	acc.enableDefault();
-	//accCalibrate();
+	accCalibrate();
 
 	encoders.getCountsAndResetLeft();
 	encoders.getCountsAndResetRight();
@@ -380,10 +385,9 @@ void loop()
 	bool leftError = encoders.checkErrorLeft();
 	int move = 0;
 
-	
-	//First Waypoint
 	motors.setSpeeds(100, 100);
 	updatePosition();
-	delay(20);
+
+
 
 }
