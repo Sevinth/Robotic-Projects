@@ -1,11 +1,12 @@
-
-
 #include <Wire.h>
 #include <Zumo32U4\Zumo32U4.h>
 #include <Zumo32U4\L3G.h>
 #include <Zumo32U4\LSM303.h>
 #include <math.h>
 #include <float.h>
+
+#define COMP_F_A 0.05f
+#define COMP_F_B 0.5f
 
 Zumo32U4Encoders encoders;
 Zumo32U4LCD lcd;
@@ -21,22 +22,21 @@ struct Path {
 };
 
 //Physical Constants
-const float pi = 4 * atan(1.0);
-
+const float pi = 4.0f * atanf(1.0f);
 
 //Robot Physical Properties
-const float wheelRad = 0.691;
-const float baseWidth = 3.351;
-const float wheelCirc = 2.0 * pi*wheelRad;;
-const float encoderRes = 75.81*12.0;
+const float wheelRad = 0.691f;
+const float baseWidth = 3.351f;
+const float wheelCirc = 2.0f * pi*wheelRad;;
+const float encoderRes = 75.81f*12.0f;
 
 //Position Variables
 float rCurrentPose[3] = { 0,0,0 };
 float rPrevPose[3] = { 0,0,0 };
-float rVelocities[4] = { 0,0,0 ,0 };
+float rVelocities[4] = { 0,0,0,0 };
 float gCurrentPose[3] = { 0,0,0 };
 float gPrevPose[3] = { 0,0,0 };
-float gVelocities[4] = { 0,0,0 ,0 };
+float gVelocities[4] = { 0,0,0,0 };
 float gPath[5][3] = { { 0,0, pi },
 { 0,0,0 },
 { 0,0,0 },
@@ -56,25 +56,28 @@ float rightMotorSpeed = 0;
 
 //calibration variables
 float gyroZOffest = 0;
+float accXOffset = 0;
+float accYOffset = 0;
+float accZOffset = 0;
 int accXVals[2] = { 0,0 };
 int accYVals[2] = { 0,0 };
 int accZVals[2] = { 0,0 };
 
-
 void getRVel(float deltaCountsRight, float deltaCountsLeft, float timeEllapsed) {
 
-	float rDeltaCenter = 0.5*(deltaCountsRight + deltaCountsLeft);
 
-	float rVelCenter = rDeltaCenter*wheelCirc / (timeEllapsed*encoderRes);
-	float rVelRight = deltaCountsRight*wheelCirc / (timeEllapsed*encoderRes);
+
+	
+	float rVelRight = deltaCountsRight*wheelCirc/(timeEllapsed*encoderRes);
 	float rVelLeft = deltaCountsLeft*wheelCirc / (timeEllapsed*encoderRes);
+
+	float rVelCenter = 0.5f*(rVelRight + rVelLeft);
 	float rVelAng = (1.0 / baseWidth)*(rVelRight - rVelLeft);
 
 	rVelocities[0] = rVelCenter;
 	rVelocities[1] = rVelRight;
 	rVelocities[2] = rVelLeft;
 	rVelocities[3] = rVelAng;
-
 
 }
 
@@ -91,9 +94,8 @@ float straightLineCalc(float distance) {
 float getZRot(float deltaTime) {
 
 	//Read the gyro
-	
 	gyro.read();
-	
+
 	float gyroZRotRaw = gyro.g.z + gyroZOffest;
 	float gyroZRot = (pi/180.0)*gyroZRotRaw*(1.0 / 8.75);
 
@@ -101,6 +103,39 @@ float getZRot(float deltaTime) {
 
 }
 
+float *rk4(float timeEllapsed) {
+
+	float k1[4] = { 0,0,0,0 };
+	float k2[4] = { 0,0,0,0 };
+	float k3[4] = { 0,0,0,0 };
+
+	float posVec[3] = { 0,0,0 };
+
+	k1[0] = rVelocities[0] * cos(gPrevPose[2]);
+	k2[0] = rVelocities[0] * sin(gPrevPose[2]);
+	k3[0] = rVelocities[3];
+	
+	k1[1] = rVelocities[0] * cos(gPrevPose[2] + k3[0] * (timeEllapsed / 2.0f));
+	k2[1] = rVelocities[0] * sin(gPrevPose[2] + k3[0] * (timeEllapsed / 2.0f));
+	k3[1] = k3[0];
+
+	k1[2] = rVelocities[0] * cos(gPrevPose[2] + k3[1] * (timeEllapsed / 2.0f));
+	k2[2] = rVelocities[0] * sin(gPrevPose[2] + k3[1] * (timeEllapsed / 2.0f));
+	k3[2] = k3[1];
+
+	k1[3] = rVelocities[0] * cos(gPrevPose[2] + k3[2] * timeEllapsed);
+	k2[3] = rVelocities[0] * sin(gPrevPose[2] + k3[2] * timeEllapsed);
+
+
+	posVec[0] = (1.0f / 6.0f)*(k1[0] + 2.0f*(k1[1] + k1[2]) + k1[3]);
+	posVec[1] = (1.0f / 6.0f)*(k2[0] + 2.0f*(k2[1] + k2[2]) + k2[3]);
+	posVec[2] = (1.0f / 6.0f)*(k3[0] + 2.0f*(k3[1] + k3[2]) + k3[3]);
+
+	return posVec;
+}
+
+
+//Called durinv movment to update the robots pose
 void updatePosition() {
 
 	timeSinceLast = millis() - prevTime;
@@ -114,28 +149,34 @@ void updatePosition() {
 
 	float gyroEncoderError = fabs(gyroAngVel - rVelocities[3]);
 
-	rVelocities[3] = (rVelocities[3] + gyroAngVel) / 2.0;
+	rVelocities[3] = (rVelocities[3] + gyroAngVel) / 2.0f;
 
 	//Robot Coordinate Frame Pose
 	rCurrentPose[0] = rPrevPose[0] + rVelocities[0] * timeSinceLast;
-	rCurrentPose[1] = 0.0;
-	rCurrentPose[2] = rPrevPose[2] + rVelocities[3] * timeSinceLast;
+	rCurrentPose[1] = 0.0f;
+	rCurrentPose[2] = angCompFilter(timeSinceLast);
 	
-
-
-	if (rCurrentPose[2] < 0) {
-		rCurrentPose[2] = 2 * pi;
+	if (rCurrentPose[2] < 0.0f) {
+		rCurrentPose[2] = 2.0f * pi;
 	}
-	else if (rCurrentPose[2] > 2 * pi) {
-		rCurrentPose[2] = 0;
+	else if (rCurrentPose[2] > 2.0f * pi) {
+		rCurrentPose[2] = 0.0f;
 	}
-
 	
 	//Global Coordinate Frame Pose
-	gCurrentPose[0] = gPrevPose[0] + rVelocities[0] * timeSinceLast*cos(rCurrentPose[2]);
-	gCurrentPose[1] = gPrevPose[1] + rVelocities[0] * timeSinceLast*sin(rCurrentPose[2]);
-	gCurrentPose[2] = rCurrentPose[2];
+	
+	float *deltaPosEst = rk4(timeSinceLast);
 
+	gCurrentPose[0] = gPrevPose[0] + deltaPosEst[0];
+	gCurrentPose[1] = gPrevPose[1] + deltaPosEst[1];
+	gCurrentPose[2] = gPrevPose[2] + deltaPosEst[2];
+
+	if (gCurrentPose[2] < 0.0f) {
+		gCurrentPose[2] = 2.0f * pi;
+	}
+	else if (gCurrentPose[2] > 2.0f * pi) {
+		gCurrentPose[2] = 0.0f;
+	}
 
 	delay(20);
 	prevTime = millis();
@@ -145,28 +186,47 @@ void updatePosition() {
 		rPrevPose[i] = rCurrentPose[i];
 	}
 }
+//Complimentary filter
+float angCompFilter(float timeEllapsed) {
 
+	//Need accelerometer values
+	getAccValues();
+
+	//Calculate the angle between Y and X accel values
+	float rotAcc = atan2f(accYVals[0], accXVals[0]) + pi;
+	//Gyro rotation about Z axis
+	float zGyro = getZRot(timeEllapsed);
+	//Apply computational filter to gyrosocope and accelerometer values
+	float imuAngVal = COMP_F_A*(rPrevPose[2] + zGyro*timeEllapsed) + (1.0f - COMP_F_A)*(rotAcc);
+
+	float angVal = COMP_F_B*(rPrevPose[2] + rVelocities[3]*timeEllapsed) + (1.0f - COMP_F_B)*imuAngVal;
+
+	return angVal;
+
+}
 
 void gyroCalibrate() {
-	
+
 	//Make sure there is no rotation
 	motors.setSpeeds(0, 0);
 	//Read the gyro
 	float ellapsedTime = 0;
 	float averageZeroReading = 0;
-	int numberofReadings = 0;
+	int numberofReadings = 1024;
 
-	while (ellapsedTime <= 5000.0) {
+	for (int i = 0; i < numberofReadings; i++) {
+
+		//while (!gyro.readReg(L3G::STATUS_REG) & 0x08);
+		gyro.read();
+
 		numberofReadings++;
 
 		gyro.read();
-		averageZeroReading += gyro.g.z/numberofReadings;
+		averageZeroReading += gyro.g.z;
 
-		ellapsedTime += millis();
 	}
 
-	gyroZOffest = 0.0 + averageZeroReading;
-
+	gyroZOffest = averageZeroReading / (float)numberofReadings;
 
 }
 
@@ -190,7 +250,7 @@ void courseCorrection(int waypoint) {
 
 	float angleToWaypoint;
 
-	if (distVec[0] == 0 && distVec[1] == 0) {
+	if (distVec[0] == 0 && distVec[1] == 0)  {
 
 		angleToWaypoint = rCurrentPose[2] + gPath[waypoint][2];
 	}
@@ -241,44 +301,54 @@ void rotateInPlace(float angle) {
 
 }
 
-
-
 void moveToLocation(int waypoint) {
 
 
-	//while (gCurrentPose != gPath[waypoint] +  posTol || gCurrentPose != gPath[waypoint] - posTol) {
-		//updatePosition();
-	//}
-
-
 }
 
-
 void accCalibrate() {
-	acc.read();
+	
 
-	int nSamples = 10;
-	float accReadX  = 0.0;
-	float accReadY = 0.0;
-	float accReadZ = 0.0;
+	int nSamples = 1024;
+	float accReadX  = 0.0f;
+	float accReadY = 0.0f;
+	float accReadZ = 0.0f;
 
-	for (int i; i > nSamples; i++) {
+	for (int i = 0; i < nSamples; i++) {
+		acc.read();
+		delay(1);
 		accReadX += acc.a.x;
 		accReadY += acc.a.y;
 		accReadZ += acc.a.z;
+		
 	}
 
-	accReadX /= nSamples;
-	accReadY /= nSamples;
-	accReadZ /= nSamples;
+	accReadX /= (float)nSamples;
+	accReadY /= (float)nSamples;
+	accReadZ /= (float)nSamples;
 
+
+	accXOffset =  accReadX;
+	accYOffset =  accReadY;
+	accZOffset =  accReadZ; 
 
 }
 
+void getAccValues() {
+
+	acc.read();
+	int nSamples;
+
+		accXVals[0] = (acc.a.x)*0.61f/1000.0f;
+
+		accYVals[0] = (acc.a.y)*0.61f/1000.0f;
+
+		accZVals[0] = (acc.a.z)*0.61f/1000.0f;
+	
+}
 
 void setup()
 {
-
 	Serial.begin(9600);
 	while (!Serial) {}
 	//enable communication to I2C devices
@@ -288,16 +358,18 @@ void setup()
 	encoders.init();
 	gyro.init();
 	gyro.enableDefault();
-	gyroCalibrate();
+	//gyroCalibrate();
+
 	acc.init();
 	acc.enableDefault();
+	//accCalibrate();
+
 	encoders.getCountsAndResetLeft();
 	encoders.getCountsAndResetRight();
 	motors.flipLeftMotor(true);
 	motors.flipRightMotor(true);
 
 }
-
 
 void loop()
 {
@@ -308,13 +380,10 @@ void loop()
 	bool leftError = encoders.checkErrorLeft();
 	int move = 0;
 
-	//First Waypoint
-	rPathType = Path::DIRECT;
-
-	updatePosition();
-	courseCorrection(0);
-		
 	
+	//First Waypoint
+	motors.setSpeeds(100, 100);
+	updatePosition();
 	delay(20);
 
 }
