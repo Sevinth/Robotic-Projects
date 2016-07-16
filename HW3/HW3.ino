@@ -153,27 +153,33 @@ void updatePosition() {
 	float timeBegin = millis();
 	timeSinceLast = millis() - prevTime;
 
+	//Get right and left encoder Counts
 	float encoderLeft = encoders.getCountsLeft();
 	float encoderRight = encoders.getCountsRight();
-
+	//Get difference between previous and current encoder counts
 	float deltaEncoderLeft = encoderLeft - prevCountsLeft;
 	float deltaEncoderRight = encoderRight - prevCountsRight;
 
+	//Save current counts for use in next updatePosition()
 	prevCountsRight = encoderRight;
 	prevCountsLeft = encoderLeft;
 
-
+	//Get velocities from delta encoder values
 	getRVel(deltaEncoderRight, deltaEncoderLeft, timeSinceLast);
 
 	float gyroAngVel = getZRot(timeSinceLast);
-
 	//rVelocities[3] = (rVelocities[3] + gyroAngVel) / 2.0f;
+	float timeTest = millis();
+	delay(20);
+	float timeTestEnd = millis() - timeTest;
 
 	//Robot Coordinate Frame Pose
-	rCurrentPose[0] = rPrevPose[0] + rVelocities[0] * timeSinceLast;
+	rCurrentPose[0] = rPrevPose[0] + rVelocities[0] * timeTestEnd;
 	rCurrentPose[1] = 0.0f;
-	rCurrentPose[2] = angCompFilter(timeSinceLast);
-	
+	//rCurrentPose[2] = angCompFilter(timeSinceLast);
+	rCurrentPose[2] = rPrevPose[2] + rVelocities[3] * timeTestEnd;
+
+	//Constrain angle(rCurrentPose[2]) between 0 and 2*pi
 	if (rCurrentPose[2] < 0.0f) {
 		rCurrentPose[2] = 2.0f * pi;
 	}
@@ -187,8 +193,10 @@ void updatePosition() {
 	//float *deltaPosEst = rk4(timeSinceLast);
 	//float rk4TimeEnd = millis() - rk4Time;
 
-	gCurrentPose[0] = gPrevPose[0] + rVelocities[0] * timeSinceLast*cos(rCurrentPose[2]);
-	gCurrentPose[1] = gPrevPose[1] + rVelocities[0] * timeSinceLast*sin(rCurrentPose[2]);
+
+	//Update robot pose in the global coordinate frame
+	gCurrentPose[0] = gPrevPose[0] + rVelocities[0] * timeTestEnd*cos(rCurrentPose[2]);
+	gCurrentPose[1] = gPrevPose[1] + rVelocities[0] * timeTestEnd*sin(rCurrentPose[2]);
 	gCurrentPose[2] = rCurrentPose[2];
 
 	if (gCurrentPose[2] < 0.0f) {
@@ -198,9 +206,11 @@ void updatePosition() {
 		gCurrentPose[2] = 0.0f;
 	}
 
-	delay(20);
+
 	prevTime = millis();
 
+
+	//Save current poses for use in the next updatePosition()
 	for (int i = 0; i < 3; i++) {
 		gPrevPose[i] = gCurrentPose[i];
 		rPrevPose[i] = rCurrentPose[i];
@@ -255,6 +265,8 @@ void gyroCalibrate() {
 
 }
 
+
+//Not used Currently
 void courseCorrection(int waypoint) {
 
 	//determine distance to next waypoint
@@ -296,6 +308,7 @@ void courseCorrection(int waypoint) {
 
 }
 
+//Not used currently
 void rotateInPlace(float angle) {
 
 	float leftSpeed = 0;
@@ -326,11 +339,14 @@ void rotateInPlace(float angle) {
 
 }
 
+
+//Not used currently
 void moveToLocation(int waypoint) {
 
 
 }
 
+//Simple accelerometer calibration
 void accCalibrate() {
 	
 
@@ -358,6 +374,8 @@ void accCalibrate() {
 
 }
 
+
+//Retrive accelerometer values and convert to mpds
 void getAccValues() {
 
 	acc.read();
@@ -378,18 +396,23 @@ void setup()
 	//enable communication to I2C devices
 	Wire.begin();
 
-	/* add setup code here */
+	//Initiate encoders
 	encoders.init();
+	//Initiate gyr and enable default values (+/- 250 dps)
 	gyro.init();
 	gyro.enableDefault();
 	gyroCalibrate();
 
+	//Enable accelerometer with default values (+/- 2g)
 	acc.init();
 	acc.enableDefault();
 	accCalibrate();
 
+	//Reset encoder counts to zero
 	encoders.getCountsAndResetLeft();
 	encoders.getCountsAndResetRight();
+
+	//Motors were wired in backwards by someone
 	motors.flipLeftMotor(true);
 	motors.flipRightMotor(true);
 
@@ -402,9 +425,10 @@ void loop()
 	float volts = readBatteryMillivolts();
 	bool rightError = encoders.checkErrorRight();
 	bool leftError = encoders.checkErrorLeft();
-	int move = 0;
 
-	motors.setSpeeds(-100, 100);
+
+	motors.setSpeeds(100, 100);
+	delay(20);
 	updatePosition();
 
 

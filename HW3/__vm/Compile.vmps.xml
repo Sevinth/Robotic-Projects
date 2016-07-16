@@ -32,24 +32,24 @@
           <MessageVariable Name="gyroZRot" Index="1" />
         </MessageVariables>
       </BreakPoint>
-      <BreakPoint Index="2" Name="HW3.ino, line 225" Id="1e58f74a-32ff-475e-8578-605536803639" Enabled="1" Message="{imuAngVal}{rotAcc}{zGyro}" MessageTextType="2" PreProcessedMessage="{0}{1}{2}" Condition="" ConditionType="1" CurrentHits="0" File="c:\robotic-projects\hw3\hw3.ino" FileLine="225" FileColumn="1" FunctionName="angCompFilter(float timeEllapsed)" FunctionLineOffset="12" FunctionColumnOffset="1" HitCountTarget="1" HitCountType="1" Language="C++" LocationType="3" Tag="&lt;vmbp Id='1e58f74a-32ff-475e-8578-605536803639'/&gt;" Type="1" ToString="System.__ComObject" BreakWhenHit="0">
-        <Source>218		//Calculate the angle between Y and X accel values
-219		float rotAcc = atan2(accYVals[0], accXVals[0]); //Angle according to the acceleromter
-220		//Gyro rotation about Z axis
-221		float zGyro = getZRot(timeEllapsed); //Angular velocity according to the gyro
-222	
-223		//Apply complimentary filter to gyrosocope and accelerometer values
-224		float imuAngVal = COMP_F_A*(rPrevPose[2] + zGyro*timeEllapsed) + (1.0f - COMP_F_A)*(rVelocities[3]*timeEllapsed);
---&gt;225	
-226		return imuAngVal;
-227	
-228	}
-229	
-230	void gyroCalibrate() {
-231	
-232		//Make sure there is no rotation
-233		motors.setSpeeds(0, 0);
-234		//Read the gyro
+      <BreakPoint Index="2" Name="HW3.ino, line 233" Id="1e58f74a-32ff-475e-8578-605536803639" Enabled="1" Message="{imuAngVal}{rotAcc}{zGyro}" MessageTextType="2" PreProcessedMessage="{0}{1}{2}" Condition="" ConditionType="1" CurrentHits="0" File="c:\robotic-projects\hw3\hw3.ino" FileLine="233" FileColumn="1" FunctionName="angCompFilter(float timeEllapsed)" FunctionLineOffset="12" FunctionColumnOffset="1" HitCountTarget="1" HitCountType="1" Language="C++" LocationType="3" Tag="&lt;vmbp Id='1e58f74a-32ff-475e-8578-605536803639'/&gt;" Type="1" ToString="System.__ComObject" BreakWhenHit="0">
+        <Source>226		//Calculate the angle between Y and X accel values
+227		float rotAcc = atan2(accYVals[0], accXVals[0]); //Angle according to the acceleromter
+228		//Gyro rotation about Z axis
+229		float zGyro = getZRot(timeEllapsed); //Angular velocity according to the gyro
+230	
+231		//Apply complimentary filter to gyrosocope and accelerometer values
+232		float imuAngVal = COMP_F_A*(rPrevPose[2] + zGyro*timeEllapsed) + (1.0f - COMP_F_A)*(rVelocities[3]*timeEllapsed);
+--&gt;233	
+234		return imuAngVal;
+235	
+236	}
+237	
+238	void gyroCalibrate() {
+239	
+240		//Make sure there is no rotation
+241		motors.setSpeeds(0, 0);
+242		//Read the gyro
 </Source>
         <MessageVariables>
           <MessageVariable Name="imuAngVal" Index="1" />
@@ -57,49 +57,50 @@
           <MessageVariable Name="zGyro" Index="3" />
         </MessageVariables>
       </BreakPoint>
-      <BreakPoint Index="3" Name="HW3.ino, line 193" Id="8e77d872-c653-4601-b628-9165c9cb6fee" Enabled="1" Message="{gCurrentPose[0]}{gCurrentPose[1]}{gCurrentPose[2]}" MessageTextType="2" PreProcessedMessage="{0}{1}{2}" Condition="" ConditionType="1" CurrentHits="0" File="c:\robotic-projects\hw3\hw3.ino" FileLine="193" FileColumn="1" FunctionName="updatePosition()" FunctionLineOffset="36" FunctionColumnOffset="1" HitCountTarget="1" HitCountType="1" Language="C++" LocationType="3" Tag="&lt;vmbp Id='8e77d872-c653-4601-b628-9165c9cb6fee'/&gt;" Type="1" ToString="System.__ComObject" BreakWhenHit="0">
-        <Source>186		//float rk4Time = millis();
-187		//float *deltaPosEst = rk4(timeSinceLast);
-188		//float rk4TimeEnd = millis() - rk4Time;
-189	
-190		gCurrentPose[0] = gPrevPose[0] + rVelocities[0] * timeSinceLast*cos(rCurrentPose[2]);
-191		gCurrentPose[1] = gPrevPose[1] + rVelocities[0] * timeSinceLast*sin(rCurrentPose[2]);
-192		gCurrentPose[2] = rCurrentPose[2];
---&gt;193	
-194		if (gCurrentPose[2] &lt; 0.0f) {
-195			gCurrentPose[2] = 2.0f * pi;
-196		}
-197		else if (gCurrentPose[2] &gt; 2.0f * pi) {
-198			gCurrentPose[2] = 0.0f;
-199		}
-200	
-201		delay(20);
-202		prevTime = millis();
+      <BreakPoint Index="3" Name="HW3.ino, line 201" Id="8e77d872-c653-4601-b628-9165c9cb6fee" Enabled="1" Message="{gCurrentPose[0]}{gCurrentPose[1]}{gCurrentPose[2]}{rCurrentPose[0]}" MessageTextType="2" PreProcessedMessage="{0}{1}{2}{3}" Condition="" ConditionType="1" CurrentHits="0" File="c:\robotic-projects\hw3\hw3.ino" FileLine="201" FileColumn="1" FunctionName="updatePosition()" FunctionLineOffset="36" FunctionColumnOffset="1" HitCountTarget="1" HitCountType="1" Language="C++" LocationType="3" Tag="&lt;vmbp Id='8e77d872-c653-4601-b628-9165c9cb6fee'/&gt;" Type="1" ToString="System.__ComObject" BreakWhenHit="0">
+        <Source>194		//float rk4TimeEnd = millis() - rk4Time;
+195	
+196	
+197		//Update robot pose in the global coordinate frame
+198		gCurrentPose[0] = gPrevPose[0] + rVelocities[0] * timeTestEnd*cos(rCurrentPose[2]);
+199		gCurrentPose[1] = gPrevPose[1] + rVelocities[0] * timeTestEnd*sin(rCurrentPose[2]);
+200		gCurrentPose[2] = rCurrentPose[2];
+--&gt;201	
+202		if (gCurrentPose[2] &lt; 0.0f) {
+203			gCurrentPose[2] = 2.0f * pi;
+204		}
+205		else if (gCurrentPose[2] &gt; 2.0f * pi) {
+206			gCurrentPose[2] = 0.0f;
+207		}
+208	
+209		delay(20);
+210		prevTime = millis();
 </Source>
         <MessageVariables>
           <MessageVariable Name="gCurrentPose[0]" Index="1" />
           <MessageVariable Name="gCurrentPose[1]" Index="2" />
           <MessageVariable Name="gCurrentPose[2]" Index="3" />
+          <MessageVariable Name="rCurrentPose[0]" Index="4" />
         </MessageVariables>
       </BreakPoint>
-      <BreakPoint Index="4" Name="HW3.ino, line 164" Id="56f33035-dfeb-48d3-8b8b-c8c25fdd307e" Enabled="1" Message="{encoderLeft}{encoderRight}{deltaEncoderRight}{deltaEncoderLeft}" MessageTextType="2" PreProcessedMessage="{0}{1}{2}{3}" Condition="" ConditionType="1" CurrentHits="0" File="c:\robotic-projects\hw3\hw3.ino" FileLine="164" FileColumn="1" FunctionName="updatePosition()" FunctionLineOffset="14" FunctionColumnOffset="1" HitCountTarget="1" HitCountType="1" Language="C++" LocationType="3" Tag="&lt;vmbp Id='56f33035-dfeb-48d3-8b8b-c8c25fdd307e'/&gt;" Type="1" ToString="System.__ComObject" BreakWhenHit="0">
-        <Source>157		float encoderRight = encoders.getCountsRight();
-158	
-159		float deltaEncoderLeft = encoderLeft - prevCountsLeft;
-160		float deltaEncoderRight = encoderRight - prevCountsRight;
-161	
-162		prevCountsRight = encoderRight;
-163		prevCountsLeft = encoderLeft;
---&gt;164	
-165	
-166		getRVel(deltaEncoderRight, deltaEncoderLeft, timeSinceLast);
-167	
-168		float gyroAngVel = getZRot(timeSinceLast);
+      <BreakPoint Index="4" Name="HW3.ino, line 166" Id="56f33035-dfeb-48d3-8b8b-c8c25fdd307e" Enabled="1" Message="{encoderLeft}{encoderRight}{deltaEncoderRight}{deltaEncoderLeft}" MessageTextType="2" PreProcessedMessage="{0}{1}{2}{3}" Condition="" ConditionType="1" CurrentHits="0" File="c:\robotic-projects\hw3\hw3.ino" FileLine="166" FileColumn="1" FunctionName="updatePosition()" FunctionLineOffset="14" FunctionColumnOffset="1" HitCountTarget="1" HitCountType="1" Language="C++" LocationType="3" Tag="&lt;vmbp Id='56f33035-dfeb-48d3-8b8b-c8c25fdd307e'/&gt;" Type="1" ToString="System.__ComObject" BreakWhenHit="0">
+        <Source>159		//Get difference between previous and current encoder counts
+160		float deltaEncoderLeft = encoderLeft - prevCountsLeft;
+161		float deltaEncoderRight = encoderRight - prevCountsRight;
+162	
+163		//Save current counts for use in next updatePosition()
+164		prevCountsRight = encoderRight;
+165		prevCountsLeft = encoderLeft;
+--&gt;166	
+167		//Get velocities from delta encoder values
+168		getRVel(deltaEncoderRight, deltaEncoderLeft, timeSinceLast);
 169	
-170		//rVelocities[3] = (rVelocities[3] + gyroAngVel) / 2.0f;
-171	
-172		//Robot Coordinate Frame Pose
-173		rCurrentPose[0] = rPrevPose[0] + rVelocities[0] * timeSinceLast;
+170		float gyroAngVel = getZRot(timeSinceLast);
+171		//rVelocities[3] = (rVelocities[3] + gyroAngVel) / 2.0f;
+172		float timeTest = millis();
+173		delay(20);
+174		float timeTestEnd = millis() - timeTest;
+175	
 </Source>
         <MessageVariables>
           <MessageVariable Name="encoderLeft" Index="1" />
@@ -108,24 +109,24 @@
           <MessageVariable Name="deltaEncoderLeft" Index="4" />
         </MessageVariables>
       </BreakPoint>
-      <BreakPoint Index="5" Name="HW3.ino, line 167" Id="029dce1f-47da-4bcb-b0d6-202a13e0beec" Enabled="1" Message="{rVelocities[0]}{rVelocities[1]}{rVelocities[2]}{rVelocities[3]}" MessageTextType="2" PreProcessedMessage="{0}{1}{2}{3}" Condition="" ConditionType="1" CurrentHits="0" File="c:\robotic-projects\hw3\hw3.ino" FileLine="167" FileColumn="1" FunctionName="updatePosition()" FunctionLineOffset="17" FunctionColumnOffset="1" HitCountTarget="1" HitCountType="1" Language="C++" LocationType="3" Tag="&lt;vmbp Id='0dcf4d11-4900-4709-8946-b89209c2df28'/&gt;" Type="1" ToString="System.__ComObject" BreakWhenHit="0">
-        <Source>160		float deltaEncoderRight = encoderRight - prevCountsRight;
-161	
-162		prevCountsRight = encoderRight;
-163		prevCountsLeft = encoderLeft;
-164	
-165	
-166		getRVel(deltaEncoderRight, deltaEncoderLeft, timeSinceLast);
---&gt;167	
-168		float gyroAngVel = getZRot(timeSinceLast);
-169	
-170		//rVelocities[3] = (rVelocities[3] + gyroAngVel) / 2.0f;
-171	
-172		//Robot Coordinate Frame Pose
-173		rCurrentPose[0] = rPrevPose[0] + rVelocities[0] * timeSinceLast;
-174		rCurrentPose[1] = 0.0f;
-175		rCurrentPose[2] = angCompFilter(timeSinceLast);
-176		
+      <BreakPoint Index="5" Name="HW3.ino, line 169" Id="0dcf4d11-4900-4709-8946-b89209c2df28" Enabled="1" Message="{rVelocities[0]}{rVelocities[1]}{rVelocities[2]}{rVelocities[3]}" MessageTextType="2" PreProcessedMessage="{0}{1}{2}{3}" Condition="" ConditionType="1" CurrentHits="0" File="c:\robotic-projects\hw3\hw3.ino" FileLine="169" FileColumn="1" FunctionName="updatePosition()" FunctionLineOffset="17" FunctionColumnOffset="1" HitCountTarget="1" HitCountType="1" Language="C++" LocationType="3" Tag="&lt;vmbp Id='0dcf4d11-4900-4709-8946-b89209c2df28'/&gt;" Type="1" ToString="System.__ComObject" BreakWhenHit="0">
+        <Source>162	
+163		//Save current counts for use in next updatePosition()
+164		prevCountsRight = encoderRight;
+165		prevCountsLeft = encoderLeft;
+166	
+167		//Get velocities from delta encoder values
+168		getRVel(deltaEncoderRight, deltaEncoderLeft, timeSinceLast);
+--&gt;169	
+170		float gyroAngVel = getZRot(timeSinceLast);
+171		//rVelocities[3] = (rVelocities[3] + gyroAngVel) / 2.0f;
+172		float timeTest = millis();
+173		delay(20);
+174		float timeTestEnd = millis() - timeTest;
+175	
+176		//Robot Coordinate Frame Pose
+177		rCurrentPose[0] = rPrevPose[0] + rVelocities[0] * timeTestEnd;
+178		rCurrentPose[1] = 0.0f;
 </Source>
         <MessageVariables>
           <MessageVariable Name="rVelocities[0]" Index="1" />
