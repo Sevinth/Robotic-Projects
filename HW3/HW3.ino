@@ -4,8 +4,9 @@
 #include <Zumo32U4\LSM303.h>
 #include <math.h>
 #include <float.h>
+#include <stdarg.h>
 
-#define COMP_F_A 0.98f
+#define COMP_F_A 0.1f
 #define COMP_F_B 0.5f
 
 Zumo32U4Encoders encoders;
@@ -40,12 +41,12 @@ float rVelocities[4] = { 0,0,0,0 };
 float gCurrentPose[3] = { 0,0,0 };
 float gPrevPose[3] = { 0,0,0 };
 float gVelocities[4] = { 0,0,0,0 };
-float gPath[5][3] = { { 0,0, pi },
+float gPath[5][3] = { { 22,0, 0 },
 { 0,0,0 },
 { 0,0,0 },
 { 0,0,0 },
 { 0,0,0 } };
-const float posTol = 0.5; //inches
+float posTol[3] = { 0.5, 0.5, 0.1 }; //inches
 Path rPath;
 Path::pathType rPathType;
 
@@ -54,8 +55,8 @@ unsigned long timeSinceLast = 0.0;
 unsigned long prevTime = 0.0;
 
 //motors
-float leftMotorSpeed = 0;
-float rightMotorSpeed = 0;
+float leftMotorSpeed = 100;
+float rightMotorSpeed = 100;
 
 //calibration variables
 float gyroZOffest = 0;
@@ -69,22 +70,9 @@ int accZVals[2] = { 0,0 };
 
 //Testing
 float encoderCounts = 0;
+float deltaEncoderLeft = 0;
+float deltaEncoderRight = 0;
 
-void getRVel(float deltaCountsRight, float deltaCountsLeft, float timeEllapsed) {
-
-	
-	float rVelRight = deltaCountsRight*wheelCirc/(timeEllapsed*encoderRes);
-	float rVelLeft = deltaCountsLeft*wheelCirc / (timeEllapsed*encoderRes);
-
-	float rVelCenter = 0.5f*(rVelRight + rVelLeft);
-	float rVelAng = (1.0f / baseWidth)*(rVelRight - rVelLeft);
-
-	rVelocities[0] = rVelCenter;
-	rVelocities[1] = rVelRight;
-	rVelocities[2] = rVelLeft;
-	rVelocities[3] = rVelAng;
-
-}
 
 float straightLineCalc(float distance) {
 
@@ -157,34 +145,44 @@ void updatePosition() {
 	float encoderLeft = encoders.getCountsLeft();
 	float encoderRight = encoders.getCountsRight();
 	//Get difference between previous and current encoder counts
-	float deltaEncoderLeft = encoderLeft - prevCountsLeft;
-	float deltaEncoderRight = encoderRight - prevCountsRight;
+	deltaEncoderLeft = encoderLeft - prevCountsLeft;
+	deltaEncoderRight = encoderRight - prevCountsRight;
+
+	float gyroRot = getZRot(timeSinceLast);
+
+	float deltaRight = wheelCirc*deltaEncoderRight / encoderRes;
+	float deltaLeft = wheelCirc*deltaEncoderLeft / encoderRes;
+	float deltaCenter = 0.5f*(deltaRight + deltaLeft);
+	float deltaTheta = (1.0f / baseWidth)*(deltaRight - deltaLeft);
+
+
+	float filteredAngle = angCompFilter(timeSinceLast, deltaTheta);
+
+	float thetaDiff = deltaTheta - gyroRot*timeSinceLast;
 
 	//Save current counts for use in next updatePosition()
 	prevCountsRight = encoderRight;
 	prevCountsLeft = encoderLeft;
 
 	//Get velocities from delta encoder values
-	getRVel(deltaEncoderRight, deltaEncoderLeft, timeSinceLast);
+	//getRVel(deltaEncoderRight, deltaEncoderLeft, timeSinceLast);
 
 	float gyroAngVel = getZRot(timeSinceLast);
 	//rVelocities[3] = (rVelocities[3] + gyroAngVel) / 2.0f;
-	float timeTest = millis();
-	delay(20);
-	float timeTestEnd = millis() - timeTest;
+	
 
 	//Robot Coordinate Frame Pose
-	rCurrentPose[0] = rPrevPose[0] + rVelocities[0] * timeTestEnd;
+	rCurrentPose[0] = rPrevPose[0] + deltaCenter;
 	rCurrentPose[1] = 0.0f;
 	//rCurrentPose[2] = angCompFilter(timeSinceLast);
-	rCurrentPose[2] = rPrevPose[2] + rVelocities[3] * timeTestEnd;
+	rCurrentPose[2] = filteredAngle;
 
 	//Constrain angle(rCurrentPose[2]) between 0 and 2*pi
-	if (rCurrentPose[2] < 0.0f) {
-		rCurrentPose[2] = 2.0f * pi;
+	if (rCurrentPose[2] < -2.0*pi) {
+		rCurrentPose[2] += 2.0f * pi;
 	}
 	else if (rCurrentPose[2] > 2.0f * pi) {
-		rCurrentPose[2] = 0.0f;
+		rCurrentPose[2] -= 2.0f*pi;
 	}
 	
 	//Global Coordinate Frame Pose
@@ -195,16 +193,11 @@ void updatePosition() {
 
 
 	//Update robot pose in the global coordinate frame
-	gCurrentPose[0] = gPrevPose[0] + rVelocities[0] * timeTestEnd*cos(rCurrentPose[2]);
-	gCurrentPose[1] = gPrevPose[1] + rVelocities[0] * timeTestEnd*sin(rCurrentPose[2]);
+	gCurrentPose[0] = gPrevPose[0] + deltaCenter*cos(rCurrentPose[2]);
+	gCurrentPose[1] = gPrevPose[1] + deltaCenter*sin(rCurrentPose[2]);
 	gCurrentPose[2] = rCurrentPose[2];
 
-	if (gCurrentPose[2] < 0.0f) {
-		gCurrentPose[2] = 2.0f * pi;
-	}
-	else if (gCurrentPose[2] > 2.0f * pi) {
-		gCurrentPose[2] = 0.0f;
-	}
+
 
 
 	prevTime = millis();
@@ -220,18 +213,13 @@ void updatePosition() {
 
 }
 //Complimentary filter
-float angCompFilter(float timeEllapsed) {
+float angCompFilter(float timeEllapsed, float theta) {
 
-	//Need accelerometer values
-	getAccValues();
-
-	//Calculate the angle between Y and X accel values
-	float rotAcc = atan2(accYVals[0], accXVals[0]); //Angle according to the acceleromter
 	//Gyro rotation about Z axis
 	float zGyro = getZRot(timeEllapsed); //Angular velocity according to the gyro
 
 	//Apply complimentary filter to gyrosocope and accelerometer values
-	float imuAngVal = COMP_F_A*(rPrevPose[2] + zGyro*timeEllapsed) + (1.0f - COMP_F_A)*(rVelocities[3]*timeEllapsed);
+	float imuAngVal = COMP_F_A*(rPrevPose[2] + zGyro*timeEllapsed) + (1.0f - COMP_F_A)*(theta);
 
 	return imuAngVal;
 
@@ -274,8 +262,9 @@ void courseCorrection(int waypoint) {
 	float yErr;
 	float xErr;
 
+	
 	for (int i = 0; i < 2; i++) {
-		distVec[i] = gCurrentPose[i] - gPath[waypoint][i];
+		distVec[i] = gPath[waypoint][i] - gCurrentPose[i];
 	}
 
 	float dist;
@@ -292,16 +281,34 @@ void courseCorrection(int waypoint) {
 		angleToWaypoint = rCurrentPose[2] + gPath[waypoint][2];
 	}
 	else if (distVec[0] != 0 || distVec[0] != 0) {
-		angleToWaypoint = atan2(distVec[0], distVec[1]);
+		angleToWaypoint = atan2(distVec[1], distVec[0]);
 	}
 
 	if (rPathType == Path::DIRECT) {
-		rotateInPlace(angleToWaypoint);
-		moveToLocation(waypoint);
+		float encoderDeltas = deltaEncoderRight - deltaEncoderLeft;
+		
+		if(encoderDeltas > 0.0f) {
+
+			leftMotorSpeed += 5;
+			rightMotorSpeed -= 5;
+		}
+		else if (encoderDeltas < 0.0f) {
+		
+			leftMotorSpeed -= 5;
+			rightMotorSpeed += 5;
+		}
+
+		if (abs(angleToWaypoint) > 1.0) {
+			motors.setSpeeds(0, 0);
+			rotateInPlace(angleToWaypoint);
+			delay(10);
+		}
 
 
 	} else if (rPathType == Path::CURVE)  {
 	
+
+
 	}
 	
 
@@ -340,8 +347,29 @@ void rotateInPlace(float angle) {
 }
 
 
-//Not used currently
 void moveToLocation(int waypoint) {
+
+	leftMotorSpeed = 100;
+	rightMotorSpeed = 100;
+	float xTol, yTol;
+	xTol = 0.5;
+	yTol = 0.5;
+
+	while ((gCurrentPose[0] <= gPath[waypoint][0] - 0.5 || gCurrentPose[0] >= gPath[waypoint][0] + 0.5)) {
+		motors.setSpeeds(leftMotorSpeed, rightMotorSpeed);
+		updatePosition();
+		courseCorrection(waypoint);
+
+	}
+
+	while ((gCurrentPose[2] <= gPath[waypoint][2] - 0.2) || (gCurrentPose[2] >= gPath[waypoint][0] + 0.2)) {
+		updatePosition();
+		courseCorrection(waypoint);
+	}
+
+	motors.setSpeeds(0, 0);
+	
+
 
 
 }
@@ -391,8 +419,8 @@ void getAccValues() {
 
 void setup()
 {
-	Serial.begin(9600);
-	while (!Serial) {}
+	//Serial.begin(9600);
+	//while (!Serial) {}
 	//enable communication to I2C devices
 	Wire.begin();
 
@@ -406,7 +434,7 @@ void setup()
 	//Enable accelerometer with default values (+/- 2g)
 	acc.init();
 	acc.enableDefault();
-	accCalibrate();
+	//accCalibrate();
 
 	//Reset encoder counts to zero
 	encoders.getCountsAndResetLeft();
@@ -425,12 +453,16 @@ void loop()
 	float volts = readBatteryMillivolts();
 	bool rightError = encoders.checkErrorRight();
 	bool leftError = encoders.checkErrorLeft();
+	rPathType = Path::DIRECT;
 
-
-	motors.setSpeeds(100, 100);
+	motors.setSpeeds(leftMotorSpeed, rightMotorSpeed);
 	delay(20);
-	updatePosition();
 
+	moveToLocation(0);
+
+	while (true) {
+		motors.setSpeeds(0, 0);
+	}
 
 
 }

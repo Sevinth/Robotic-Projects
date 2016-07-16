@@ -4,135 +4,174 @@
     <Platform Name="arduino16x" Package="pololu" Platform="avr" Architecture="avr">
       <Board Name="pololu_pololu_avr_a-star32U4" Description="Pololu A-Star 32U4" CoreFolder="C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino" VariantFullPath="C:\Program Files (x86)\Arduino\hardware\arduino\avr\variants\leonardo" McuIdePath="C:\Program Files (x86)\Arduino" McuSketchBookPath="C:\Users\Mark\Documents\Arduino" name="Pololu A-Star 32U4" vid.0="0x1ffb" pid.0="0x0101" vid.1="0x1ffb" pid.1="0x2300" upload.tool="arduino:avrdude" upload.protocol="avr109" upload.maximum_size="28672" upload.maximum_data_size="2560" upload.speed="57600" upload.disable_flushing="true" upload.use_1200bps_touch="true" upload.wait_for_upload_port="true" bootloader.tool="arduino:avrdude" bootloader.low_fuses="0xff" bootloader.high_fuses="0xd0" bootloader.extended_fuses="0xc8" bootloader.file="caterina/Caterina-A-Star.hex" bootloader.unlock_bits="0x3F" bootloader.lock_bits="0x2F" build.mcu="atmega32u4" build.f_cpu="16000000L" build.vid="0x1ffb" build.pid="0x2300" build.usb_product="&quot;Pololu A-Star 32U4&quot;" build.usb_manufacturer="&quot;Pololu Corporation&quot;" build.board="AVR_A_STAR_32U4" build.core="arduino:arduino" build.variant="arduino:leonardo" build.extra_flags="{build.usb_flags}" runtime.ide.path="C:\Program Files (x86)\Arduino" runtime.os="windows" build.system.path="C:\Users\Mark\Documents\Arduino\hardware\pololu\avr\system" runtime.ide.version="10609" target_package="pololu" target_platform="avr" runtime.hardware.path="C:\Users\Mark\Documents\Arduino\hardware\pololu" originalid="pololu_avr_a-star32U4" intellisense.tools.path="{runtime.tools.avr-gcc.path}/" intellisense.include.paths="{intellisense.tools.path}avr/include/;{intellisense.tools.path}/avr/include/avr/;{intellisense.tools.path}lib\gcc\avr\4.8.1\include" tools.atprogram.cmd.path="%AVRSTUDIO_EXE_PATH%\atbackend\atprogram" tools.atprogram.cmd.setwinpath="true" tools.atprogram.program.params.verbose="-v" tools.atprogram.program.params.quiet="-q" tools.atprogram.program.pattern="&quot;{cmd.path}&quot; -d {build.mcu} {program.verbose} {program.extra_params} program -c -f &quot;{build.path}\{build.project_name}.hex&quot;" tools.atprogram.program.xpattern="&quot;{cmd.path}&quot; {AVRSTUDIO_BACKEND_CONNECTION} -d {build.mcu} {program.verbose} {program.extra_params} program -c -f &quot;{build.path}\{build.project_name}.hex&quot;" tools.atprogram.erase.params.verbose="-v" tools.atprogram.erase.params.quiet="-q" tools.atprogram.bootloader.params.verbose="-v" tools.atprogram.bootloader.params.quiet="-q" tools.atprogram.bootloader.pattern="&quot;{cmd.path}&quot; -d {build.mcu} {bootloader.verbose}  program -c -f &quot;{runtime.ide.path}/hardware/arduino/avr/bootloaders/{bootloader.file}&quot;" version="1.5.6" compiler.warning_flags="-w" compiler.warning_flags.none="-w" compiler.warning_flags.default="" compiler.warning_flags.more="-Wall" compiler.warning_flags.all="-Wall -Wextra" compiler.path="{runtime.tools.avr-gcc.path}/bin/" compiler.c.cmd="avr-gcc" compiler.c.flags="-c -g -Os {compiler.warning_flags} -std=gnu11 -ffunction-sections -fdata-sections -MMD" compiler.c.elf.flags="{compiler.warning_flags} -Os -Wl,--gc-sections" compiler.c.elf.cmd="avr-gcc" compiler.S.flags="-c -g -x assembler-with-cpp" compiler.cpp.cmd="avr-g++" compiler.cpp.flags="-c -g -Os {compiler.warning_flags} -std=gnu++11 -fno-exceptions -ffunction-sections -fdata-sections -fno-threadsafe-statics -MMD" compiler.ar.cmd="avr-ar" compiler.ar.flags="rcs" compiler.objcopy.cmd="avr-objcopy" compiler.objcopy.eep.flags="-O ihex -j .eeprom --set-section-flags=.eeprom=alloc,load --no-change-warnings --change-section-lma .eeprom=0" compiler.elf2hex.flags="-O ihex -R .eeprom" compiler.elf2hex.cmd="avr-objcopy" compiler.ldflags="" compiler.size.cmd="avr-size" compiler.c.extra_flags="" compiler.c.elf.extra_flags="" compiler.S.extra_flags="" compiler.cpp.extra_flags="" compiler.ar.extra_flags="" compiler.objcopy.eep.extra_flags="" compiler.elf2hex.extra_flags="" recipe.c.o.pattern="&quot;{compiler.path}{compiler.c.cmd}&quot; {compiler.c.flags} -mmcu={build.mcu} -DF_CPU={build.f_cpu} -DARDUINO={runtime.ide.version} -DARDUINO_{build.board} -DARDUINO_ARCH_{build.arch} {compiler.c.extra_flags} {build.extra_flags} {includes} &quot;{source_file}&quot; -o &quot;{object_file}&quot;" recipe.cpp.o.pattern="&quot;{compiler.path}{compiler.cpp.cmd}&quot; {compiler.cpp.flags} -mmcu={build.mcu} -DF_CPU={build.f_cpu} -DARDUINO={runtime.ide.version} -DARDUINO_{build.board} -DARDUINO_ARCH_{build.arch} {compiler.cpp.extra_flags} {build.extra_flags} {includes} &quot;{source_file}&quot; -o &quot;{object_file}&quot;" recipe.S.o.pattern="&quot;{compiler.path}{compiler.c.cmd}&quot; {compiler.S.flags} -mmcu={build.mcu} -DF_CPU={build.f_cpu} -DARDUINO={runtime.ide.version} -DARDUINO_{build.board} -DARDUINO_ARCH_{build.arch} {compiler.S.extra_flags} {build.extra_flags} {includes} &quot;{source_file}&quot; -o &quot;{object_file}&quot;" archive_file_path="{build.path}/{archive_file}" recipe.ar.pattern="&quot;{compiler.path}{compiler.ar.cmd}&quot; {compiler.ar.flags} {compiler.ar.extra_flags} &quot;{archive_file_path}&quot; &quot;{object_file}&quot;" recipe.c.combine.pattern="&quot;{compiler.path}{compiler.c.elf.cmd}&quot; {compiler.c.elf.flags} -mmcu={build.mcu} {compiler.c.elf.extra_flags} -o &quot;{build.path}/{build.project_name}.elf&quot; {object_files} &quot;{build.path}/{archive_file}&quot; &quot;-L{build.path}&quot; -lm" recipe.objcopy.eep.pattern="&quot;{compiler.path}{compiler.objcopy.cmd}&quot; {compiler.objcopy.eep.flags} {compiler.objcopy.eep.extra_flags} &quot;{build.path}/{build.project_name}.elf&quot; &quot;{build.path}/{build.project_name}.eep&quot;" recipe.objcopy.hex.pattern="&quot;{compiler.path}{compiler.elf2hex.cmd}&quot; {compiler.elf2hex.flags} {compiler.elf2hex.extra_flags} &quot;{build.path}/{build.project_name}.elf&quot; &quot;{build.path}/{build.project_name}.hex&quot;" recipe.output.tmp_file="{build.project_name}.hex" recipe.output.save_file="{build.project_name}.{build.variant}.hex" recipe.size.pattern="&quot;{compiler.path}{compiler.size.cmd}&quot; -A &quot;{build.path}/{build.project_name}.elf&quot;" recipe.size.regex="^(?:\.text|\.data|\.bootloader)\s+([0-9]+).*" recipe.size.regex.data="^(?:\.data|\.bss|\.noinit)\s+([0-9]+).*" recipe.size.regex.eeprom="^(?:\.eeprom)\s+([0-9]+).*" preproc.includes.flags="-w -x c++ -M -MG -MP" recipe.preproc.includes="&quot;{compiler.path}{compiler.cpp.cmd}&quot; {compiler.cpp.flags} {preproc.includes.flags} -mmcu={build.mcu} -DF_CPU={build.f_cpu} -DARDUINO={runtime.ide.version} -DARDUINO_{build.board} -DARDUINO_ARCH_{build.arch} {compiler.cpp.extra_flags} {build.extra_flags} {includes} &quot;{source_file}&quot;" preproc.macros.flags="-w -x c++ -E -CC" recipe.preproc.macros="&quot;{compiler.path}{compiler.cpp.cmd}&quot; {compiler.cpp.flags} {preproc.macros.flags} -mmcu={build.mcu} -DF_CPU={build.f_cpu} -DARDUINO={runtime.ide.version} -DARDUINO_{build.board} -DARDUINO_ARCH_{build.arch} {compiler.cpp.extra_flags} {build.extra_flags} {includes} &quot;{source_file}&quot; -o &quot;{preprocessed_file_path}&quot;" tools.avrdude.path="{runtime.tools.avrdude.path}" tools.avrdude.cmd.path="{path}/bin/avrdude" tools.avrdude.config.path="{path}/etc/avrdude.conf" tools.avrdude.upload.params.verbose="-v" tools.avrdude.upload.params.quiet="-q -q" tools.avrdude.upload.params.noverify="-V" tools.avrdude.upload.pattern="&quot;{cmd.path}&quot; &quot;-C{config.path}&quot; {upload.verbose} {upload.verify} -p{build.mcu} -c{upload.protocol} -P{serial.port} -b{upload.speed} -D &quot;-Uflash:w:{build.path}/{build.project_name}.hex:i&quot;" tools.avrdude.program.params.verbose="-v" tools.avrdude.program.params.quiet="-q -q" tools.avrdude.program.params.noverify="-V" tools.avrdude.program.pattern="&quot;{cmd.path}&quot; &quot;-C{config.path}&quot; {program.verbose} {program.verify} -p{build.mcu} -c{protocol} {program.extra_params} &quot;-Uflash:w:{build.path}/{build.project_name}.hex:i&quot;" tools.avrdude.erase.params.verbose="-v" tools.avrdude.erase.params.quiet="-q -q" tools.avrdude.erase.pattern="&quot;{cmd.path}&quot; &quot;-C{config.path}&quot; {erase.verbose} -p{build.mcu} -c{protocol} {program.extra_params} -e -Ulock:w:{bootloader.unlock_bits}:m -Uefuse:w:{bootloader.extended_fuses}:m -Uhfuse:w:{bootloader.high_fuses}:m -Ulfuse:w:{bootloader.low_fuses}:m" tools.avrdude.bootloader.params.verbose="-v" tools.avrdude.bootloader.params.quiet="-q -q" tools.avrdude.bootloader.pattern="&quot;{cmd.path}&quot; &quot;-C{config.path}&quot; {bootloader.verbose} -p{build.mcu} -c{protocol} {program.extra_params} &quot;-Uflash:w:{runtime.platform.path}/bootloaders/{bootloader.file}:i&quot; -Ulock:w:{bootloader.lock_bits}:m" tools.avrdude_remote.upload.pattern="/usr/bin/run-avrdude /tmp/sketch.hex {upload.verbose} -p{build.mcu}" build.usb_flags="-DUSB_VID={build.vid} -DUSB_PID={build.pid} '-DUSB_MANUFACTURER={build.usb_manufacturer}' '-DUSB_PRODUCT={build.usb_product}'" vm.platform.root.path="C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\Extensions\b3x05dwk.yaq\Micro Platforms\arduino16x" usbavrpgm.name="Pololu USB AVR Programmer" usbavrpgm.communication="serial" usbavrpgm.protocol="avrispv2" usbavrpgm.program.protocol="avrispv2" usbavrpgm.program.tool="arduino:avrdude" usbavrpgm.program.extra_params="-P{serial.port}" runtime.tools.avrdude.path="C:\Program Files (x86)\Arduino\hardware\tools\avr" runtime.tools.avrdude-6.0.1-arduino5.path="C:\Program Files (x86)\Arduino\hardware\tools\avr" runtime.tools.avr-gcc.path="C:\Program Files (x86)\Arduino\hardware\tools\avr" runtime.tools.avr-gcc-4.8.1-arduino5.path="C:\Program Files (x86)\Arduino\hardware\tools\avr" runtime.vm.boardinfo.id="pololu_pololu_avr_a-star32U4" runtime.vm.boardinfo.name="pololu_pololu_avr_a-star32U4" runtime.vm.boardinfo.desc="Pololu A-Star 32U4" runtime.vm.boardinfo.src_location="C:\Users\Mark\Documents\Arduino\hardware\pololu\avr" ide.hint="For use with Arduino.cc 1.6.2+ ide" ide.location.key="Arduino16x" ide.location.ide.winreg="Arduino 1.6.x Application" ide.location.sketchbook.winreg="Arduino 1.6.x Sketchbook" ide.location.sketchbook.preferences="sketchbook.path" ide.default.revision_name="1.6.9" ide.default.version="10609" ide.default.package="arduino" ide.default.platform="avr" ide.multiplatform="true" ide.includes="arduino.h" ide.exe_name="arduino" ide.platformswithoutpackage="false" ide.includes.fallback="wprogram.h" ide.extension="ino" ide.extension.fallback="pde" ide.versionGTEQ="160" ide.exe="arduino.exe" ide.hosts="atmel" ide.url="http://arduino.cc/en/Main/Software" ide.help.reference.path="reference\arduino.cc\en\Reference" ide.help.reference.path2="reference\www.arduino.cc\en\Reference" ide.help.reference.serial="reference\www.arduino.cc\en\Serial" vm.debug="true" software="ARDUINO" ssh.user.name="root" ssh.user.default.password="arduino" ssh.host.wwwfiles.path="/www/sd" build.working_directory="{runtime.ide.path}" ide.location.preferences.portable="{runtime.ide.path}\portable" ide.location.preferences="%VM_APPDATA_LOCAL%\arduino15\preferences.txt" ide.location.preferences_fallback="%VM_APPDATA_ROAMING%\arduino15\preferences.txt" ide.location.contributions="%VM_APPDATA_LOCAL%\arduino15" ide.location.contributions_fallback="%VM_APPDATA_ROAMING%\arduino15" ide.contributions.boards.allow="true" ide.contributions.boards.ignore_unless_rewrite_found="true" ide.contributions.libraries.allow="true" ide.contributions.boards.support.urls.wiki="https://github.com/arduino/Arduino/wiki/Unofficial-list-of-3rd-party-boards-support-urls" ide.create_platforms_from_boardsTXT.teensy="build.core" ide.appid="arduino16x" location.sketchbook="C:\Users\Mark\Documents\Arduino" build.core.vmresolved="C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino" build.core.parentfolder.vmresolved="C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores" build.core.coresparentfolder.vmresolved="C:\Program Files (x86)\Arduino\hardware\arduino\avr" build.core.path="C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino" vm.core.include="arduino.h" vm.boardsource.path="C:\Users\Mark\Documents\Arduino\hardware\pololu\avr" runtime.platform.path="C:\Users\Mark\Documents\Arduino\hardware\pololu\avr" vm.platformname.name="avr" build.arch="AVR" build.variant.vmresolved="C:\Program Files (x86)\Arduino\hardware\arduino\avr\variants\leonardo" build.architecture="avr" vmresolved.compiler.path="C:\Program Files (x86)\Arduino\hardware\tools\avr\bin\" vmresolved.tools.path="C:\Program Files (x86)\Arduino\hardware\tools\avr" vm.runtime.compiler.showwarnings="false" vm.runtime.upload.verbose="false" vm.runtime.upload.verify="false" vm.runtime.compiler.auto_discover_includes="true" vm.last.buildpath="C:\Users\Mark\AppData\Local\Temp\VMicroBuilds\HW3\pololu_pololu_avr_a-star32U4" />
     </Platform>
-    <Debug EnableBreak="1" DebugEnabled="1" LocalPort="COM3" LocalPortSpeed="9600" IsGdb="0" RemotePortSpeedWrittenToDebugSource="9600" />
+    <Debug EnableBreak="1" DebugEnabled="1" LocalPort="COM3" LocalPortSpeed="9600" IsGdb="0" RemotePortSpeedWrittenToDebugSource="115200" />
     <VCCodeModel>
       <VCCodeMacros />
     </VCCodeModel>
     <BreakPoints>
-      <BreakPoint Index="1" Name="HW3.ino, line 108" Id="de86ba6e-8afa-4172-b163-2e5fe42cfb40" Enabled="1" Message="{gyroZRot}" MessageTextType="2" PreProcessedMessage="{0}" Condition="" ConditionType="1" CurrentHits="0" File="c:\robotic-projects\hw3\hw3.ino" FileLine="108" FileColumn="1" FunctionName="getZRot(float deltaTime)" FunctionLineOffset="10" FunctionColumnOffset="1" HitCountTarget="1" HitCountType="1" Language="C++" LocationType="3" Tag="&lt;vmbp Id='de86ba6e-8afa-4172-b163-2e5fe42cfb40'/&gt;" Type="1" ToString="System.__ComObject" BreakWhenHit="0">
-        <Source>101		//Read the gyro
-102		gyro.read();
-103	
-104		float gyroZRotRaw = gyro.g.z;
-105		(gyro.g.z &gt; 0) ? (gyro.g.z + gyroZOffest) : (gyro.g.z - gyroZOffest); 
-106		float gyroZeroOffset = 0;
-107		float gyroZRot = (pi/ 180.0f)*gyroZRotRaw*8.75f/1000.0f; //radians/ms
---&gt;108	
-109		//Serial.println("Gyro:");
-110		//Serial.print(gyroZRot);
-111		//Serial.println("");
-112		return gyroZRot;
-113	
-114	}
-115	
-116	
-117	//Fourth Order Runge-Kutta
-</Source>
-        <MessageVariables>
-          <MessageVariable Name="gyroZRot" Index="1" />
-        </MessageVariables>
-      </BreakPoint>
-      <BreakPoint Index="2" Name="HW3.ino, line 233" Id="1e58f74a-32ff-475e-8578-605536803639" Enabled="1" Message="{imuAngVal}{rotAcc}{zGyro}" MessageTextType="2" PreProcessedMessage="{0}{1}{2}" Condition="" ConditionType="1" CurrentHits="0" File="c:\robotic-projects\hw3\hw3.ino" FileLine="233" FileColumn="1" FunctionName="angCompFilter(float timeEllapsed)" FunctionLineOffset="12" FunctionColumnOffset="1" HitCountTarget="1" HitCountType="1" Language="C++" LocationType="3" Tag="&lt;vmbp Id='1e58f74a-32ff-475e-8578-605536803639'/&gt;" Type="1" ToString="System.__ComObject" BreakWhenHit="0">
-        <Source>226		//Calculate the angle between Y and X accel values
-227		float rotAcc = atan2(accYVals[0], accXVals[0]); //Angle according to the acceleromter
-228		//Gyro rotation about Z axis
-229		float zGyro = getZRot(timeEllapsed); //Angular velocity according to the gyro
-230	
-231		//Apply complimentary filter to gyrosocope and accelerometer values
-232		float imuAngVal = COMP_F_A*(rPrevPose[2] + zGyro*timeEllapsed) + (1.0f - COMP_F_A)*(rVelocities[3]*timeEllapsed);
---&gt;233	
-234		return imuAngVal;
-235	
-236	}
-237	
-238	void gyroCalibrate() {
-239	
-240		//Make sure there is no rotation
-241		motors.setSpeeds(0, 0);
-242		//Read the gyro
-</Source>
-        <MessageVariables>
-          <MessageVariable Name="imuAngVal" Index="1" />
-          <MessageVariable Name="rotAcc" Index="2" />
-          <MessageVariable Name="zGyro" Index="3" />
-        </MessageVariables>
-      </BreakPoint>
-      <BreakPoint Index="3" Name="HW3.ino, line 201" Id="8e77d872-c653-4601-b628-9165c9cb6fee" Enabled="1" Message="{gCurrentPose[0]}{gCurrentPose[1]}{gCurrentPose[2]}{rCurrentPose[0]}" MessageTextType="2" PreProcessedMessage="{0}{1}{2}{3}" Condition="" ConditionType="1" CurrentHits="0" File="c:\robotic-projects\hw3\hw3.ino" FileLine="201" FileColumn="1" FunctionName="updatePosition()" FunctionLineOffset="36" FunctionColumnOffset="1" HitCountTarget="1" HitCountType="1" Language="C++" LocationType="3" Tag="&lt;vmbp Id='8e77d872-c653-4601-b628-9165c9cb6fee'/&gt;" Type="1" ToString="System.__ComObject" BreakWhenHit="0">
-        <Source>194		//float rk4TimeEnd = millis() - rk4Time;
-195	
-196	
-197		//Update robot pose in the global coordinate frame
-198		gCurrentPose[0] = gPrevPose[0] + rVelocities[0] * timeTestEnd*cos(rCurrentPose[2]);
-199		gCurrentPose[1] = gPrevPose[1] + rVelocities[0] * timeTestEnd*sin(rCurrentPose[2]);
-200		gCurrentPose[2] = rCurrentPose[2];
---&gt;201	
-202		if (gCurrentPose[2] &lt; 0.0f) {
-203			gCurrentPose[2] = 2.0f * pi;
-204		}
-205		else if (gCurrentPose[2] &gt; 2.0f * pi) {
-206			gCurrentPose[2] = 0.0f;
-207		}
-208	
-209		delay(20);
-210		prevTime = millis();
+      <BreakPoint Index="1" Name="HW3.ino, line 191" Id="2bbc480a-0e49-4961-9a13-a928173da4d0" Enabled="1" Message="{gCurrentPose[0]}{gCurrentPose[1]}{gCurrentPose[2]}" MessageTextType="2" PreProcessedMessage="{0}{1}{2}" Condition="" ConditionType="1" CurrentHits="0" File="c:\robotic-projects\hw3\hw3.ino" FileLine="191" FileColumn="1" FunctionName="updatePosition()" FunctionLineOffset="48" FunctionColumnOffset="1" HitCountTarget="1" HitCountType="1" Language="C++" LocationType="3" Tag="&lt;vmbp Id='2bbc480a-0e49-4961-9a13-a928173da4d0'/&gt;" Type="1" ToString="System.__ComObject" BreakWhenHit="0">
+        <Source>184		else if (rCurrentPose[2] &gt; 2.0f * pi) {
+185			rCurrentPose[2] -= 2.0f*pi;
+186		}
+187		
+188		//Global Coordinate Frame Pose
+189		
+190		//float rk4Time = millis();
+--&gt;191		//float *deltaPosEst = rk4(timeSinceLast);
+192		//float rk4TimeEnd = millis() - rk4Time;
+193	
+194	
+195		//Update robot pose in the global coordinate frame
+196		gCurrentPose[0] = gPrevPose[0] + deltaCenter*cos(rCurrentPose[2]);
+197		gCurrentPose[1] = gPrevPose[1] + deltaCenter*sin(rCurrentPose[2]);
+198		gCurrentPose[2] = rCurrentPose[2];
+199	
+200	
 </Source>
         <MessageVariables>
           <MessageVariable Name="gCurrentPose[0]" Index="1" />
           <MessageVariable Name="gCurrentPose[1]" Index="2" />
           <MessageVariable Name="gCurrentPose[2]" Index="3" />
-          <MessageVariable Name="rCurrentPose[0]" Index="4" />
         </MessageVariables>
       </BreakPoint>
-      <BreakPoint Index="4" Name="HW3.ino, line 166" Id="56f33035-dfeb-48d3-8b8b-c8c25fdd307e" Enabled="1" Message="{encoderLeft}{encoderRight}{deltaEncoderRight}{deltaEncoderLeft}" MessageTextType="2" PreProcessedMessage="{0}{1}{2}{3}" Condition="" ConditionType="1" CurrentHits="0" File="c:\robotic-projects\hw3\hw3.ino" FileLine="166" FileColumn="1" FunctionName="updatePosition()" FunctionLineOffset="14" FunctionColumnOffset="1" HitCountTarget="1" HitCountType="1" Language="C++" LocationType="3" Tag="&lt;vmbp Id='56f33035-dfeb-48d3-8b8b-c8c25fdd307e'/&gt;" Type="1" ToString="System.__ComObject" BreakWhenHit="0">
-        <Source>159		//Get difference between previous and current encoder counts
-160		float deltaEncoderLeft = encoderLeft - prevCountsLeft;
-161		float deltaEncoderRight = encoderRight - prevCountsRight;
-162	
-163		//Save current counts for use in next updatePosition()
-164		prevCountsRight = encoderRight;
-165		prevCountsLeft = encoderLeft;
---&gt;166	
-167		//Get velocities from delta encoder values
-168		getRVel(deltaEncoderRight, deltaEncoderLeft, timeSinceLast);
-169	
-170		float gyroAngVel = getZRot(timeSinceLast);
-171		//rVelocities[3] = (rVelocities[3] + gyroAngVel) / 2.0f;
-172		float timeTest = millis();
-173		delay(20);
-174		float timeTestEnd = millis() - timeTest;
-175	
+      <BreakPoint Index="2" Name="HW3.ino, line 286" Id="55ef3e0e-7bc2-4a86-8db5-b8c4ad580522" Enabled="1" Message="{angleToWaypoint}" MessageTextType="2" PreProcessedMessage="{0}" Condition="" ConditionType="1" CurrentHits="0" File="c:\robotic-projects\hw3\hw3.ino" FileLine="286" FileColumn="1" FunctionName="courseCorrection(int waypoint)" FunctionLineOffset="29" FunctionColumnOffset="1" HitCountTarget="1" HitCountType="1" Language="C++" LocationType="3" Tag="&lt;vmbp Id='55ef3e0e-7bc2-4a86-8db5-b8c4ad580522'/&gt;" Type="1" ToString="System.__ComObject" BreakWhenHit="0">
+        <Source>279		if (distVec[0] == 0 &amp;&amp; distVec[1] == 0)  {
+280	
+281			angleToWaypoint = rCurrentPose[2] + gPath[waypoint][2];
+282		}
+283		else if (distVec[0] != 0 || distVec[0] != 0) {
+284			angleToWaypoint = atan2(distVec[1], distVec[0]);
+285		}
+--&gt;286	
+287		if (rPathType == Path::DIRECT) {
+288			float encoderDeltas = deltaEncoderRight - deltaEncoderLeft;
+289			
+290			if(encoderDeltas &gt; 0.0f) {
+291	
+292				leftMotorSpeed += 5;
+293				rightMotorSpeed -= 5;
+294			}
+295			else if (encoderDeltas &lt; 0.0f) {
 </Source>
         <MessageVariables>
-          <MessageVariable Name="encoderLeft" Index="1" />
-          <MessageVariable Name="encoderRight" Index="2" />
-          <MessageVariable Name="deltaEncoderRight" Index="3" />
-          <MessageVariable Name="deltaEncoderLeft" Index="4" />
+          <MessageVariable Name="angleToWaypoint" Index="1" />
         </MessageVariables>
       </BreakPoint>
-      <BreakPoint Index="5" Name="HW3.ino, line 169" Id="0dcf4d11-4900-4709-8946-b89209c2df28" Enabled="1" Message="{rVelocities[0]}{rVelocities[1]}{rVelocities[2]}{rVelocities[3]}" MessageTextType="2" PreProcessedMessage="{0}{1}{2}{3}" Condition="" ConditionType="1" CurrentHits="0" File="c:\robotic-projects\hw3\hw3.ino" FileLine="169" FileColumn="1" FunctionName="updatePosition()" FunctionLineOffset="17" FunctionColumnOffset="1" HitCountTarget="1" HitCountType="1" Language="C++" LocationType="3" Tag="&lt;vmbp Id='0dcf4d11-4900-4709-8946-b89209c2df28'/&gt;" Type="1" ToString="System.__ComObject" BreakWhenHit="0">
-        <Source>162	
+      <BreakPoint Index="3" Name="HW3.ino, line 361" Id="efe0ccae-0dc3-45af-855d-13ff918104d5" Enabled="1" Message="{gCurrentPose[0]}{gCurrentPose[1]}{gCurrentPose[2]}" MessageTextType="2" PreProcessedMessage="{0}{1}{2}" Condition="" ConditionType="1" CurrentHits="0" File="c:\robotic-projects\hw3\hw3.ino" FileLine="361" FileColumn="1" FunctionName="moveToLocation(int waypoint)" FunctionLineOffset="13" FunctionColumnOffset="1" HitCountTarget="1" HitCountType="1" Language="C++" LocationType="3" Tag="&lt;vmbp Id='efe0ccae-0dc3-45af-855d-13ff918104d5'/&gt;" Type="1" ToString="System.__ComObject" BreakWhenHit="0">
+        <Source>354		float xTol, yTol;
+355		xTol = 0.5;
+356		yTol = 0.5;
+357	
+358		while ((gCurrentPose[0] &lt;= gPath[waypoint][0] - 0.5 || gCurrentPose[0] &gt;= gPath[waypoint][0] + 0.5)) {
+359			motors.setSpeeds(leftMotorSpeed, rightMotorSpeed);
+360			updatePosition();
+--&gt;361			courseCorrection(waypoint);
+362	
+363		}
+364	
+365		while ((gCurrentPose[2] &lt;= gPath[waypoint][2] - 0.2) || (gCurrentPose[2] &gt;= gPath[waypoint][0] + 0.2)) {
+366			updatePosition();
+367			courseCorrection(waypoint);
+368		}
+369	
+370		motors.setSpeeds(0, 0);
+</Source>
+        <MessageVariables>
+          <MessageVariable Name="gCurrentPose[0]" Index="1" />
+          <MessageVariable Name="gCurrentPose[1]" Index="2" />
+          <MessageVariable Name="gCurrentPose[2]" Index="3" />
+        </MessageVariables>
+      </BreakPoint>
+      <BreakPoint Index="4" Name="HW3.ino, line 101" Id="e8be0eeb-5f73-4a3a-8e0b-2a53a83c6066" Enabled="1" Message="{gyroZRot}" MessageTextType="2" PreProcessedMessage="{0}" Condition="" ConditionType="1" CurrentHits="0" File="c:\robotic-projects\hw3\hw3.ino" FileLine="101" FileColumn="1" FunctionName="getZRot(float deltaTime)" FunctionLineOffset="15" FunctionColumnOffset="1" HitCountTarget="1" HitCountType="1" Language="C++" LocationType="3" Tag="&lt;vmbp Id='e8be0eeb-5f73-4a3a-8e0b-2a53a83c6066'/&gt;" Type="1" ToString="System.__ComObject" BreakWhenHit="0">
+        <Source>94		float gyroZeroOffset = 0;
+95		float gyroZRot = (pi/ 180.0f)*gyroZRotRaw*8.75f/1000.0f; //radians/ms
+96	
+97		//Serial.println("Gyro:");
+98		//Serial.print(gyroZRot);
+99		//Serial.println("");
+100		return gyroZRot;
+--&gt;101	
+102	}
+103	
+104	
+105	//Fourth Order Runge-Kutta
+106	float *rk4(float timeEllapsed) {
+107	
+108		float k1[4] = { 0,0,0,0 };
+109		float k2[4] = { 0,0,0,0 };
+110		float k3[4] = { 0,0,0,0 };
+</Source>
+        <MessageVariables>
+          <MessageVariable Name="gyroZRot" Index="1" />
+        </MessageVariables>
+      </BreakPoint>
+      <BreakPoint Index="5" Name="HW3.ino, line 162" Id="449407c9-f257-47a5-9f3e-18348a01cedf" Enabled="1" Message="{thetaDiff}" MessageTextType="2" PreProcessedMessage="{0}" Condition="" ConditionType="1" CurrentHits="0" File="c:\robotic-projects\hw3\hw3.ino" FileLine="162" FileColumn="1" FunctionName="updatePosition()" FunctionLineOffset="21" FunctionColumnOffset="1" HitCountTarget="1" HitCountType="1" Language="C++" LocationType="3" Tag="&lt;vmbp Id='449407c9-f257-47a5-9f3e-18348a01cedf'/&gt;" Type="1" ToString="System.__ComObject" BreakWhenHit="0">
+        <Source>155		float deltaCenter = 0.5f*(deltaRight + deltaLeft);
+156		float deltaTheta = (1.0f / baseWidth)*(deltaRight - deltaLeft);
+157	
+158	
+159		float filteredAngle = angCompFilter(timeSinceLast, deltaTheta);
+160	
+161		float thetaDiff = deltaTheta - gyroRot*timeSinceLast;
+--&gt;162	
 163		//Save current counts for use in next updatePosition()
 164		prevCountsRight = encoderRight;
 165		prevCountsLeft = encoderLeft;
 166	
 167		//Get velocities from delta encoder values
-168		getRVel(deltaEncoderRight, deltaEncoderLeft, timeSinceLast);
---&gt;169	
+168		//getRVel(deltaEncoderRight, deltaEncoderLeft, timeSinceLast);
+169	
 170		float gyroAngVel = getZRot(timeSinceLast);
 171		//rVelocities[3] = (rVelocities[3] + gyroAngVel) / 2.0f;
-172		float timeTest = millis();
-173		delay(20);
-174		float timeTestEnd = millis() - timeTest;
-175	
-176		//Robot Coordinate Frame Pose
-177		rCurrentPose[0] = rPrevPose[0] + rVelocities[0] * timeTestEnd;
-178		rCurrentPose[1] = 0.0f;
 </Source>
         <MessageVariables>
-          <MessageVariable Name="rVelocities[0]" Index="1" />
-          <MessageVariable Name="rVelocities[1]" Index="2" />
-          <MessageVariable Name="rVelocities[2]" Index="3" />
-          <MessageVariable Name="rVelocities[3]" Index="4" />
+          <MessageVariable Name="thetaDiff" Index="1" />
+        </MessageVariables>
+      </BreakPoint>
+      <BreakPoint Index="6" Name="HW3.ino, line 323" Id="c6912636-1dec-495f-b16f-35e1a9bc38fa" Enabled="1" Message="{angle}" MessageTextType="2" PreProcessedMessage="{0}" Condition="" ConditionType="1" CurrentHits="0" File="c:\robotic-projects\hw3\hw3.ino" FileLine="323" FileColumn="1" FunctionName="rotateInPlace(float angle)" FunctionLineOffset="5" FunctionColumnOffset="1" HitCountTarget="1" HitCountType="1" Language="C++" LocationType="3" Tag="&lt;vmbp Id='c6912636-1dec-495f-b16f-35e1a9bc38fa'/&gt;" Type="1" ToString="System.__ComObject" BreakWhenHit="0">
+        <Source>316	}
+317	
+318	//Not used currently
+319	void rotateInPlace(float angle) {
+320	
+321		float leftSpeed = 0;
+322		float rightSpeed = 0;
+--&gt;323	
+324		if (angle &gt; 0) {
+325			leftSpeed = -200;
+326			rightSpeed = 200;
+327	
+328			while (rCurrentPose[2] &lt;= angle) {
+329				motors.setSpeeds(leftSpeed, rightSpeed);
+330				updatePosition();
+331			}
+332		}
+</Source>
+        <MessageVariables>
+          <MessageVariable Name="angle" Index="1" />
+        </MessageVariables>
+      </BreakPoint>
+      <BreakPoint Index="7" Name="HW3.ino, line 217" Id="ebf1b0af-3ed3-44f2-9728-43c27ea988e7" Enabled="1" Message="{timeEllapsed}" MessageTextType="2" PreProcessedMessage="{0}" Condition="" ConditionType="1" CurrentHits="0" File="c:\robotic-projects\hw3\hw3.ino" FileLine="217" FileColumn="1" FunctionName="angCompFilter(float timeEllapsed, float theta)" FunctionLineOffset="2" FunctionColumnOffset="1" HitCountTarget="1" HitCountType="1" Language="C++" LocationType="3" Tag="&lt;vmbp Id='ebf1b0af-3ed3-44f2-9728-43c27ea988e7'/&gt;" Type="1" ToString="System.__ComObject" BreakWhenHit="0">
+        <Source>210		}
+211	
+212		float timeEnd = millis() - timeBegin;
+213	
+214	}
+215	//Complimentary filter
+216	float angCompFilter(float timeEllapsed, float theta) {
+--&gt;217	
+218		//Gyro rotation about Z axis
+219		float zGyro = getZRot(timeEllapsed); //Angular velocity according to the gyro
+220	
+221		//Apply complimentary filter to gyrosocope and accelerometer values
+222		float imuAngVal = COMP_F_A*(rPrevPose[2] + zGyro*timeEllapsed) + (1.0f - COMP_F_A)*(theta);
+223	
+224		return imuAngVal;
+225	
+226	}
+</Source>
+        <MessageVariables>
+          <MessageVariable Name="timeEllapsed" Index="1" />
         </MessageVariables>
       </BreakPoint>
     </BreakPoints>
