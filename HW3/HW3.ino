@@ -5,7 +5,7 @@
 #include <math.h>
 #include <float.h>
 
-#define COMP_F_A 0.3f
+#define COMP_F_A 0.98f
 #define COMP_F_B 0.5f
 
 Zumo32U4Encoders encoders;
@@ -20,6 +20,9 @@ struct Path {
 	float curveRadius;
 	float pathLength;
 };
+
+int prevCountsRight  = 0;
+int prevCountsLeft = 0;
 
 //Physical Constants
 const float pi = 4.0f * atanf(1.0f);
@@ -101,7 +104,7 @@ float getZRot(float deltaTime) {
 	float gyroZRotRaw = gyro.g.z;
 	(gyro.g.z > 0) ? (gyro.g.z + gyroZOffest) : (gyro.g.z - gyroZOffest); 
 	float gyroZeroOffset = 0;
-	float gyroZRot = (1.0f/ 57295.7795131f)*gyroZRotRaw*8.75f/1000.0f; //radians/ms
+	float gyroZRot = (pi/ 180.0f)*gyroZRotRaw*8.75f/1000.0f; //radians/ms
 
 	//Serial.println("Gyro:");
 	//Serial.print(gyroZRot);
@@ -150,10 +153,17 @@ void updatePosition() {
 	float timeBegin = millis();
 	timeSinceLast = millis() - prevTime;
 
-	float encoderLeft = encoders.getCountsAndResetLeft();
-	float encoderRight = encoders.getCountsAndResetRight();
+	float encoderLeft = encoders.getCountsLeft();
+	float encoderRight = encoders.getCountsRight();
 
-	getRVel(encoderRight, encoderLeft, timeSinceLast);
+	float deltaEncoderLeft = encoderLeft - prevCountsLeft;
+	float deltaEncoderRight = encoderRight - prevCountsRight;
+
+	prevCountsRight = encoderRight;
+	prevCountsLeft = encoderLeft;
+
+
+	getRVel(deltaEncoderRight, deltaEncoderLeft, timeSinceLast);
 
 	float gyroAngVel = getZRot(timeSinceLast);
 
@@ -206,11 +216,12 @@ float angCompFilter(float timeEllapsed) {
 	getAccValues();
 
 	//Calculate the angle between Y and X accel values
-	float rotAcc = atan2(accYVals[0], accXVals[0]);
+	float rotAcc = atan2(accYVals[0], accXVals[0]); //Angle according to the acceleromter
 	//Gyro rotation about Z axis
-	float zGyro = getZRot(timeEllapsed);
-	//Apply computational filter to gyrosocope and accelerometer values
-	float imuAngVal = COMP_F_A*(rPrevPose[2] + zGyro*timeEllapsed) + (1.0f - COMP_F_A)*(rotAcc);
+	float zGyro = getZRot(timeEllapsed); //Angular velocity according to the gyro
+
+	//Apply complimentary filter to gyrosocope and accelerometer values
+	float imuAngVal = COMP_F_A*(rPrevPose[2] + zGyro*timeEllapsed) + (1.0f - COMP_F_A)*(rVelocities[3]*timeEllapsed);
 
 	return imuAngVal;
 
@@ -330,7 +341,7 @@ void accCalibrate() {
 
 	for (int i = 0; i < nSamples; i++) {
 		acc.read();
-		delay(1);
+		delay(10);
 		accReadX += acc.a.x;
 		accReadY += acc.a.y;
 		accReadZ += acc.a.z;
