@@ -9,72 +9,47 @@
       <VCCodeMacros />
     </VCCodeModel>
     <BreakPoints>
-      <BreakPoint Index="1" Name="HW3.ino, line 203" Id="2bbc480a-0e49-4961-9a13-a928173da4d0" Enabled="1" Message="{gCurrentPose[0]}{gCurrentPose[1]}{gCurrentPose[2]}" MessageTextType="2" PreProcessedMessage="{0}{1}{2}" Condition="" ConditionType="1" CurrentHits="0" File="c:\robotic-projects\hw3\hw3.ino" FileLine="203" FileColumn="1" FunctionName="updatePosition()" FunctionLineOffset="53" FunctionColumnOffset="1" HitCountTarget="1" HitCountType="1" Language="C++" LocationType="3" Tag="&lt;vmbp Id='2bbc480a-0e49-4961-9a13-a928173da4d0'/&gt;" Type="1" ToString="System.__ComObject" BreakWhenHit="0">
-        <Source>196		else if (rCurrentPose[2] &gt; 2.0f * pi) {
-197			rCurrentPose[2] = 0.0f;
-198		}
-199		
-200		//Global Coordinate Frame Pose
-201		
-202		//float rk4Time = millis();
---&gt;203		//float *deltaPosEst = rk4(timeSinceLast);
-204		//float rk4TimeEnd = millis() - rk4Time;
-205	
-206	
-207		//Update robot pose in the global coordinate frame
-208		gCurrentPose[0] = gPrevPose[0] + deltaCenter*cos(rCurrentPose[2]);
-209		gCurrentPose[1] = gPrevPose[1] + deltaCenter*sin(rCurrentPose[2]);
-210		gCurrentPose[2] = rCurrentPose[2];
-211	
-212	
-</Source>
-        <MessageVariables>
-          <MessageVariable Name="gCurrentPose[0]" Index="1" />
-          <MessageVariable Name="gCurrentPose[1]" Index="2" />
-          <MessageVariable Name="gCurrentPose[2]" Index="3" />
-        </MessageVariables>
-      </BreakPoint>
-      <BreakPoint Index="2" Name="HW3.ino, line 310" Id="55ef3e0e-7bc2-4a86-8db5-b8c4ad580522" Enabled="1" Message="{angleToWaypoint}" MessageTextType="2" PreProcessedMessage="{0}" Condition="" ConditionType="1" CurrentHits="0" File="c:\robotic-projects\hw3\hw3.ino" FileLine="310" FileColumn="1" FunctionName="courseCorrection(int waypoint)" FunctionLineOffset="41" FunctionColumnOffset="1" HitCountTarget="1" HitCountType="1" Language="C++" LocationType="3" Tag="&lt;vmbp Id='55ef3e0e-7bc2-4a86-8db5-b8c4ad580522'/&gt;" Type="1" ToString="System.__ComObject" BreakWhenHit="0">
-        <Source>303				angleToWaypoint *= -1;
-304				turnDir = -1; //Left Turn
-305			} else if (angleToWaypoint &gt; 0.0f) {
-306			
-307				turnDir = 1;
-308			}
-309		}
---&gt;310	
-311		if (rPathType == Path::DIRECT) {
-312			float encoderDeltas = deltaEncoderRight - deltaEncoderLeft;
-313			
-314			if(encoderDeltas &gt; 0.0f) {
-315	
-316				leftMotorSpeed += 5;
-317				rightMotorSpeed -= 5;
-318			}
-319			else if (encoderDeltas &lt; 0.0f) {
+      <BreakPoint Index="1" Name="HW3.ino, line 338" Id="55ef3e0e-7bc2-4a86-8db5-b8c4ad580522" Enabled="1" Message="{angleToWaypoint}" MessageTextType="2" PreProcessedMessage="{0}" Condition="" ConditionType="1" CurrentHits="0" File="c:\robotic-projects\hw3\hw3.ino" FileLine="338" FileColumn="1" FunctionName="courseCorrection(int waypoint)" FunctionLineOffset="41" FunctionColumnOffset="1" HitCountTarget="1" HitCountType="1" Language="C++" LocationType="3" Tag="&lt;vmbp Id='55ef3e0e-7bc2-4a86-8db5-b8c4ad580522'/&gt;" Type="1" ToString="System.__ComObject" BreakWhenHit="0">
+        <Source>331				angleToWaypoint *= -1;
+332				turnDir = -1; //Left Turn
+333			} else if (angleToWaypoint &gt; 0.0f) {
+334			
+335				turnDir = 1;
+336			}
+337		}
+--&gt;338	
+339		if (rPathType == Path::DIRECT) {
+340			float encoderDeltas = deltaEncoderRight - deltaEncoderLeft;
+341			
+342			if(encoderDeltas &gt; 0.0f) {
+343	
+344				leftMotorSpeed += 5;
+345				rightMotorSpeed -= 5;
+346			}
+347			else if (encoderDeltas &lt; 0.0f) {
 </Source>
         <MessageVariables>
           <MessageVariable Name="angleToWaypoint" Index="1" />
         </MessageVariables>
       </BreakPoint>
-      <BreakPoint Index="3" Name="HW3.ino, line 392" Id="efe0ccae-0dc3-45af-855d-13ff918104d5" Enabled="1" Message="{gCurrentPose[0]}{gCurrentPose[1]}{gCurrentPose[2]}" MessageTextType="2" PreProcessedMessage="{0}{1}{2}" Condition="" ConditionType="1" CurrentHits="0" File="c:\robotic-projects\hw3\hw3.ino" FileLine="392" FileColumn="1" FunctionName="moveToLocation(int waypoint)" FunctionLineOffset="12" FunctionColumnOffset="1" HitCountTarget="1" HitCountType="1" Language="C++" LocationType="3" Tag="&lt;vmbp Id='efe0ccae-0dc3-45af-855d-13ff918104d5'/&gt;" Type="1" ToString="System.__ComObject" BreakWhenHit="0">
-        <Source>385		yTol = 0.5;
-386	
-387		if (rPathType == Path::DIRECT) {
-388	
-389			while ((gCurrentPose[0] &lt;= gPath[waypoint][0] - 0.5 || gCurrentPose[0] &gt;= gPath[waypoint][0] + 0.5)) {
-390				motors.setSpeeds(leftMotorSpeed, rightMotorSpeed);
-391				updatePosition();
---&gt;392				courseCorrection(waypoint);
-393	
-394			}
-395	
-396	
-397			motors.setSpeeds(0, 0);
-398		}
-399		else if (rPathType == Path::CURVE) {
-400	
-401			rightMotorSpeed = 150;
+      <BreakPoint Index="2" Name="HW3.ino, line 426" Id="efe0ccae-0dc3-45af-855d-13ff918104d5" Enabled="1" Message="{gCurrentPose[0]}{gCurrentPose[1]}{gCurrentPose[2]}" MessageTextType="2" PreProcessedMessage="{0}{1}{2}" Condition="" ConditionType="1" CurrentHits="0" File="c:\robotic-projects\hw3\hw3.ino" FileLine="426" FileColumn="1" FunctionName="moveToLocation(int waypoint)" FunctionLineOffset="12" FunctionColumnOffset="1" HitCountTarget="1" HitCountType="1" Language="C++" LocationType="3" Tag="&lt;vmbp Id='efe0ccae-0dc3-45af-855d-13ff918104d5'/&gt;" Type="1" ToString="System.__ComObject" BreakWhenHit="0">
+        <Source>419		yTol = 0.5;
+420	
+421		if (rPathType == Path::DIRECT) {
+422	
+423			while ((gCurrentPose[0] &lt;= gPath[waypoint][0] - 0.5 || gCurrentPose[0] &gt;= gPath[waypoint][0] + 0.5)) {
+424				motors.setSpeeds(leftMotorSpeed, rightMotorSpeed);
+425				updatePosition();
+--&gt;426				courseCorrection(waypoint);
+427	
+428			}
+429	
+430	
+431			motors.setSpeeds(0, 0);
+432		}
+433		else if (rPathType == Path::CURVE) {
+434	
+435			rightMotorSpeed = 100;
 </Source>
         <MessageVariables>
           <MessageVariable Name="gCurrentPose[0]" Index="1" />
@@ -82,142 +57,169 @@
           <MessageVariable Name="gCurrentPose[2]" Index="3" />
         </MessageVariables>
       </BreakPoint>
-      <BreakPoint Index="4" Name="HW3.ino, line 101" Id="e8be0eeb-5f73-4a3a-8e0b-2a53a83c6066" Enabled="1" Message="{gyroZRot}" MessageTextType="2" PreProcessedMessage="{0}" Condition="" ConditionType="1" CurrentHits="0" File="c:\robotic-projects\hw3\hw3.ino" FileLine="101" FileColumn="1" FunctionName="getZRot(float deltaTime)" FunctionLineOffset="15" FunctionColumnOffset="1" HitCountTarget="1" HitCountType="1" Language="C++" LocationType="3" Tag="&lt;vmbp Id='e8be0eeb-5f73-4a3a-8e0b-2a53a83c6066'/&gt;" Type="1" ToString="System.__ComObject" BreakWhenHit="0">
-        <Source>94		float gyroZeroOffset = 0;
-95		float gyroZRot = (pi/ 180.0f)*gyroZRotRaw*8.75f/1000.0f; //radians/ms
-96	
-97		//Serial.println("Gyro:");
-98		//Serial.print(gyroZRot);
-99		//Serial.println("");
-100		return gyroZRot;
---&gt;101	
-102	}
-103	
-104	
-105	//Fourth Order Runge-Kutta
-106	float *rk4(float timeEllapsed) {
-107	
-108		float k1[4] = { 0,0,0,0 };
-109		float k2[4] = { 0,0,0,0 };
-110		float k3[4] = { 0,0,0,0 };
+      <BreakPoint Index="3" Name="HW3.ino, line 126" Id="e8be0eeb-5f73-4a3a-8e0b-2a53a83c6066" Enabled="1" Message="{gyroZRot}" MessageTextType="2" PreProcessedMessage="{0}" Condition="" ConditionType="1" CurrentHits="0" File="c:\robotic-projects\hw3\hw3.ino" FileLine="126" FileColumn="1" FunctionName="getZRot(float deltaTime)" FunctionLineOffset="15" FunctionColumnOffset="1" HitCountTarget="1" HitCountType="1" Language="C++" LocationType="3" Tag="&lt;vmbp Id='e8be0eeb-5f73-4a3a-8e0b-2a53a83c6066'/&gt;" Type="1" ToString="System.__ComObject" BreakWhenHit="0">
+        <Source>119		float gyroZRot = gyroZRotRaw*8.75f; // millidegrees / seceond
+120	
+121		gyroZRot = (1.0f/1000.0)*gyroZRot;
+122		gyroZRot = (pi / 180.0f)*gyroZRot;
+123		gyroZRot = gyroZRot/1000.0f;
+124	
+125		return gyroZRot*deltaTime;
+--&gt;126	
+127	}
+128	
+129	
+130	//Fourth Order Runge-Kutta
+131	float *rk4(float timeEllapsed) {
+132	
+133		float k1[4] = { 0,0,0,0 };
+134		float k2[4] = { 0,0,0,0 };
+135		float k3[4] = { 0,0,0,0 };
 </Source>
         <MessageVariables>
           <MessageVariable Name="gyroZRot" Index="1" />
         </MessageVariables>
       </BreakPoint>
-      <BreakPoint Index="5" Name="HW3.ino, line 174" Id="449407c9-f257-47a5-9f3e-18348a01cedf" Enabled="1" Message="{thetaDiff}" MessageTextType="2" PreProcessedMessage="{0}" Condition="" ConditionType="1" CurrentHits="0" File="c:\robotic-projects\hw3\hw3.ino" FileLine="174" FileColumn="1" FunctionName="updatePosition()" FunctionLineOffset="24" FunctionColumnOffset="1" HitCountTarget="1" HitCountType="1" Language="C++" LocationType="3" Tag="&lt;vmbp Id='449407c9-f257-47a5-9f3e-18348a01cedf'/&gt;" Type="1" ToString="System.__ComObject" BreakWhenHit="0">
-        <Source>167		float deltaCenter = 0.5f*(deltaRight + deltaLeft);
-168		float deltaTheta = (1.0f / baseWidth)*(deltaRight - deltaLeft);
-169	
-170	
-171		float filteredAngle = angCompFilter(timeSinceLast, deltaTheta);
-172	
-173		float thetaDiff = deltaTheta - gyroRot*timeSinceLast;
---&gt;174	
-175		//Save current counts for use in next updatePosition()
-176		prevCountsRight = encoderRight;
-177		prevCountsLeft = encoderLeft;
-178	
-179		//Get velocities from delta encoder values
-180		//getRVel(deltaEncoderRight, deltaEncoderLeft, timeSinceLast);
-181	
-182		float gyroAngVel = getZRot(timeSinceLast);
-183		//rVelocities[3] = (rVelocities[3] + gyroAngVel) / 2.0f;
-</Source>
-        <MessageVariables>
-          <MessageVariable Name="thetaDiff" Index="1" />
-        </MessageVariables>
-      </BreakPoint>
-      <BreakPoint Index="6" Name="HW3.ino, line 351" Id="c6912636-1dec-495f-b16f-35e1a9bc38fa" Enabled="1" Message="{angle}" MessageTextType="2" PreProcessedMessage="{0}" Condition="" ConditionType="1" CurrentHits="0" File="c:\robotic-projects\hw3\hw3.ino" FileLine="351" FileColumn="1" FunctionName="rotateInPlace(float angle)" FunctionLineOffset="5" FunctionColumnOffset="1" HitCountTarget="1" HitCountType="1" Language="C++" LocationType="3" Tag="&lt;vmbp Id='c6912636-1dec-495f-b16f-35e1a9bc38fa'/&gt;" Type="1" ToString="System.__ComObject" BreakWhenHit="0">
-        <Source>344	}
-345	
-346	//Not used currently
-347	void rotateInPlace(float angle, int turnDirection) {
-348	
-349		float leftSpeed = 0;
-350		float rightSpeed = 0;
---&gt;351	
-352		if (turnDirection &lt; 0) {
-353			leftSpeed = -200;
-354			rightSpeed = 200;
-355	
-356			while (rCurrentPose[2] &lt;= angle) {
-357				motors.setSpeeds(leftSpeed, rightSpeed);
-358				updatePosition();
-359				
-360			}
+      <BreakPoint Index="4" Name="HW3.ino, line 385" Id="c6912636-1dec-495f-b16f-35e1a9bc38fa" Enabled="1" Message="{angle}" MessageTextType="2" PreProcessedMessage="{0}" Condition="" ConditionType="1" CurrentHits="0" File="c:\robotic-projects\hw3\hw3.ino" FileLine="385" FileColumn="1" FunctionName="rotateInPlace(float angle)" FunctionLineOffset="5" FunctionColumnOffset="1" HitCountTarget="1" HitCountType="1" Language="C++" LocationType="3" Tag="&lt;vmbp Id='c6912636-1dec-495f-b16f-35e1a9bc38fa'/&gt;" Type="1" ToString="System.__ComObject" BreakWhenHit="0">
+        <Source>378	}
+379	
+380	//Not used currently
+381	void rotateInPlace(float angle, int turnDirection) {
+382	
+383		float leftSpeed = 0;
+384		float rightSpeed = 0;
+--&gt;385	
+386		if (turnDirection &lt; 0) {
+387			leftSpeed = -200;
+388			rightSpeed = 200;
+389	
+390			while (rCurrentPose[2] &lt;= angle) {
+391				motors.setSpeeds(leftSpeed, rightSpeed);
+392				updatePosition();
+393				
+394			}
 </Source>
         <MessageVariables>
           <MessageVariable Name="angle" Index="1" />
         </MessageVariables>
       </BreakPoint>
-      <BreakPoint Index="7" Name="HW3.ino, line 229" Id="ebf1b0af-3ed3-44f2-9728-43c27ea988e7" Enabled="1" Message="{timeEllapsed}" MessageTextType="2" PreProcessedMessage="{0}" Condition="" ConditionType="1" CurrentHits="0" File="c:\robotic-projects\hw3\hw3.ino" FileLine="229" FileColumn="1" FunctionName="angCompFilter(float timeEllapsed, float theta)" FunctionLineOffset="2" FunctionColumnOffset="1" HitCountTarget="1" HitCountType="1" Language="C++" LocationType="3" Tag="&lt;vmbp Id='ebf1b0af-3ed3-44f2-9728-43c27ea988e7'/&gt;" Type="1" ToString="System.__ComObject" BreakWhenHit="0">
-        <Source>222		}
-223	
-224		float timeEnd = millis() - timeBegin;
-225	
-226	}
-227	//Complimentary filter
-228	float angCompFilter(float timeEllapsed, float theta) {
---&gt;229	
-230		//Gyro rotation about Z axis
-231		float zGyro = getZRot(timeEllapsed); //Angular velocity according to the gyro
-232	
-233		//Apply complimentary filter to gyrosocope and accelerometer values
-234		float imuAngVal = COMP_F_A*(rPrevPose[2] + zGyro*timeEllapsed) + (1.0f - COMP_F_A)*(theta);
-235	
-236		return imuAngVal;
-237	
-238	}
+      <BreakPoint Index="5" Name="HW3.ino, line 257" Id="ebf1b0af-3ed3-44f2-9728-43c27ea988e7" Enabled="1" Message="{timeEllapsed}" MessageTextType="2" PreProcessedMessage="{0}" Condition="" ConditionType="1" CurrentHits="0" File="c:\robotic-projects\hw3\hw3.ino" FileLine="257" FileColumn="1" FunctionName="angCompFilter(float timeEllapsed, float theta)" FunctionLineOffset="2" FunctionColumnOffset="1" HitCountTarget="1" HitCountType="1" Language="C++" LocationType="3" Tag="&lt;vmbp Id='ebf1b0af-3ed3-44f2-9728-43c27ea988e7'/&gt;" Type="1" ToString="System.__ComObject" BreakWhenHit="0">
+        <Source>250		}
+251	
+252		float timeEnd = millis() - timeBegin;
+253	
+254	}
+255	//Complimentary filter
+256	float angCompFilter(float timeEllapsed, float theta) {
+--&gt;257	
+258		//Gyro rotation about Z axis
+259		float zGyro = getZRot(timeEllapsed); //Angular displacement about the Z axis according to the gyro
+260	
+261		//Apply complimentary filter to gyrosocope and accelerometer values
+262		float imuAngVal = COMP_F_A*(rPrevPose[2] + zGyro) + (1.0f - COMP_F_A)*(theta);
+263	
+264		return imuAngVal;
+265	
+266	}
 </Source>
         <MessageVariables>
           <MessageVariable Name="timeEllapsed" Index="1" />
         </MessageVariables>
       </BreakPoint>
-      <BreakPoint Index="8" Name="HW3.ino, line 337" Id="cae46167-8082-4a45-ad90-f13a54a1df8a" Enabled="1" Message="{velRatio}" MessageTextType="2" PreProcessedMessage="{0}" Condition="" ConditionType="1" CurrentHits="0" File="c:\robotic-projects\hw3\hw3.ino" FileLine="337" FileColumn="1" FunctionName="courseCorrection(int waypoint)" FunctionLineOffset="68" FunctionColumnOffset="1" HitCountTarget="1" HitCountType="1" Language="C++" LocationType="3" Tag="&lt;vmbp Id='cae46167-8082-4a45-ad90-f13a54a1df8a'/&gt;" Type="1" ToString="System.__ComObject" BreakWhenHit="0">
-        <Source>330	
-331	
-332		} else if (rPathType == Path::CURVE)  {
-333		
-334			float velRatio = calcTurnRatios(11.0f);
-335	
-336			leftMotorSpeed = velRatio*rightMotorSpeed*1.2f;
---&gt;337	
-338	
-339	
-340		}
-341		
-342	
-343	
-344	}
-345	
-346	//Not used currently
-</Source>
-        <MessageVariables>
-          <MessageVariable Name="velRatio" Index="1" />
-        </MessageVariables>
-      </BreakPoint>
-      <BreakPoint Index="9" Name="HW3.ino, line 413" Id="c52a8812-d256-4cbd-90a7-a1eb3f42d541" Enabled="1" Message="{gCurrentPose[1]}" MessageTextType="2" PreProcessedMessage="{0}" Condition="" ConditionType="1" CurrentHits="0" File="c:\robotic-projects\hw3\hw3.ino" FileLine="413" FileColumn="1" FunctionName="moveToLocation(int waypoint)" FunctionLineOffset="30" FunctionColumnOffset="1" HitCountTarget="1" HitCountType="1" Language="C++" LocationType="3" Tag="&lt;vmbp Id='c52a8812-d256-4cbd-90a7-a1eb3f42d541'/&gt;" Type="1" ToString="System.__ComObject" BreakWhenHit="0">
-        <Source>406				updatePosition();
-407				courseCorrection(waypoint);
-408				lcd.gotoXY(0, 0);
-409				lcd.print(gCurrentPose[2]);
-410				if (gCurrentPose[2] == pi) {
-411					break;
-412				}
---&gt;413	
-414			}
-415	
-416	
-417		}
-418	
-419	
-420	
-421	}
-422	
+      <BreakPoint Index="6" Name="HW3.ino, line 447" Id="c52a8812-d256-4cbd-90a7-a1eb3f42d541" Enabled="1" Message="{gCurrentPose[1]}" MessageTextType="2" PreProcessedMessage="{0}" Condition="" ConditionType="1" CurrentHits="0" File="c:\robotic-projects\hw3\hw3.ino" FileLine="447" FileColumn="1" FunctionName="moveToLocation(int waypoint)" FunctionLineOffset="30" FunctionColumnOffset="1" HitCountTarget="1" HitCountType="1" Language="C++" LocationType="3" Tag="&lt;vmbp Id='c52a8812-d256-4cbd-90a7-a1eb3f42d541'/&gt;" Type="1" ToString="System.__ComObject" BreakWhenHit="0">
+        <Source>440				updatePosition();
+441				lcd.gotoXY(0, 0);
+442				lcd.print(gCurrentPose[2]);
+443				lcd.gotoXY(0, 1);
+444				lcd.print(rVelocities[3]);
+445				courseCorrection(waypoint);
+446	
+--&gt;447	
+448			}
+449	
+450	
+451		}
+452	
+453	
+454	
+455	}
+456	
 </Source>
         <MessageVariables>
           <MessageVariable Name="gCurrentPose[1]" Index="1" />
+        </MessageVariables>
+      </BreakPoint>
+      <BreakPoint Index="7" Name="HW3.ino, line 367" Id="a8178dd3-a82f-4102-bb57-8944844a16cd" Enabled="1" Message="{deltaEncoderLeft}{deltaEncoderRight}{CalculatedRadius}" MessageTextType="2" PreProcessedMessage="{0}{1}{2}" Condition="" ConditionType="1" CurrentHits="0" File="c:\robotic-projects\hw3\hw3.ino" FileLine="367" FileColumn="1" FunctionName="courseCorrection(int waypoint)" FunctionLineOffset="67" FunctionColumnOffset="1" HitCountTarget="1" HitCountType="1" Language="C++" LocationType="3" Tag="&lt;vmbp Id='a8178dd3-a82f-4102-bb57-8944844a16cd'/&gt;" Type="1" ToString="System.__ComObject" BreakWhenHit="0">
+        <Source>360		}
+361		else if (rPathType == Path::CURVE) {
+362	
+363			float velRatio = calcTurnRatios(11.0f);
+364	
+365			float denom = fabs(deltaEncoderLeft - deltaEncoderRight);
+366			float CalculatedRadius = (baseWidth / 2.0f)*(deltaEncoderRight + deltaEncoderLeft) / (denom);
+--&gt;367	
+368		
+369	
+370				
+371			leftMotorSpeed = constrain(leftMotorSpeed, 75, 225);
+372			rightMotorSpeed = constrain(rightMotorSpeed, 75, 225);
+373	
+374		}
+375		
+376	
+</Source>
+        <MessageVariables>
+          <MessageVariable Name="deltaEncoderLeft" Index="1" />
+          <MessageVariable Name="deltaEncoderRight" Index="2" />
+          <MessageVariable Name="CalculatedRadius" Index="3" />
+        </MessageVariables>
+      </BreakPoint>
+      <BreakPoint Index="8" Name="HW3.ino, line 202" Id="79fd8e25-31cc-415f-a161-38dbe74a51cd" Enabled="1" Message="{filteredAngle}" MessageTextType="2" PreProcessedMessage="{0}" Condition="" ConditionType="1" CurrentHits="0" File="c:\robotic-projects\hw3\hw3.ino" FileLine="202" FileColumn="1" FunctionName="updatePosition()" FunctionLineOffset="27" FunctionColumnOffset="1" HitCountTarget="1" HitCountType="1" Language="C++" LocationType="3" Tag="&lt;vmbp Id='79fd8e25-31cc-415f-a161-38dbe74a51cd'/&gt;" Type="1" ToString="System.__ComObject" BreakWhenHit="0">
+        <Source>195		float deltaTheta = (1.0f / baseWidth)*(deltaRight - deltaLeft);
+196	
+197	
+198	
+199		float filteredAngle = angCompFilter(timeSinceLast, deltaTheta);
+200	
+201		float thetaDiff = deltaTheta - gyroRot*timeSinceLast;
+--&gt;202	
+203		//Save current counts for use in next updatePosition()
+204		prevCountsRight = encoderRight;
+205		prevCountsLeft = encoderLeft;
+206	
+207		//Get velocities from delta encoder values
+208		//getRVel(deltaEncoderRight, deltaEncoderLeft, timeSinceLast);
+209	
+210		float gyroAngVel = getZRot(timeSinceLast);
+211		//rVelocities[3] = (rVelocities[3] + gyroAngVel) / 2.0f;
+</Source>
+        <MessageVariables>
+          <MessageVariable Name="filteredAngle" Index="1" />
+        </MessageVariables>
+      </BreakPoint>
+      <BreakPoint Index="9" Name="HW3.ino, line 240" Id="171889ad-dc93-4746-9ed6-a6769bdbcdc3" Enabled="1" Message="{gCurrentPose[0]}{gCurrentPose[1]}{gCurrentPose[2]}" MessageTextType="2" PreProcessedMessage="{0}{1}{2}" Condition="" ConditionType="1" CurrentHits="0" File="c:\robotic-projects\hw3\hw3.ino" FileLine="240" FileColumn="1" FunctionName="updatePosition()" FunctionLineOffset="65" FunctionColumnOffset="1" HitCountTarget="1" HitCountType="1" Language="C++" LocationType="3" Tag="&lt;vmbp Id='171889ad-dc93-4746-9ed6-a6769bdbcdc3'/&gt;" Type="1" ToString="System.__ComObject" BreakWhenHit="0">
+        <Source>233	
+234	
+235		//Update robot pose in the global coordinate frame
+236		gCurrentPose[0] = gPrevPose[0] + deltaCenter*cos(rCurrentPose[2]);
+237		gCurrentPose[1] = gPrevPose[1] + deltaCenter*sin(rCurrentPose[2]);
+238		gCurrentPose[2] = rCurrentPose[2];
+239	
+--&gt;240	
+241	
+242	
+243		prevTime = millis();
+244	
+245	
+246		//Save current poses for use in the next updatePosition()
+247		for (int i = 0; i &lt; 3; i++) {
+248			gPrevPose[i] = gCurrentPose[i];
+249			rPrevPose[i] = rCurrentPose[i];
+</Source>
+        <MessageVariables>
+          <MessageVariable Name="gCurrentPose[0]" Index="1" />
+          <MessageVariable Name="gCurrentPose[1]" Index="2" />
+          <MessageVariable Name="gCurrentPose[2]" Index="3" />
         </MessageVariables>
       </BreakPoint>
     </BreakPoints>

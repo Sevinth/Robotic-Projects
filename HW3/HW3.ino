@@ -6,7 +6,7 @@
 #include <float.h>
 #include <stdarg.h>
 
-#define COMP_F_A 0.1f
+#define COMP_F_A 0.15f
 #define COMP_F_B 0.5f
 
 Zumo32U4Encoders encoders;
@@ -57,6 +57,8 @@ unsigned long prevTime = 0.0;
 //motors
 float leftMotorSpeed = 100;
 float rightMotorSpeed = 100;
+float deltaEncodersLeft;
+float deltaEncodersRight;
 
 //calibration variables
 float gyroZOffest = 0;
@@ -73,6 +75,22 @@ float encoderCounts = 0;
 float deltaEncoderLeft = 0;
 float deltaEncoderRight = 0;
 
+void getRVel(float deltaCountsRight, float deltaCountsLeft, float timeEllapsed) {
+
+	float rDeltaCenter = 0.5*(deltaCountsRight + deltaCountsLeft);
+
+	float rVelCenter = rDeltaCenter*wheelCirc / (timeEllapsed*encoderRes);
+	float rVelRight = deltaCountsRight*wheelCirc / (timeEllapsed*encoderRes);
+	float rVelLeft = deltaCountsLeft*wheelCirc / (timeEllapsed*encoderRes);
+	float rVelAng = (1.0 / baseWidth)*(rVelRight - rVelLeft);
+
+	rVelocities[0] = rVelCenter;
+	rVelocities[1] = rVelRight;
+	rVelocities[2] = rVelLeft;
+	rVelocities[3] = rVelAng;
+
+
+}
 
 float straightLineCalc(float distance) {
 
@@ -87,17 +105,24 @@ float straightLineCalc(float distance) {
 float getZRot(float deltaTime) {
 
 	//Read the gyro
-	gyro.read();
+	float nSamples = 15;
+	float gyroZRotRaw = 0;
 
-	float gyroZRotRaw = gyro.g.z;
-	(gyro.g.z > 0) ? (gyro.g.z + gyroZOffest) : (gyro.g.z - gyroZOffest); 
-	float gyroZeroOffset = 0;
-	float gyroZRot = (pi/ 180.0f)*gyroZRotRaw*8.75f/1000.0f; //radians/ms
+	for (int i = 0; i < nSamples; i++) {
+		gyro.read();
+		
+		gyroZRotRaw += gyro.g.z;
+	}
+	
+	gyroZRotRaw /= nSamples;
+	
+	float gyroZRot = gyroZRotRaw*8.75f; // millidegrees / seceond
 
-	//Serial.println("Gyro:");
-	//Serial.print(gyroZRot);
-	//Serial.println("");
-	return gyroZRot;
+	gyroZRot = (1.0f/1000.0)*gyroZRot;
+	gyroZRot = (pi / 180.0f)*gyroZRot;
+	gyroZRot = gyroZRot/1000.0f;
+
+	return gyroZRot*deltaTime;
 
 }
 
@@ -139,7 +164,7 @@ float calcTurnRatios(float turnRadius) {
 	float velLeft;
 	float velRight;
 
-	velLeft = 200.0f * (1 + baseWidth / (2.0*turnRadius));
+	velLeft =  200.0f* (1 + baseWidth / (2.0*turnRadius));
 	velRight = 200.0f* (1 - baseWidth / (2.0*turnRadius));
 
 
@@ -152,7 +177,7 @@ void updatePosition() {
 
 	float timeBegin = millis();
 	timeSinceLast = millis() - prevTime;
-
+	
 	//Get right and left encoder Counts
 	float encoderLeft = encoders.getCountsLeft();
 	float encoderRight = encoders.getCountsRight();
@@ -160,12 +185,15 @@ void updatePosition() {
 	deltaEncoderLeft = encoderLeft - prevCountsLeft;
 	deltaEncoderRight = encoderRight - prevCountsRight;
 
+	getRVel(deltaEncoderRight, deltaEncoderLeft, timeSinceLast);
+
 	float gyroRot = getZRot(timeSinceLast);
 
 	float deltaRight = wheelCirc*deltaEncoderRight / encoderRes;
 	float deltaLeft = wheelCirc*deltaEncoderLeft / encoderRes;
 	float deltaCenter = 0.5f*(deltaRight + deltaLeft);
 	float deltaTheta = (1.0f / baseWidth)*(deltaRight - deltaLeft);
+
 
 
 	float filteredAngle = angCompFilter(timeSinceLast, deltaTheta);
@@ -228,10 +256,10 @@ void updatePosition() {
 float angCompFilter(float timeEllapsed, float theta) {
 
 	//Gyro rotation about Z axis
-	float zGyro = getZRot(timeEllapsed); //Angular velocity according to the gyro
+	float zGyro = getZRot(timeEllapsed); //Angular displacement about the Z axis according to the gyro
 
 	//Apply complimentary filter to gyrosocope and accelerometer values
-	float imuAngVal = COMP_F_A*(rPrevPose[2] + zGyro*timeEllapsed) + (1.0f - COMP_F_A)*(theta);
+	float imuAngVal = COMP_F_A*(rPrevPose[2] + zGyro) + (1.0f - COMP_F_A)*(theta);
 
 	return imuAngVal;
 
@@ -329,13 +357,19 @@ void courseCorrection(int waypoint) {
 		//}
 
 
-	} else if (rPathType == Path::CURVE)  {
-	
+	}
+	else if (rPathType == Path::CURVE) {
+
 		float velRatio = calcTurnRatios(11.0f);
 
-		leftMotorSpeed = velRatio*rightMotorSpeed*1.2f;
+		float denom = fabs(deltaEncoderLeft - deltaEncoderRight);
+		float CalculatedRadius = (baseWidth / 2.0f)*(deltaEncoderRight + deltaEncoderLeft) / (denom);
 
+	
 
+			
+		leftMotorSpeed = constrain(leftMotorSpeed, 75, 225);
+		rightMotorSpeed = constrain(rightMotorSpeed, 75, 225);
 
 	}
 	
@@ -398,18 +432,18 @@ void moveToLocation(int waypoint) {
 	}
 	else if (rPathType == Path::CURVE) {
 
-		rightMotorSpeed = 150;
-		leftMotorSpeed = calcTurnRatios(11.0f)*rightMotorSpeed;
+		rightMotorSpeed = 100;
+		leftMotorSpeed = calcTurnRatios(11.0f)*rightMotorSpeed*1.5;
 
-		while ((gCurrentPose[1] > gPath[waypoint][1] - 0.5)) {
+		while ((gCurrentPose[2] > gPath[waypoint][2] - 0.2)) {
 			motors.setSpeeds(leftMotorSpeed, rightMotorSpeed);
 			updatePosition();
-			courseCorrection(waypoint);
 			lcd.gotoXY(0, 0);
 			lcd.print(gCurrentPose[2]);
-			if (gCurrentPose[2] == pi) {
-				break;
-			}
+			lcd.gotoXY(0, 1);
+			lcd.print(rVelocities[3]);
+			courseCorrection(waypoint);
+
 
 		}
 
@@ -453,13 +487,21 @@ void accCalibrate() {
 void getAccValues() {
 
 	acc.read();
-	int nSamples;
+	int nSamples = 15;
 
-		accXVals[0] = ((float)acc.a.x + accXOffset)*0.61f;
+	for (int i = 0; i < nSamples; i++) {
+		accXVals[0] += ((float)acc.a.x + accXOffset)*0.61f;
 
-		accYVals[0] = ((float)acc.a.y + accYOffset)*0.61f;
+		accYVals[0] += ((float)acc.a.y + accYOffset)*0.61f;
 
-		accZVals[0] = ((float)acc.a.z + accZOffset)*0.61f;
+		accZVals[0] += ((float)acc.a.z + accZOffset)*0.61f;
+	}
+
+	accXVals[0] /= nSamples;
+	accYVals[0] /= nSamples;
+	accZVals[0] /= nSamples;
+
+
 	
 }
 
