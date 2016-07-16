@@ -98,9 +98,14 @@ float getZRot(float deltaTime) {
 	//Read the gyro
 	gyro.read();
 
-	float gyroZRotRaw = gyro.g.z + gyroZOffest;
-	float gyroZRot = (pi/180.0*1000.0)*gyroZRotRaw*(1.0 / 8.75);
+	float gyroZRotRaw = gyro.g.z;
+	(gyro.g.z > 0) ? (gyro.g.z + gyroZOffest) : (gyro.g.z - gyroZOffest); 
+	float gyroZeroOffset = 0;
+	float gyroZRot = (1.0f/ 57295.7795131f)*gyroZRotRaw*8.75f/1000.0f; //radians/ms
 
+	//Serial.println("Gyro:");
+	//Serial.print(gyroZRot);
+	//Serial.println("");
 	return gyroZRot;
 
 }
@@ -218,21 +223,24 @@ void gyroCalibrate() {
 	//Read the gyro
 	float ellapsedTime = 0;
 	float averageZeroReading = 0;
-	int numberofReadings = 1024;
+	int numberofReadings = 250;
 
 	for (int i = 0; i < numberofReadings; i++) {
 
 		//while (!gyro.readReg(L3G::STATUS_REG) & 0x08);
 		gyro.read();
-
-		numberofReadings++;
-
-		gyro.read();
+		delay(10);
 		averageZeroReading += gyro.g.z;
-
+		Serial.println("Calibration Gyro Read:");
+		Serial.print(averageZeroReading);
+		Serial.println("Run #:");
+		Serial.print(numberofReadings);
+		Serial.println("");
 	}
 
 	gyroZOffest = averageZeroReading / (float)numberofReadings;
+	Serial.println("Gyro Offset");
+	Serial.print(gyroZOffest);
 
 }
 
@@ -363,7 +371,7 @@ void setup()
 	encoders.init();
 	gyro.init();
 	gyro.enableDefault();
-	//gyroCalibrate();
+	gyroCalibrate();
 
 	acc.init();
 	acc.enableDefault();
@@ -385,7 +393,7 @@ void loop()
 	bool leftError = encoders.checkErrorLeft();
 	int move = 0;
 
-	motors.setSpeeds(100, 100);
+	motors.setSpeeds(-100, 100);
 	updatePosition();
 
 
