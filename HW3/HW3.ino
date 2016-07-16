@@ -42,7 +42,7 @@ float gCurrentPose[3] = { 0,0,0 };
 float gPrevPose[3] = { 0,0,0 };
 float gVelocities[4] = { 0,0,0,0 };
 float gPath[5][3] = { { 22,0, 0 },
-{ 0,0,0 },
+{ 0,-22.0f,0 },
 { 0,0,0 },
 { 0,0,0 },
 { 0,0,0 } };
@@ -134,6 +134,18 @@ float *rk4(float timeEllapsed) {
 	return posVec;
 }
 
+float calcTurnRatios(float turnRadius) {
+
+	float velLeft;
+	float velRight;
+
+	velLeft = 200.0f * (1 + baseWidth / (2.0*turnRadius));
+	velRight = 200.0f* (1 - baseWidth / (2.0*turnRadius));
+
+
+	return velLeft / velRight;
+}
+
 
 //Called durinv movment to update the robots pose
 void updatePosition() {
@@ -178,11 +190,11 @@ void updatePosition() {
 	rCurrentPose[2] = filteredAngle;
 
 	//Constrain angle(rCurrentPose[2]) between 0 and 2*pi
-	if (rCurrentPose[2] < -2.0*pi) {
-		rCurrentPose[2] += 2.0f * pi;
+	if (rCurrentPose[2] < 0.0f) {
+		rCurrentPose[2] = 2.0f * pi;
 	}
 	else if (rCurrentPose[2] > 2.0f * pi) {
-		rCurrentPose[2] -= 2.0f*pi;
+		rCurrentPose[2] = 0.0f;
 	}
 	
 	//Global Coordinate Frame Pose
@@ -262,6 +274,9 @@ void courseCorrection(int waypoint) {
 	float yErr;
 	float xErr;
 
+	int turnDir = 0;
+	
+
 	
 	for (int i = 0; i < 2; i++) {
 		distVec[i] = gPath[waypoint][i] - gCurrentPose[i];
@@ -282,6 +297,15 @@ void courseCorrection(int waypoint) {
 	}
 	else if (distVec[0] != 0 || distVec[0] != 0) {
 		angleToWaypoint = atan2(distVec[1], distVec[0]);
+
+		if (angleToWaypoint < 0.0f) {
+
+			angleToWaypoint *= -1;
+			turnDir = -1; //Left Turn
+		} else if (angleToWaypoint > 0.0f) {
+		
+			turnDir = 1;
+		}
 	}
 
 	if (rPathType == Path::DIRECT) {
@@ -298,15 +322,19 @@ void courseCorrection(int waypoint) {
 			rightMotorSpeed += 5;
 		}
 
-		if (abs(angleToWaypoint) > 1.0) {
-			motors.setSpeeds(0, 0);
-			rotateInPlace(angleToWaypoint);
-			delay(10);
-		}
+		//if (abs(angleToWaypoint) > 1.0) {
+		//	motors.setSpeeds(0, 0);
+		//	rotateInPlace(angleToWaypoint, turnDir);
+		//	delay(10);
+		//}
 
 
 	} else if (rPathType == Path::CURVE)  {
 	
+		float velRatio = calcTurnRatios(11.0f);
+
+		leftMotorSpeed = velRatio*rightMotorSpeed*1.2f;
+
 
 
 	}
@@ -316,21 +344,22 @@ void courseCorrection(int waypoint) {
 }
 
 //Not used currently
-void rotateInPlace(float angle) {
+void rotateInPlace(float angle, int turnDirection) {
 
 	float leftSpeed = 0;
 	float rightSpeed = 0;
 
-	if (angle > 0) {
+	if (turnDirection < 0) {
 		leftSpeed = -200;
 		rightSpeed = 200;
 
 		while (rCurrentPose[2] <= angle) {
 			motors.setSpeeds(leftSpeed, rightSpeed);
 			updatePosition();
+			
 		}
 	}
-	else if (angle < 0) {
+	else if (turnDirection > 0) {
 		leftSpeed = 200;
 		rightSpeed = -200;
 
@@ -355,20 +384,37 @@ void moveToLocation(int waypoint) {
 	xTol = 0.5;
 	yTol = 0.5;
 
-	while ((gCurrentPose[0] <= gPath[waypoint][0] - 0.5 || gCurrentPose[0] >= gPath[waypoint][0] + 0.5)) {
-		motors.setSpeeds(leftMotorSpeed, rightMotorSpeed);
-		updatePosition();
-		courseCorrection(waypoint);
+	if (rPathType == Path::DIRECT) {
+
+		while ((gCurrentPose[0] <= gPath[waypoint][0] - 0.5 || gCurrentPose[0] >= gPath[waypoint][0] + 0.5)) {
+			motors.setSpeeds(leftMotorSpeed, rightMotorSpeed);
+			updatePosition();
+			courseCorrection(waypoint);
+
+		}
+
+
+		motors.setSpeeds(0, 0);
+	}
+	else if (rPathType == Path::CURVE) {
+
+		rightMotorSpeed = 150;
+		leftMotorSpeed = calcTurnRatios(11.0f)*rightMotorSpeed;
+
+		while ((gCurrentPose[1] > gPath[waypoint][1] - 0.5)) {
+			motors.setSpeeds(leftMotorSpeed, rightMotorSpeed);
+			updatePosition();
+			courseCorrection(waypoint);
+			lcd.gotoXY(0, 0);
+			lcd.print(gCurrentPose[2]);
+			if (gCurrentPose[2] == pi) {
+				break;
+			}
+
+		}
+
 
 	}
-
-	while ((gCurrentPose[2] <= gPath[waypoint][2] - 0.2) || (gCurrentPose[2] >= gPath[waypoint][0] + 0.2)) {
-		updatePosition();
-		courseCorrection(waypoint);
-	}
-
-	motors.setSpeeds(0, 0);
-	
 
 
 
@@ -453,12 +499,12 @@ void loop()
 	float volts = readBatteryMillivolts();
 	bool rightError = encoders.checkErrorRight();
 	bool leftError = encoders.checkErrorLeft();
-	rPathType = Path::DIRECT;
+	rPathType = Path::CURVE;
 
 	motors.setSpeeds(leftMotorSpeed, rightMotorSpeed);
 	delay(20);
 
-	moveToLocation(0);
+	moveToLocation(1);
 
 	while (true) {
 		motors.setSpeeds(0, 0);
