@@ -75,6 +75,8 @@ float encoderCounts = 0;
 float deltaEncoderLeft = 0;
 float deltaEncoderRight = 0;
 
+bool usingIMUOnly;
+
 void getRVel(float deltaCountsRight, float deltaCountsLeft, float timeEllapsed) {
 
 	float rDeltaCenter = 0.5*(deltaCountsRight + deltaCountsLeft);
@@ -194,43 +196,79 @@ void updatePosition() {
 
 
 
-	float filteredAngle = angCompFilter(timeSinceLast, deltaTheta);
+	
 
 	//Save current counts for use in next updatePosition()
 	prevCountsRight = encoderRight;
+
 	prevCountsLeft = encoderLeft;
 
 	//Get velocities from delta encoder values
 	//getRVel(deltaEncoderRight, deltaEncoderLeft, timeSinceLast);
+
+
+	if (usingIMUOnly) {
 	
+		float deltaThetaIMU = angCompFilter(timeSinceLast);
 
-	//Robot Coordinate Frame Pose
-	rCurrentPose[0] = rPrevPose[0] + deltaCenter;
-	rCurrentPose[1] = 0.0f;
-	//rCurrentPose[2] = angCompFilter(timeSinceLast);
-	rCurrentPose[2] = filteredAngle;
+		//Robot Coordinate Frame Pose
+		rCurrentPose[0] = rPrevPose[0] + deltaCenter;
+		rCurrentPose[1] = 0.0f;
+		//rCurrentPose[2] = angCompFilter(timeSinceLast);
+		rCurrentPose[2] = rPrevPose[2] + deltaThetaIMU;
 
-	//Constrain angle(rCurrentPose[2]) between 0 and 2*pi
-	if (rCurrentPose[2] < 0.0f) {
-		rCurrentPose[2] = 2.0f * pi;
+		//Constrain angle(rCurrentPose[2]) between 0 and 2*pi
+		if (rCurrentPose[2] < 0.0f) {
+			rCurrentPose[2] = 2.0f * pi;
+		}
+		else if (rCurrentPose[2] > 2.0f * pi) {
+			rCurrentPose[2] = 0.0f;
+		}
+
+		//Global Coordinate Frame Pose
+
+		//float rk4Time = millis();
+		//float *deltaPosEst = rk4(timeSinceLast);
+		//float rk4TimeEnd = millis() - rk4Time;
+
+
+		//Update robot pose in the global coordinate frame
+		gCurrentPose[0] = gPrevPose[0] + deltaCenter*cos(rCurrentPose[2]);
+		gCurrentPose[1] = gPrevPose[1] + deltaCenter*sin(rCurrentPose[2]);
+		gCurrentPose[2] = rCurrentPose[2];
+
 	}
-	else if (rCurrentPose[2] > 2.0f * pi) {
-		rCurrentPose[2] = 0.0f;
+	else {
+
+		float filteredAngle;
+
+		//Robot Coordinate Frame Pose
+		rCurrentPose[0] = rPrevPose[0] + deltaCenter;
+		rCurrentPose[1] = 0.0f;
+		//rCurrentPose[2] = angCompFilter(timeSinceLast);
+		rCurrentPose[2] = filteredAngle;
+
+		//Constrain angle(rCurrentPose[2]) between 0 and 2*pi
+		if (rCurrentPose[2] < 0.0f) {
+			rCurrentPose[2] = 2.0f * pi;
+		}
+		else if (rCurrentPose[2] > 2.0f * pi) {
+			rCurrentPose[2] = 0.0f;
+		}
+
+		//Global Coordinate Frame Pose
+
+		//float rk4Time = millis();
+		//float *deltaPosEst = rk4(timeSinceLast);
+		//float rk4TimeEnd = millis() - rk4Time;
+
+
+		//Update robot pose in the global coordinate frame
+		gCurrentPose[0] = gPrevPose[0] + deltaCenter*cos(rCurrentPose[2]);
+		gCurrentPose[1] = gPrevPose[1] + deltaCenter*sin(rCurrentPose[2]);
+		gCurrentPose[2] = rCurrentPose[2];
+
 	}
-	
-	//Global Coordinate Frame Pose
-	
-	//float rk4Time = millis();
-	//float *deltaPosEst = rk4(timeSinceLast);
-	//float rk4TimeEnd = millis() - rk4Time;
-
-
-	//Update robot pose in the global coordinate frame
-	gCurrentPose[0] = gPrevPose[0] + deltaCenter*cos(rCurrentPose[2]);
-	gCurrentPose[1] = gPrevPose[1] + deltaCenter*sin(rCurrentPose[2]);
-	gCurrentPose[2] = rCurrentPose[2];
-
-
 
 
 	prevTime = millis();
@@ -246,13 +284,18 @@ void updatePosition() {
 
 }
 //Complimentary filter
-float angCompFilter(float timeEllapsed, float theta) {
+float angCompFilter(float timeEllapsed) {
 
 	//Gyro rotation about Z axis
 	float zGyro = getZRot(timeEllapsed); //Angular displacement about the Z axis according to the gyro
+	getAccValues();
+
+
+
+	float accTheta = atan2f(accYVals[0], accXVals[0]);
 
 	//Apply complimentary filter to gyrosocope and accelerometer values
-	float imuAngVal = COMP_F_A*(rPrevPose[2] + zGyro) + (1.0f - COMP_F_A)*(theta);
+	float imuAngVal = COMP_F_A*(rPrevPose[2] + zGyro) + (1.0f - COMP_F_A)*(accTheta);
 
 	return imuAngVal;
 
@@ -436,7 +479,7 @@ void moveToLocation(int waypoint) {
 		leftMotorSpeed = calcTurnRatios(11.0f)*rightMotorSpeed*1.5;
 		motors.setSpeeds(leftMotorSpeed, rightMotorSpeed);
 		delay(250);
-		while ((gCurrentPose[2]  >= gPath[waypoint][2] + 0.1) || (gCurrentPose[2] <= gPath[waypoint][2] - 0.1)) {
+		while ((gCurrentPose[2]  >= gPath[waypoint][2]) || (gCurrentPose[2] <= gPath[waypoint][2])) {
 			motors.setSpeeds(leftMotorSpeed, rightMotorSpeed);
 			updatePosition();
 			lcd.gotoXY(0, 0);
@@ -550,6 +593,7 @@ void loop()
 	motors.setSpeeds(leftMotorSpeed, rightMotorSpeed);
 
 	//Go to First Waypoint
+	usingIMUOnly = true;
 	rPathType = Path::DIRECT;
 	moveToLocation(0);
 

@@ -3,6 +3,8 @@
 // 
 
 #include "Robot.h"
+#include <LSM303.h>
+#include <L3G.h>
 
 Zumo32U4Encoders wheelEncoders;
 
@@ -82,9 +84,6 @@ void RobotClass::updatePosition(RobotClass::sensorsAllowed sensors) {
 
 	if (sensors = RobotClass::sensorsAllowed::IMU_ENC) {
 		
-		encoderLeftCounts = wheelEncoders.getCountsAndResetLeft();
-		encoderRightCounts = wheelEncoders.getCountsAndResetRight();
-
 		if (isnan(encoderLeftCounts)) encoderLeftCounts = 0;
 		if (isnan(encoderRightCounts)) encoderRightCounts = 0;
 
@@ -113,10 +112,19 @@ void RobotClass::updatePosition(RobotClass::sensorsAllowed sensors) {
 	}
 
 
-
-
 	lastTime = millis();
 }
+
+
+void RobotClass::calcTurnVel(float turnRadius) {
+
+	float angular = 10;  //"desired speed"
+
+	turnVel.right = angular*(1 - rWheelBase/(2.0f*turnRadius));
+	turnVel.leftVel = angular*(1 + rWheelBase / (2.0f*turnRadius));
+	
+}
+
 
 
 //Keep track of the total distance traveled by each wheel and the robots center
@@ -141,7 +149,9 @@ void RobotClass::updateRobotPose(float &centerDist, float &leftDist, float &righ
 	
 	currentRPos.x = previousRPos.x + centerDist;
 	currentRPos.y = 0.0f;
-	currentRPos.theta = previousRPos.theta + dTheta;
+	currentRPos.theta = previousRPos.theta + thetaAvg;
+
+
 
 	//Constrain anglular position to be between 0 and 2pi
 	if (currentRPos.theta > 2.0f*M_PI) {
@@ -193,6 +203,7 @@ void RobotClass::readIMU() {
 
 	convAccVals();
 	convGyroVals();	
+
 }
 
 void RobotClass::convGyroVals() {
@@ -218,7 +229,9 @@ float RobotClass::compFilter(unsigned long deltaTime) {
 
 	float angVal = COMP_F*(currentRPos.theta + currGyro.zRot*deltaTime) + (1.0f - COMP_F)*accAngle;
 
+	//Filtered angular position, works poorly
 	return angVal;
+
 }
 
 
@@ -234,7 +247,45 @@ int RobotClass::getLeftCounts() {
 }
 
 
+void RobotClass::moveTo(RobotClass::rPosition waypoint, RobotClass::pathType path) {
 
+	if (path == RobotClass::DIRECT) {
+		//Make sure the robot drives in a straight line
+
+		encoderLeftCounts = wheelEncoders.getCountsAndResetLeft;
+		encoderRightCounts = wheelEncoders.getCountsAndResetRight;
+
+		
+		//Update the robots position in global and local coordinate frames
+		
+		while (globalCurrentPos.x <= waypoint.x || globalCurrentPos.y != waypoint.y || globalCurrentPos.theta != waypoint.theta) {
+			updatePosition(RobotClass::IMU_ENC);
+
+			float deltaEncoderCounts = encoderRightCounts - encoderRightCounts;
+
+			//Adjust motor PWM based on the difference in encoder counts every loop
+			if (deltaEncoderCounts > 0) {
+				leftMotorSpeed += 2;
+				rightMotorSpeed -= 2;
+			}
+			else if (deltaEncoderCounts < 0) {
+				leftMotorSpeed -= 2;
+				rightMotorSpeed += 2;
+			}
+
+		}
+
+
+	}
+	else if (path == RobotClass::CURVED) {
+		//Maintain the proper turn radius
+
+
+
+	}
+
+
+}
 
 
 RobotClass Robot;

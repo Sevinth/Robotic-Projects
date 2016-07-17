@@ -10,8 +10,13 @@
 	#include "WProgram.h"
 #endif
 
-#include "ZumoIncludes.h"
+
 #include <Wire.h>
+#include <L3G.h>
+#include <LSM303.h>
+#include <Zumo32U4Encoders.h>
+
+
 
 #define GYRO_CONV (M_PI/180.0f)*8.75/1000.0f
 #define ACC_CONV 0.061/1000.0f
@@ -32,7 +37,9 @@ protected:
 	float totalDistance;
 	float totalLeftWheelDistance;
 	float totalRightWheelDistance;
-
+	
+	int rightMotorSpeed;
+	int leftMotorSpeed;
 
 	float rightWheelVel;  // Right wheel velocity
 	float leftWheelVel;  // Left Wheel velocity
@@ -65,6 +72,22 @@ protected:
 
 	};
 
+	struct turnVelocities {
+		float leftVel;
+		float right;
+	};
+
+	struct wayPoints {
+		enum waypointNames {WaypointOne, WaypointTwo, WaypointThree, WaypointFour};
+		rPosition wpone;
+		rPosition wptwo;
+		rPosition wpthree;
+		rPosition wpfour;
+	};
+
+	turnVelocities turnVel;
+
+	wayPoints rWaypoints;
 
 	rotVel currGyro;
 	rotVel prevGyro;
@@ -89,7 +112,7 @@ public:
 	unsigned long lastTime;
 
 	enum sensorsAllowed { IMU, IMU_ENC };
-	
+	enum pathType {DIRECT, CURVED};
 	
 	void init();
 
@@ -119,6 +142,14 @@ public:
 	void convAccVals();
 
 	float compFilter(unsigned long deltaTime);
+
+
+
+	void calcTurnVel(float);
+
+
+	void moveTo(rPosition, pathType);
+
 
 	//Get functions for all the structs
 	rPosition getCurrentRPos() {

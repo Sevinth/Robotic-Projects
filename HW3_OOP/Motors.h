@@ -7,8 +7,7 @@
 #include <Arduino.h>
 #include <pins_arduino.h>
 #include <avr\io.h>
-#include "ZumoIncludes.h"
-#include <PID\PID_v1.h>
+#include <FastGPIO.h>
 
 
 class Motors {
