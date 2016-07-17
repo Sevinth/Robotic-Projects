@@ -209,7 +209,7 @@ void updatePosition() {
 	rCurrentPose[0] = rPrevPose[0] + deltaCenter;
 	rCurrentPose[1] = 0.0f;
 	//rCurrentPose[2] = angCompFilter(timeSinceLast);
-	rCurrentPose[2] = rPrevPose[2] + deltaTheta;
+	rCurrentPose[2] = filteredAngle;
 
 	//Constrain angle(rCurrentPose[2]) between 0 and 2*pi
 	if (rCurrentPose[2] < 0.0f) {
@@ -436,8 +436,8 @@ void moveToLocation(int waypoint) {
 		rightMotorSpeed = 100;
 		leftMotorSpeed = calcTurnRatios(11.0f)*rightMotorSpeed*1.5;
 		motors.setSpeeds(leftMotorSpeed, rightMotorSpeed);
-		delay(1250);
-		while ((gCurrentPose[2] != gPath[waypoint][2] + 0.2) && (gCurrentPose[2] != gPath[waypoint][2] - 0.2)) {
+		delay(250);
+		while ((gCurrentPose[2]  >= gPath[waypoint][2] + 0.1) || (gCurrentPose[2] <= gPath[waypoint][2] - 0.1)) {
 			motors.setSpeeds(leftMotorSpeed, rightMotorSpeed);
 			updatePosition();
 			lcd.gotoXY(0, 0);
@@ -446,10 +446,9 @@ void moveToLocation(int waypoint) {
 
 			courseCorrection(waypoint);
 
-
-		
-
 		}
+
+		motors.setSpeeds(0, 0);
 
 
 	}
@@ -548,9 +547,15 @@ void loop()
 	rPathType = Path::CURVE;
 
 	motors.setSpeeds(leftMotorSpeed, rightMotorSpeed);
-	delay(20);
 
+	//Go to First Waypoint
+	rPathType = Path::DIRECT;
+	moveToLocation(0);
+
+	//Go to Second Waypoint
+	rPathType = Path::CURVE;
 	moveToLocation(1);
+
 
 	while (true) {
 		motors.setSpeeds(0, 0);
