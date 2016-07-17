@@ -9,24 +9,24 @@
       <VCCodeMacros />
     </VCCodeModel>
     <BreakPoints>
-      <BreakPoint Index="1" Name="Robot.cpp, line 197" Id="8dd1f4cb-aca5-4b79-b20e-75ea95d5c990" Enabled="1" Message="{currGyro.xRot}{currGyro.yRot}{currGyro.zRot}{currAcc.xAcc}{currAcc.yAcc}{currAcc.zAcc}" MessageTextType="2" PreProcessedMessage="{0}{1}{2}{3}{4}{5}" Condition="" ConditionType="1" CurrentHits="0" File="c:\robotic-projects\hw3_oop\robot.cpp" FileLine="197" FileColumn="1" FunctionName="readIMU()" FunctionLineOffset="14" FunctionColumnOffset="1" HitCountTarget="1" HitCountType="1" Language="C++" LocationType="3" Tag="&lt;vmbp Id='8dd1f4cb-aca5-4b79-b20e-75ea95d5c990'/&gt;" Type="1" ToString="System.__ComObject" BreakWhenHit="0">
-        <Source>190		currGyro.xRot = rGyro.g.x;
-191		currGyro.yRot = rGyro.g.y;
-192		currGyro.zRot = rGyro.g.z;
-193	
-194		currAcc.xAcc = rAccel.a.x;
-195		currAcc.yAcc = rAccel.a.y;
-196		currAcc.zAcc = rAccel.a.z;
---&gt;197	
-198		convAccVals();
-199		convGyroVals();	
-200	
-201	}
-202	
-203	void RobotClass::convGyroVals() {
-204	
-205		currGyro.xRot *= GYRO_CONV;
-206		currGyro.yRot *= GYRO_CONV;
+      <BreakPoint Index="1" Name="Robot.cpp, line 215" Id="8dd1f4cb-aca5-4b79-b20e-75ea95d5c990" Enabled="1" Message="{currGyro.xRot}{currGyro.yRot}{currGyro.zRot}{currAcc.xAcc}{currAcc.yAcc}{currAcc.zAcc}" MessageTextType="2" PreProcessedMessage="{0}{1}{2}{3}{4}{5}" Condition="" ConditionType="1" CurrentHits="0" File="c:\robotic-projects\hw3_oop\robot.cpp" FileLine="215" FileColumn="1" FunctionName="readIMU()" FunctionLineOffset="14" FunctionColumnOffset="1" HitCountTarget="1" HitCountType="1" Language="C++" LocationType="3" Tag="&lt;vmbp Id='8dd1f4cb-aca5-4b79-b20e-75ea95d5c990'/&gt;" Type="1" ToString="System.__ComObject" BreakWhenHit="0">
+        <Source>208		currGyro.xRot = rGyro.g.x;
+209		currGyro.yRot = rGyro.g.y;
+210		currGyro.zRot = rGyro.g.z;
+211	
+212		currAcc.xAcc = rAccel.a.x;
+213		currAcc.yAcc = rAccel.a.y;
+214		currAcc.zAcc = rAccel.a.z;
+--&gt;215	
+216		convAccVals();
+217		convGyroVals();	
+218	
+219	}
+220	
+221	void RobotClass::convGyroVals() {
+222	
+223		currGyro.xRot *= GYRO_CONV;
+224		currGyro.yRot *= GYRO_CONV;
 </Source>
         <MessageVariables>
           <MessageVariable Name="currGyro.xRot" Index="1" />
@@ -37,24 +37,24 @@
           <MessageVariable Name="currAcc.zAcc" Index="6" />
         </MessageVariables>
       </BreakPoint>
-      <BreakPoint Index="2" Name="Robot.cpp, line 200" Id="78d211e9-437b-4dd3-8d39-5a28d83efb1f" Enabled="1" Message="{currGyro.xRot}{currGyro.yRot}{currGyro.zRot}{currAcc.xAcc}{currAcc.yAcc}{currAcc.zAcc}" MessageTextType="2" PreProcessedMessage="{0}{1}{2}{3}{4}{5}" Condition="" ConditionType="1" CurrentHits="0" File="c:\robotic-projects\hw3_oop\robot.cpp" FileLine="200" FileColumn="1" FunctionName="readIMU()" FunctionLineOffset="17" FunctionColumnOffset="1" HitCountTarget="1" HitCountType="1" Language="C++" LocationType="3" Tag="&lt;vmbp Id='78d211e9-437b-4dd3-8d39-5a28d83efb1f'/&gt;" Type="1" ToString="System.__ComObject" BreakWhenHit="0">
-        <Source>193	
-194		currAcc.xAcc = rAccel.a.x;
-195		currAcc.yAcc = rAccel.a.y;
-196		currAcc.zAcc = rAccel.a.z;
-197	
-198		convAccVals();
-199		convGyroVals();	
---&gt;200	
-201	}
-202	
-203	void RobotClass::convGyroVals() {
-204	
-205		currGyro.xRot *= GYRO_CONV;
-206		currGyro.yRot *= GYRO_CONV;
-207		currGyro.zRot *= GYRO_CONV;
-208	
-209	}
+      <BreakPoint Index="2" Name="Robot.cpp, line 218" Id="78d211e9-437b-4dd3-8d39-5a28d83efb1f" Enabled="1" Message="{currGyro.xRot}{currGyro.yRot}{currGyro.zRot}{currAcc.xAcc}{currAcc.yAcc}{currAcc.zAcc}" MessageTextType="2" PreProcessedMessage="{0}{1}{2}{3}{4}{5}" Condition="" ConditionType="1" CurrentHits="0" File="c:\robotic-projects\hw3_oop\robot.cpp" FileLine="218" FileColumn="1" FunctionName="readIMU()" FunctionLineOffset="17" FunctionColumnOffset="1" HitCountTarget="1" HitCountType="1" Language="C++" LocationType="3" Tag="&lt;vmbp Id='78d211e9-437b-4dd3-8d39-5a28d83efb1f'/&gt;" Type="1" ToString="System.__ComObject" BreakWhenHit="0">
+        <Source>211	
+212		currAcc.xAcc = rAccel.a.x;
+213		currAcc.yAcc = rAccel.a.y;
+214		currAcc.zAcc = rAccel.a.z;
+215	
+216		convAccVals();
+217		convGyroVals();	
+--&gt;218	
+219	}
+220	
+221	void RobotClass::convGyroVals() {
+222	
+223		currGyro.xRot *= GYRO_CONV;
+224		currGyro.yRot *= GYRO_CONV;
+225		currGyro.zRot *= GYRO_CONV;
+226	
+227	}
 </Source>
         <MessageVariables>
           <MessageVariable Name="currGyro.xRot" Index="1" />
@@ -65,93 +65,93 @@
           <MessageVariable Name="currAcc.zAcc" Index="6" />
         </MessageVariables>
       </BreakPoint>
-      <BreakPoint Index="3" Name="Robot.cpp, line 227" Id="2792864f-c6ed-4f4e-9be9-d106c548d621" Enabled="1" Message="{angVal}" MessageTextType="2" PreProcessedMessage="{0}" Condition="" ConditionType="1" CurrentHits="0" File="c:\robotic-projects\hw3_oop\robot.cpp" FileLine="227" FileColumn="1" FunctionName="compFilter(unsigned long deltaTime)" FunctionLineOffset="8" FunctionColumnOffset="1" HitCountTarget="1" HitCountType="1" Language="C++" LocationType="3" Tag="&lt;vmbp Id='2792864f-c6ed-4f4e-9be9-d106c548d621'/&gt;" Type="1" ToString="System.__ComObject" BreakWhenHit="0">
-        <Source>220	float RobotClass::compFilter(unsigned long deltaTime) {
-221	
-222		float accAngle = atan2(currAcc.yAcc, currAcc.xAcc);
-223	
-224		float angVal = COMP_F*(currentRPos.theta + currGyro.zRot*deltaTime) + (1.0f - COMP_F)*accAngle;
-225	
-226		return angVal;
---&gt;227	
-228	}
-229	
-230	
-231	int RobotClass::getRightCounts() {
-232		
-233		return encoderRightCounts;
-234	
-235	}
-236	
+      <BreakPoint Index="3" Name="Robot.cpp, line 246" Id="2792864f-c6ed-4f4e-9be9-d106c548d621" Enabled="1" Message="{angVal}" MessageTextType="2" PreProcessedMessage="{0}" Condition="" ConditionType="1" CurrentHits="0" File="c:\robotic-projects\hw3_oop\robot.cpp" FileLine="246" FileColumn="1" FunctionName="compFilter(unsigned long deltaTime)" FunctionLineOffset="8" FunctionColumnOffset="1" HitCountTarget="1" HitCountType="1" Language="C++" LocationType="3" Tag="&lt;vmbp Id='2792864f-c6ed-4f4e-9be9-d106c548d621'/&gt;" Type="1" ToString="System.__ComObject" BreakWhenHit="0">
+        <Source>239	
+240		float accAngle = atan2(currAcc.yAcc, currAcc.xAcc);
+241	
+242		float angVal = COMP_F*(currentRPos.theta + currGyro.zRot*deltaTime) + (1.0f - COMP_F)*accAngle;
+243	
+244		//Filtered angular position, works poorly
+245		return angVal;
+--&gt;246	
+247	}
+248	
+249	
+250	int RobotClass::getRightCounts() {
+251		
+252		return encoderRightCounts;
+253	
+254	}
+255	
 </Source>
         <MessageVariables>
           <MessageVariable Name="angVal" Index="1" />
         </MessageVariables>
       </BreakPoint>
-      <BreakPoint Index="4" Name="Robot.cpp, line 110" Id="480b53c6-c5ff-43a0-ba3c-61e7c5118d99" Enabled="1" Message="{test}" MessageTextType="2" PreProcessedMessage="{0}" Condition="" ConditionType="1" CurrentHits="0" File="c:\robotic-projects\hw3_oop\robot.cpp" FileLine="110" FileColumn="1" FunctionName="updatePosition(RobotClass::sensorsAllowed sensors)" FunctionLineOffset="29" FunctionColumnOffset="1" HitCountTarget="1" HitCountType="1" Language="C++" LocationType="3" Tag="&lt;vmbp Id='480b53c6-c5ff-43a0-ba3c-61e7c5118d99'/&gt;" Type="1" ToString="System.__ComObject" BreakWhenHit="0">
-        <Source>103			readIMU();
-104			
-105			//Calculate change in orientation using IMU
-106			float deltaTheta = currGyro.zRot*deltaTime/1000.0f;
-107			
-108			//testing out the complimentary filter
-109			float test = compFilter(deltaTime);
---&gt;110	
-111			//Update the robots pose
-112			updateRobotPose(centerDistance, leftDistance, rightDistance, deltaTheta);
-113			updateGlobalPose(centerDistance, leftDistance, rightDistance);
-114		
-115		}
-116	
-117	
-118	
-119	
+      <BreakPoint Index="4" Name="Robot.cpp, line 119" Id="480b53c6-c5ff-43a0-ba3c-61e7c5118d99" Enabled="1" Message="{test}" MessageTextType="2" PreProcessedMessage="{0}" Condition="" ConditionType="1" CurrentHits="0" File="c:\robotic-projects\hw3_oop\robot.cpp" FileLine="119" FileColumn="1" FunctionName="updatePosition(RobotClass::sensorsAllowed sensors)" FunctionLineOffset="29" FunctionColumnOffset="1" HitCountTarget="1" HitCountType="1" Language="C++" LocationType="3" Tag="&lt;vmbp Id='480b53c6-c5ff-43a0-ba3c-61e7c5118d99'/&gt;" Type="1" ToString="System.__ComObject" BreakWhenHit="0">
+        <Source>112			readIMU();
+113			
+114			//Calculate change in orientation using IMU
+115			float deltaTheta = currGyro.zRot*deltaTime/1000.0f;
+116			
+117			//testing out the complimentary filter
+118			float test = compFilter(deltaTime);
+--&gt;119	
+120			//Update the robots pose
+121			updateRobotPose(centerDistance, leftDistance, rightDistance, deltaTheta);
+122			updateGlobalPose(centerDistance, leftDistance, rightDistance);
+123		
+124		}
+125	
+126	
+127		lastTime = millis();
+128	}
 </Source>
         <MessageVariables>
           <MessageVariable Name="test" Index="1" />
         </MessageVariables>
       </BreakPoint>
-      <BreakPoint Index="5" Name="Robot.cpp, line 161" Id="a3774d06-3b19-4f67-9125-2517e64080f2" Enabled="1" Message="{currentRPos.theta}" MessageTextType="2" PreProcessedMessage="{0}" Condition="" ConditionType="1" CurrentHits="0" File="c:\robotic-projects\hw3_oop\robot.cpp" FileLine="161" FileColumn="1" FunctionName="updateRobotPose(float &amp;centerDist, float &amp;leftDist, float &amp;rightDist, float &amp;dTheta)" FunctionLineOffset="27" FunctionColumnOffset="1" HitCountTarget="1" HitCountType="1" Language="C++" LocationType="3" Tag="&lt;vmbp Id='a3774d06-3b19-4f67-9125-2517e64080f2'/&gt;" Type="1" ToString="System.__ComObject" BreakWhenHit="0">
-        <Source>154	
-155		}
-156		else if (currentRPos.theta &lt; 0.0f) {
-157	
-158			currentRPos.theta += 2.0f*M_PI;
-159	
-160		}
---&gt;161		
-162		//Save for use in the next loop
-163		previousRPos.x = currentRPos.x;
-164		previousRPos.y = currentRPos.y;
-165		previousRPos.theta = currentRPos.theta;
-166	
-167	}
-168	
-169	
-170	void RobotClass::updateGlobalPose(float &amp;centerDist, float &amp;leftDist, float &amp;rightDist) {
+      <BreakPoint Index="5" Name="Robot.cpp, line 179" Id="a3774d06-3b19-4f67-9125-2517e64080f2" Enabled="1" Message="{currentRPos.theta}" MessageTextType="2" PreProcessedMessage="{0}" Condition="" ConditionType="1" CurrentHits="0" File="c:\robotic-projects\hw3_oop\robot.cpp" FileLine="179" FileColumn="1" FunctionName="updateRobotPose(float &amp;centerDist, float &amp;leftDist, float &amp;rightDist, float &amp;dTheta)" FunctionLineOffset="27" FunctionColumnOffset="1" HitCountTarget="1" HitCountType="1" Language="C++" LocationType="3" Tag="&lt;vmbp Id='a3774d06-3b19-4f67-9125-2517e64080f2'/&gt;" Type="1" ToString="System.__ComObject" BreakWhenHit="0">
+        <Source>172	
+173		}
+174		else if (currentRPos.theta &lt; 0.0f) {
+175	
+176			currentRPos.theta += 2.0f*M_PI;
+177	
+178		}
+--&gt;179		
+180		//Save for use in the next loop
+181		previousRPos.x = currentRPos.x;
+182		previousRPos.y = currentRPos.y;
+183		previousRPos.theta = currentRPos.theta;
+184	
+185	}
+186	
+187	
+188	void RobotClass::updateGlobalPose(float &amp;centerDist, float &amp;leftDist, float &amp;rightDist) {
 </Source>
         <MessageVariables>
           <MessageVariable Name="currentRPos.theta" Index="1" />
         </MessageVariables>
       </BreakPoint>
-      <BreakPoint Index="6" Name="Robot.cpp, line 176" Id="7e1cddd1-80a2-44a1-a3f2-f610bc699c31" Enabled="1" Message="{globalCurrentPos.x}{globalCurrentPos.y}{globalCurrentPos.theta}" MessageTextType="2" PreProcessedMessage="{0}{1}{2}" Condition="" ConditionType="1" CurrentHits="0" File="c:\robotic-projects\hw3_oop\robot.cpp" FileLine="176" FileColumn="1" FunctionName="updateGlobalPose(float &amp;centerDist, float &amp;leftDist, float &amp;rightDist)" FunctionLineOffset="7" FunctionColumnOffset="1" HitCountTarget="1" HitCountType="1" Language="C++" LocationType="3" Tag="&lt;vmbp Id='7e1cddd1-80a2-44a1-a3f2-f610bc699c31'/&gt;" Type="1" ToString="System.__ComObject" BreakWhenHit="0">
-        <Source>169	
-170	void RobotClass::updateGlobalPose(float &amp;centerDist, float &amp;leftDist, float &amp;rightDist) {
-171	
-172		//Update robots position in the global coordinate frame
-173		globalCurrentPos.x = globalPreviousPos.x + centerDist*cosf(currentRPos.theta);
-174		globalCurrentPos.y = globalPreviousPos.y + centerDist*sinf(currentRPos.theta);
-175		globalCurrentPos.theta = currentRPos.theta;
---&gt;176	
-177		//Save for use in the next loop
-178		globalPreviousPos.x = globalCurrentPos.x;
-179		globalPreviousPos.y = globalCurrentPos.y;
-180		globalPreviousPos.theta = globalCurrentPos.theta;
-181	}
-182	
-183	
-184	void RobotClass::readIMU() {
-185		
+      <BreakPoint Index="6" Name="Robot.cpp, line 194" Id="7e1cddd1-80a2-44a1-a3f2-f610bc699c31" Enabled="1" Message="{globalCurrentPos.x}{globalCurrentPos.y}{globalCurrentPos.theta}" MessageTextType="2" PreProcessedMessage="{0}{1}{2}" Condition="" ConditionType="1" CurrentHits="0" File="c:\robotic-projects\hw3_oop\robot.cpp" FileLine="194" FileColumn="1" FunctionName="updateGlobalPose(float &amp;centerDist, float &amp;leftDist, float &amp;rightDist)" FunctionLineOffset="7" FunctionColumnOffset="1" HitCountTarget="1" HitCountType="1" Language="C++" LocationType="3" Tag="&lt;vmbp Id='7e1cddd1-80a2-44a1-a3f2-f610bc699c31'/&gt;" Type="1" ToString="System.__ComObject" BreakWhenHit="0">
+        <Source>187	
+188	void RobotClass::updateGlobalPose(float &amp;centerDist, float &amp;leftDist, float &amp;rightDist) {
+189	
+190		//Update robots position in the global coordinate frame
+191		globalCurrentPos.x = globalPreviousPos.x + centerDist*cosf(currentRPos.theta);
+192		globalCurrentPos.y = globalPreviousPos.y + centerDist*sinf(currentRPos.theta);
+193		globalCurrentPos.theta = currentRPos.theta;
+--&gt;194	
+195		//Save for use in the next loop
+196		globalPreviousPos.x = globalCurrentPos.x;
+197		globalPreviousPos.y = globalCurrentPos.y;
+198		globalPreviousPos.theta = globalCurrentPos.theta;
+199	}
+200	
+201	
+202	void RobotClass::readIMU() {
+203		
 </Source>
         <MessageVariables>
           <MessageVariable Name="globalCurrentPos.x" Index="1" />
@@ -159,27 +159,122 @@
           <MessageVariable Name="globalCurrentPos.theta" Index="3" />
         </MessageVariables>
       </BreakPoint>
-      <BreakPoint Index="7" Name="Robot.cpp, line 141" Id="e2d18295-890a-48b7-8265-6352bcb3202b" Enabled="1" Message="{thetaDiff}" MessageTextType="2" PreProcessedMessage="{0}" Condition="" ConditionType="1" CurrentHits="0" File="c:\robotic-projects\hw3_oop\robot.cpp" FileLine="141" FileColumn="1" FunctionName="updateRobotPose(float &amp;centerDist, float &amp;leftDist, float &amp;rightDist, float &amp;dTheta)" FunctionLineOffset="7" FunctionColumnOffset="1" HitCountTarget="1" HitCountType="1" Language="C++" LocationType="3" Tag="&lt;vmbp Id='e2d18295-890a-48b7-8265-6352bcb3202b'/&gt;" Type="1" ToString="System.__ComObject" BreakWhenHit="0">
-        <Source>134	//Update robots position in the local coordinate frame
-135	void RobotClass::updateRobotPose(float &amp;centerDist, float &amp;leftDist, float &amp;rightDist, float &amp;dTheta) {
-136		
-137	
-138		float deltaThetaEncoder = (rightDist - leftDist) / rWheelBase;
-139	
-140		float thetaDiff = deltaThetaEncoder - dTheta;
---&gt;141		
-142		float thetaAvg = 0.5f*(deltaThetaEncoder + dTheta);
-143		
-144		currentRPos.x = previousRPos.x + centerDist;
-145		currentRPos.y = 0.0f;
-146		currentRPos.theta = previousRPos.theta + thetaAvg;
-147	
-148	
-149	
-150		//Constrain anglular position to be between 0 and 2pi
+      <BreakPoint Index="7" Name="Robot.cpp, line 159" Id="e2d18295-890a-48b7-8265-6352bcb3202b" Enabled="1" Message="{thetaDiff}" MessageTextType="2" PreProcessedMessage="{0}" Condition="" ConditionType="1" CurrentHits="0" File="c:\robotic-projects\hw3_oop\robot.cpp" FileLine="159" FileColumn="1" FunctionName="updateRobotPose(float &amp;centerDist, float &amp;leftDist, float &amp;rightDist, float &amp;dTheta)" FunctionLineOffset="7" FunctionColumnOffset="1" HitCountTarget="1" HitCountType="1" Language="C++" LocationType="3" Tag="&lt;vmbp Id='e2d18295-890a-48b7-8265-6352bcb3202b'/&gt;" Type="1" ToString="System.__ComObject" BreakWhenHit="0">
+        <Source>152	//Update robots position in the local coordinate frame
+153	void RobotClass::updateRobotPose(float &amp;centerDist, float &amp;leftDist, float &amp;rightDist, float &amp;dTheta) {
+154		
+155	
+156		float deltaThetaEncoder = (rightDist - leftDist) / rWheelBase;
+157	
+158		float thetaDiff = deltaThetaEncoder - dTheta;
+--&gt;159		
+160		float thetaAvg = 0.5f*(deltaThetaEncoder + dTheta);
+161		
+162		currentRPos.x = previousRPos.x + centerDist;
+163		currentRPos.y = 0.0f;
+164		currentRPos.theta = previousRPos.theta + thetaAvg;
+165	
+166	
+167	
+168		//Constrain anglular position to be between 0 and 2pi
 </Source>
         <MessageVariables>
           <MessageVariable Name="thetaDiff" Index="1" />
+        </MessageVariables>
+      </BreakPoint>
+      <BreakPoint Index="8" Name="Robot.cpp, line 98" Id="100d921e-8332-4ce3-adf9-cb01821bc05e" Enabled="1" Message="{encoderLeftCounts}" MessageTextType="2" PreProcessedMessage="{0}" Condition="" ConditionType="1" CurrentHits="0" File="c:\robotic-projects\hw3_oop\robot.cpp" FileLine="98" FileColumn="1" FunctionName="updatePosition(RobotClass::sensorsAllowed sensors)" FunctionLineOffset="5" FunctionColumnOffset="1" HitCountTarget="1" HitCountType="1" Language="C++" LocationType="3" Tag="&lt;vmbp Id='100d921e-8332-4ce3-adf9-cb01821bc05e'/&gt;" Type="1" ToString="System.__ComObject" BreakWhenHit="0">
+        <Source>91	}
+92	
+93	
+94	void RobotClass::updatePosition(RobotClass::sensorsAllowed sensors) {
+95		deltaTime = millis() - lastTime;
+96	
+97		if (sensors = RobotClass::sensorsAllowed::IMU_ENC) {
+--&gt;98			
+99			if (isnan(encoderLeftCounts)) encoderLeftCounts = 0;
+100			if (isnan(encoderRightCounts)) encoderRightCounts = 0;
+101	
+102			//First, determine distance traveled via the encoder sensors
+103			float leftDistance = encoderLeftCounts*rWheelCirc/encoderRes;
+104			float rightDistance = encoderRightCounts*rWheelCirc / encoderRes;
+105			float centerDistance = 0.5f*(rightDistance + leftDistance);
+106	
+107	
+</Source>
+        <MessageVariables>
+          <MessageVariable Name="encoderLeftCounts" Index="1" />
+        </MessageVariables>
+      </BreakPoint>
+      <BreakPoint Index="9" Name="Robot.cpp, line 279" Id="f5b4f378-fdce-4361-879d-ca6cf1fc1352" Enabled="1" Message="{encoderDeltaLeft}" MessageTextType="2" PreProcessedMessage="{0}" Condition="" ConditionType="1" CurrentHits="0" File="c:\robotic-projects\hw3_oop\robot.cpp" FileLine="279" FileColumn="1" FunctionName="moveTo(RobotClass::rPosition waypoint, RobotClass::pathType path)" FunctionLineOffset="18" FunctionColumnOffset="1" HitCountTarget="1" HitCountType="1" Language="C++" LocationType="3" Tag="&lt;vmbp Id='f5b4f378-fdce-4361-879d-ca6cf1fc1352'/&gt;" Type="1" ToString="System.__ComObject" BreakWhenHit="0">
+        <Source>272			
+273			//Update the robots position in global and local coordinate frames
+274			
+275			while (globalCurrentPos.x &lt;= waypoint.x) {
+276				
+277				encoderLeftCounts = wheelEncoders.getCountsAndResetLeft();
+278				encoderRightCounts = wheelEncoders.getCountsAndResetRight();
+--&gt;279	
+280				motors.setLeftMotorSpeed(leftMotorSpeed);
+281				motors.setRightMotorSpeed(rightMotorSpeed);
+282	
+283				updatePosition(RobotClass::IMU_ENC);
+284	
+285				float deltaEncoderCounts = encoderRightCounts - encoderRightCounts;
+286	
+287				//Adjust motor PWM based on the difference in encoder counts every loop
+288				if (deltaEncoderCounts &gt; 0) {
+</Source>
+        <MessageVariables>
+          <MessageVariable Name="encoderDeltaLeft" Index="1" />
+        </MessageVariables>
+      </BreakPoint>
+      <BreakPoint Index="10" Name="Robot.cpp, line 305" Id="bce65de0-c9b6-467f-baf6-7447cdf0c882" Enabled="1" Message="{turnVel.right}{turnVel.leftVel}" MessageTextType="2" PreProcessedMessage="{0}{1}" Condition="" ConditionType="1" CurrentHits="0" File="c:\robotic-projects\hw3_oop\robot.cpp" FileLine="305" FileColumn="1" FunctionName="moveTo(RobotClass::rPosition waypoint, RobotClass::pathType path)" FunctionLineOffset="43" FunctionColumnOffset="1" HitCountTarget="1" HitCountType="1" Language="C++" LocationType="3" Tag="&lt;vmbp Id='bce65de0-c9b6-467f-baf6-7447cdf0c882'/&gt;" Type="1" ToString="System.__ComObject" BreakWhenHit="0">
+        <Source>298			motors.setLeftMotorSpeed(0);
+299			motors.setRightMotorSpeed(0);
+300		}
+301		else if (path == RobotClass::CURVED) {
+302			//Maintain the proper turn radius
+303			 calcTurnVel(11.0f);
+304			 
+--&gt;305			 leftMotorSpeed = turnVel.leftVel;
+306			 rightMotorSpeed = turnVel.right;
+307	
+308			 float velRatio = leftMotorSpeed / rightMotorSpeed;
+309	
+310			 float currentTurnRadius;
+311	
+312				  while (globalCurrentPos.theta &gt;= M_PI + 0.1 || globalCurrentPos.theta &lt;= M_PI - 0.1) {
+313	
+314					  encoderLeftCounts = wheelEncoders.getCountsAndResetLeft();
+</Source>
+        <MessageVariables>
+          <MessageVariable Name="turnVel.right" Index="1" />
+          <MessageVariable Name="turnVel.leftVel" Index="2" />
+        </MessageVariables>
+      </BreakPoint>
+      <BreakPoint Index="11" Name="Robot.cpp, line 325" Id="b9b06efb-e055-45c3-a607-97f43e7d8bb7" Enabled="1" Message="{currentTurnRadius}{encoderLeftCounts}{encoderRightCounts}" MessageTextType="2" PreProcessedMessage="{0}{1}{2}" Condition="" ConditionType="1" CurrentHits="0" File="c:\robotic-projects\hw3_oop\robot.cpp" FileLine="325" FileColumn="1" FunctionName="moveTo(RobotClass::rPosition waypoint, RobotClass::pathType path)" FunctionLineOffset="53" FunctionColumnOffset="1" HitCountTarget="1" HitCountType="1" Language="C++" LocationType="3" Tag="&lt;vmbp Id='b9b06efb-e055-45c3-a607-97f43e7d8bb7'/&gt;" Type="1" ToString="System.__ComObject" BreakWhenHit="0">
+        <Source>318					  motors.setRightMotorSpeed(rightMotorSpeed * 8);
+319	
+320					  updatePosition(RobotClass::IMU_ENC);
+321					  lcd.gotoXY(0, 0);
+322					  lcd.print(globalCurrentPos.theta);
+323		
+324					  currentTurnRadius = (rWheelBase / 2.0f)*(encoderLeftCounts + encoderRightCounts) / fabs((encoderLeftCounts - encoderRightCounts));
+--&gt;325					  lcd.gotoXY(0, 1);
+326					  lcd.print(currentTurnRadius);
+327	
+328					  if (leftMotorSpeed/rightMotorSpeed &gt; velRatio) {
+329	
+330						  leftMotorSpeed -= 1;
+331						  rightMotorSpeed += 1;
+332						
+333					  }
+334					  else if (leftMotorSpeed/rightMotorSpeed &lt; velRatio) {
+</Source>
+        <MessageVariables>
+          <MessageVariable Name="currentTurnRadius" Index="1" />
+          <MessageVariable Name="encoderLeftCounts" Index="2" />
+          <MessageVariable Name="encoderRightCounts" Index="3" />
         </MessageVariables>
       </BreakPoint>
     </BreakPoints>

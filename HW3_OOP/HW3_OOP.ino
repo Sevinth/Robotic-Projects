@@ -21,19 +21,23 @@
 #include "Robot.h"
 #include "Motors.h"
 
-Motors motors;
 RobotClass robot;
 
 RobotClass::sensorsAllowed sensors = RobotClass::IMU_ENC;
-RobotClass::pathType path = RobotClass::DIRECT;
+RobotClass::pathType path = RobotClass::CURVED;
+
 void setup()
 {
 	Serial.begin(9600);
-	motors.setRightMotorDirection(true);
-	motors.setLeftMotorDirection(true);
+
+
+	robot.motors.setRightMotorDirection(true);
+	robot.motors.setLeftMotorDirection(true);
+
 
 	robot.init();
-
+	
+	robot.setWaypoint(22.0, 0, 0, RobotClass::WaypointOne);
 
 }
 
@@ -41,15 +45,7 @@ void loop()
 {
 
 	
-	while (robot.getCurrentGPos().x <= 22.0) {
-		motors.setRightMotorSpeed(50);
-		motors.setLeftMotorSpeed(50);
-		robot.updatePosition(sensors);
-	}
-
-
-	motors.setRightMotorSpeed(0);
-	motors.setLeftMotorSpeed(0);
+	robot.moveTo(robot.getWaypointOne(), path);
 
 
 

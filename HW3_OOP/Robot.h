@@ -12,6 +12,7 @@
 
 
 #include <Wire.h>
+#include "Motors.h"
 #include <L3G.h>
 #include <LSM303.h>
 #include <Zumo32U4Encoders.h>
@@ -48,6 +49,8 @@ protected:
 	int encoderLeftCounts;
 	int encoderRightCounts;
 
+	int encoderDeltaLeft;
+	int encoderDeltaRight;
 
 	struct rotVel {
 		float xRot;
@@ -77,13 +80,16 @@ protected:
 		float right;
 	};
 
+	
+
 	struct wayPoints {
-		enum waypointNames {WaypointOne, WaypointTwo, WaypointThree, WaypointFour};
 		rPosition wpone;
 		rPosition wptwo;
 		rPosition wpthree;
 		rPosition wpfour;
 	};
+
+
 
 	turnVelocities turnVel;
 
@@ -105,15 +111,19 @@ protected:
 
 	L3G rGyro;
 	LSM303 rAccel;
+	
 
 public:
+
+	Motors motors;
 
 	unsigned long deltaTime;
 	unsigned long lastTime;
 
 	enum sensorsAllowed { IMU, IMU_ENC };
 	enum pathType {DIRECT, CURVED};
-	
+	enum waypointNames { WaypointOne, WaypointTwo, WaypointThree, WaypointFour };
+
 	void init();
 
 	//Update the robots position according to available sensors
@@ -150,6 +160,7 @@ public:
 
 	void moveTo(rPosition, pathType);
 
+	void setWaypoint(float x, float y, float theta, waypointNames name);
 
 	//Get functions for all the structs
 	rPosition getCurrentRPos() {
@@ -160,8 +171,11 @@ public:
 		return this->globalCurrentPos;
 	}
 
-
+	rPosition getWaypointOne() {
+		return this->rWaypoints.wpone;
+	}
 };
+
 
 
 

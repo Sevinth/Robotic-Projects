@@ -3,10 +3,13 @@
 // 
 
 #include "Robot.h"
+#include "Motors.h"
 #include <LSM303.h>
 #include <L3G.h>
+#include <Zumo32U4LCD.h>
 
 Zumo32U4Encoders wheelEncoders;
+Zumo32U4LCD lcd;
 
 void RobotClass::init()
 {
@@ -63,18 +66,27 @@ void RobotClass::init()
 	prevAcc.yAcc = 0;
 	prevAcc.zAcc = 0;
 
+	encoderLeftCounts = 0;
+	encoderRightCounts = 0;
+
+	encoderDeltaLeft = 0;
+	encoderDeltaRight = 0;
 	
 	//Initiate quadrature encoders and IMU to default parameters
 	//Gyro Default: +/- 250 mpds, conversion: 8.75 mpds/LSB
 	//Accel Default: +/- 2 g, conversion: 0.61 mg/LSB
 
 	Wire.begin();
+	lcd.init();
 
 	wheelEncoders.init();
 	rGyro.init();
 	rGyro.enableDefault();
 	rAccel.init();
 	rAccel.enableDefault();
+
+	wheelEncoders.getCountsAndResetLeft();
+	wheelEncoders.getCountsAndResetRight();
 	
 }
 
@@ -252,13 +264,22 @@ void RobotClass::moveTo(RobotClass::rPosition waypoint, RobotClass::pathType pat
 	if (path == RobotClass::DIRECT) {
 		//Make sure the robot drives in a straight line
 
-		encoderLeftCounts = wheelEncoders.getCountsAndResetLeft;
-		encoderRightCounts = wheelEncoders.getCountsAndResetRight;
+		leftMotorSpeed = 75;
+		rightMotorSpeed = 75;
+
+
 
 		
 		//Update the robots position in global and local coordinate frames
 		
-		while (globalCurrentPos.x <= waypoint.x || globalCurrentPos.y != waypoint.y || globalCurrentPos.theta != waypoint.theta) {
+		while (globalCurrentPos.x <= waypoint.x) {
+			
+			encoderLeftCounts = wheelEncoders.getCountsAndResetLeft();
+			encoderRightCounts = wheelEncoders.getCountsAndResetRight();
+
+			motors.setLeftMotorSpeed(leftMotorSpeed);
+			motors.setRightMotorSpeed(rightMotorSpeed);
+
 			updatePosition(RobotClass::IMU_ENC);
 
 			float deltaEncoderCounts = encoderRightCounts - encoderRightCounts;
@@ -272,16 +293,77 @@ void RobotClass::moveTo(RobotClass::rPosition waypoint, RobotClass::pathType pat
 				leftMotorSpeed -= 2;
 				rightMotorSpeed += 2;
 			}
+		} 
 
-		}
-
-
+		motors.setLeftMotorSpeed(0);
+		motors.setRightMotorSpeed(0);
 	}
 	else if (path == RobotClass::CURVED) {
 		//Maintain the proper turn radius
+		 calcTurnVel(11.0f);
+		 
+		 leftMotorSpeed = turnVel.leftVel;
+		 rightMotorSpeed = turnVel.right;
+
+		 float velRatio = leftMotorSpeed / rightMotorSpeed;
+
+		 float currentTurnRadius;
+
+			  while (globalCurrentPos.theta >= M_PI + 0.1 || globalCurrentPos.theta <= M_PI - 0.1) {
+
+				  encoderLeftCounts = wheelEncoders.getCountsAndResetLeft();
+				  encoderRightCounts = wheelEncoders.getCountsAndResetRight();
+
+				  motors.setLeftMotorSpeed(leftMotorSpeed * 8);
+				  motors.setRightMotorSpeed(rightMotorSpeed * 8);
+
+				  updatePosition(RobotClass::IMU_ENC);
+				  lcd.gotoXY(0, 0);
+				  lcd.print(globalCurrentPos.theta);
+	
+				  currentTurnRadius = (rWheelBase / 2.0f)*(encoderLeftCounts + encoderRightCounts) / fabs((encoderLeftCounts - encoderRightCounts));
+				  lcd.gotoXY(0, 1);
+				  lcd.print(currentTurnRadius);
+
+				  if (leftMotorSpeed/rightMotorSpeed > velRatio) {
+
+					  leftMotorSpeed -= 1;
+					  rightMotorSpeed += 1;
+					
+				  }
+				  else if (leftMotorSpeed/rightMotorSpeed < velRatio) {
+					  leftMotorSpeed += 1;
+					  rightMotorSpeed -= 1;
+					
+				  }
+
+				 
+
+			  }
+
+			  motors.setRightMotorSpeed(0);
+			  motors.setLeftMotorSpeed(0);
+		
+
+	}
 
 
+}
 
+//Used to set new waypoints from the main program(the ino file)
+void RobotClass::setWaypoint(float x, float y, float theta, waypointNames name) {
+
+	switch (name) {
+	case 0:
+		rWaypoints.wpone.x = x;
+		rWaypoints.wpone.y = y;
+		rWaypoints.wpone.theta = theta;
+		break;
+	case 1:
+		rWaypoints.wptwo.x = x;
+		rWaypoints.wptwo.y = y;
+		rWaypoints.wptwo.theta = theta;
+		break;
 	}
 
 
