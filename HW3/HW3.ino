@@ -42,7 +42,7 @@ float gCurrentPose[3] = { 0,0,0 };
 float gPrevPose[3] = { 0,0,0 };
 float gVelocities[4] = { 0,0,0,0 };
 float gPath[5][3] = { { 22,0, 0 },
-{ 0,-22.0f,0 },
+{ 0,-22.0f,pi},
 { 0,0,0 },
 { 0,0,0 },
 { 0,0,0 } };
@@ -187,18 +187,15 @@ void updatePosition() {
 
 	getRVel(deltaEncoderRight, deltaEncoderLeft, timeSinceLast);
 
-	float gyroRot = getZRot(timeSinceLast);
-
 	float deltaRight = wheelCirc*deltaEncoderRight / encoderRes;
 	float deltaLeft = wheelCirc*deltaEncoderLeft / encoderRes;
 	float deltaCenter = 0.5f*(deltaRight + deltaLeft);
+
 	float deltaTheta = (1.0f / baseWidth)*(deltaRight - deltaLeft);
 
 
 
 	float filteredAngle = angCompFilter(timeSinceLast, deltaTheta);
-
-	float thetaDiff = deltaTheta - gyroRot*timeSinceLast;
 
 	//Save current counts for use in next updatePosition()
 	prevCountsRight = encoderRight;
@@ -206,16 +203,13 @@ void updatePosition() {
 
 	//Get velocities from delta encoder values
 	//getRVel(deltaEncoderRight, deltaEncoderLeft, timeSinceLast);
-
-	float gyroAngVel = getZRot(timeSinceLast);
-	//rVelocities[3] = (rVelocities[3] + gyroAngVel) / 2.0f;
 	
 
 	//Robot Coordinate Frame Pose
 	rCurrentPose[0] = rPrevPose[0] + deltaCenter;
 	rCurrentPose[1] = 0.0f;
 	//rCurrentPose[2] = angCompFilter(timeSinceLast);
-	rCurrentPose[2] = filteredAngle;
+	rCurrentPose[2] = rPrevPose[2] + deltaTheta;
 
 	//Constrain angle(rCurrentPose[2]) between 0 and 2*pi
 	if (rCurrentPose[2] < 0.0f) {
@@ -365,8 +359,15 @@ void courseCorrection(int waypoint) {
 		float denom = fabs(deltaEncoderLeft - deltaEncoderRight);
 		float CalculatedRadius = (baseWidth / 2.0f)*(deltaEncoderRight + deltaEncoderLeft) / (denom);
 
-	
+		if (CalculatedRadius > 11.0f) {
+			leftMotorSpeed += 5;
+			rightMotorSpeed -= 5;
 
+		}
+		else if (CalculatedRadius < 11.0f) {
+			leftMotorSpeed -= 5;
+			rightMotorSpeed += 5;
+		}
 			
 		leftMotorSpeed = constrain(leftMotorSpeed, 75, 225);
 		rightMotorSpeed = constrain(rightMotorSpeed, 75, 225);
@@ -434,16 +435,19 @@ void moveToLocation(int waypoint) {
 
 		rightMotorSpeed = 100;
 		leftMotorSpeed = calcTurnRatios(11.0f)*rightMotorSpeed*1.5;
-
-		while ((gCurrentPose[2] > gPath[waypoint][2] - 0.2)) {
+		motors.setSpeeds(leftMotorSpeed, rightMotorSpeed);
+		delay(1250);
+		while ((gCurrentPose[2] != gPath[waypoint][2] + 0.2) && (gCurrentPose[2] != gPath[waypoint][2] - 0.2)) {
 			motors.setSpeeds(leftMotorSpeed, rightMotorSpeed);
 			updatePosition();
 			lcd.gotoXY(0, 0);
 			lcd.print(gCurrentPose[2]);
 			lcd.gotoXY(0, 1);
-			lcd.print(rVelocities[3]);
+
 			courseCorrection(waypoint);
 
+
+		
 
 		}
 
