@@ -6,7 +6,7 @@
 #include <float.h>
 #include <stdarg.h>
 
-#define COMP_F_A 0.15f
+#define COMP_F_A 0.98f
 #define COMP_F_B 0.5f
 
 Zumo32U4Encoders encoders;
@@ -116,11 +116,10 @@ float getZRot(float deltaTime) {
 	
 	gyroZRotRaw /= nSamples;
 	
-	float gyroZRot = gyroZRotRaw*8.75f; // millidegrees / seceond
+	float gyroZRot = gyroZRotRaw/8.75; // millidegrees / seceond
 
-	gyroZRot = (1.0f/1000.0)*gyroZRot;
-	gyroZRot = (pi / 180.0f)*gyroZRot;
-	gyroZRot = gyroZRot/1000.0f;
+	gyroZRot = (pi / (180.0f*1000.0f))*gyroZRot;
+	gyroZRot = gyroZRot;
 
 	return gyroZRot*deltaTime;
 
@@ -519,7 +518,9 @@ void setup()
 	encoders.init();
 	//Initiate gyr and enable default values (+/- 250 dps)
 	gyro.init();
+
 	gyro.enableDefault();
+	gyro.writeReg(L3G::CTRL1, 0b11111111);
 	gyroCalibrate();
 
 	//Enable accelerometer with default values (+/- 2g)
