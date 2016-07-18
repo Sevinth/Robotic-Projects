@@ -69,13 +69,16 @@ float encoderCounts = 0;
 
 void getRVel(float deltaCountsRight, float deltaCountsLeft, float timeEllapsed) {
 
-	
+	//Use difference in counts for Left and Right motors to calculate the forwad velocities
 	float rVelRight = deltaCountsRight*wheelCirc/(timeEllapsed*encoderRes);
 	float rVelLeft = deltaCountsLeft*wheelCirc / (timeEllapsed*encoderRes);
 
+	//Center velocity of the robot
 	float rVelCenter = 0.5f*(rVelRight + rVelLeft);
+	//Angular velocity of the robot
 	float rVelAng = (1.0f / baseWidth)*(rVelRight - rVelLeft);
 
+	//Copy velocities into global variable for use later
 	rVelocities[0] = rVelCenter;
 	rVelocities[1] = rVelRight;
 	rVelocities[2] = rVelLeft;
@@ -83,6 +86,8 @@ void getRVel(float deltaCountsRight, float deltaCountsLeft, float timeEllapsed) 
 
 }
 
+
+//Not currently used
 float straightLineCalc(float distance) {
 
 	float time;
@@ -93,6 +98,8 @@ float straightLineCalc(float distance) {
 
 }
 
+
+//Get angular velocity around the Z axis according to the gyro
 float getZRot(float deltaTime) {
 
 	//Read the gyro
@@ -157,7 +164,7 @@ void updatePosition() {
 	//Robot Coordinate Frame Pose
 	rCurrentPose[0] = rPrevPose[0] + rVelocities[0] * timeSinceLast;
 	rCurrentPose[1] = 0.0f;
-	rCurrentPose[2] = angCompFilter(timeSinceLast);
+	rCurrentPose[2] = rPrevPose[2] + rVelocities[3] * timeSinceLast;
 	
 	if (rCurrentPose[2] < 0.0f) {
 		rCurrentPose[2] = 2.0f * pi;
@@ -314,20 +321,18 @@ void moveToLocation(int waypoint) {
 
 void accCalibrate() {
 	
+	lcd.gotoXY(0, 0);
+	lcd.print("Calibrate");
+	lcd.gotoXY(0, 1);
+	lcd.print("Accel");
+
 
 	int nSamples = 1024;
 	float accReadX  = 0.0f;
 	float accReadY = 0.0f;
 	float accReadZ = 0.0f;
+	
 
-	for (int i = 0; i < nSamples; i++) {
-		acc.read();
-		delay(1);
-		accReadX += acc.a.x;
-		accReadY += acc.a.y;
-		accReadZ += acc.a.z;
-		
-	}
 
 	accReadX /= (float)nSamples;
 	accReadY /= (float)nSamples;
@@ -344,11 +349,11 @@ void getAccValues() {
 	acc.read();
 	int nSamples;
 
-		accXVals[0] = ((float)acc.a.x + accXOffset)*0.61f;
+		accXVals[0] = ((float)acc.a.x - accXOffset)*0.61f;
 
-		accYVals[0] = ((float)acc.a.y + accYOffset)*0.61f;
+		accYVals[0] = ((float)acc.a.y - accYOffset)*0.61f;
 
-		accZVals[0] = ((float)acc.a.z + accZOffset)*0.61f;
+		accZVals[0] = ((float)acc.a.z)*0.61f;
 	
 }
 
@@ -359,12 +364,14 @@ void setup()
 	//enable communication to I2C devices
 	Wire.begin();
 
-	/* add setup code here */
+	
+	//Initiate L3G with default behavior, then calibrate
 	encoders.init();
 	gyro.init();
 	gyro.enableDefault();
-	//gyroCalibrate();
+	gyroCalibrate();
 
+	//Initiate LSM303 with default behavior, then calibrate
 	acc.init();
 	acc.enableDefault();
 	accCalibrate();
