@@ -53,13 +53,19 @@ void setup()
 void loop()
 {
 
-	
-	robot.moveTo(robot.getWaypointOne(), path1);
-	delay(100);
-	robot.moveTo(robot.getWaypointTwo(), path2);
-	delay(100);
-	robot.moveTo(robot.getWaypointThree(), path3);
-	delay(100);
+	float batt = readBatteryMillivolts();
+
+	robot.motors.setLeftMotorSpeed(0);
+	robot.motors.setRightMotorSpeed(0);
+	robot.updatePosition(RobotClass::IMU_ENC);
+
+
+
+	//delay(100);
+	//robot.moveTo(robot.getWaypointTwo(), path2);
+	//delay(100);
+	//robot.moveTo(robot.getWaypointThree(), path3);
+	//delay(100);
 	//robot.moveTo(robot.getWaypointFour(), path4);
 
 	delay(150);

@@ -18,10 +18,19 @@
 #include <Zumo32U4Encoders.h>
 
 
+#define GYRO_CONV (8.75/1000.0f) //* (M_PI/180.0f) //Convert Gyro output to radians/second
+#define GYRO_X_OFFSET_GAIN 1.0
+#define GYRO_Y_OFFSET_GAIN 1.0
+#define GYRO_Z_OFFSET_GAIN 2.0
 
-#define GYRO_CONV (M_PI/180.0f)*8.75/1000.0f
-#define ACC_CONV 0.061/1000.0f
-#define COMP_F 0.98
+
+#define ACC_CONV 0.061f/1000.0f
+#define ACC_X_OFFSET_GAIN 1.0
+#define ACC_Y_OFFSET_GAIN 1.0
+#define ACC_Z_OFFSET_GAIN 1.0
+
+#define COMP_F 0.98f
+#define GYRO_OFFEST 0.0015f
 
 class RobotClass
 {
@@ -53,7 +62,11 @@ protected:
 	int encoderDeltaLeft;
 	int encoderDeltaRight;
 
+	float leftDistance;
+	float rightDistance;
+	float centerDistance;
 
+	float gyroNoise;
 
 	struct rotVel {
 		float xRot;
@@ -78,6 +91,13 @@ protected:
 
 	};
 
+
+	struct rVelocities {
+		float leftWheel;
+		float rightWheel;
+		float center;
+		float angular;
+	};
 	struct turnVelocities {
 		float leftVel;
 		float right;
@@ -101,8 +121,13 @@ protected:
 	rotVel currGyro;
 	rotVel prevGyro;
 
+	rotVel gyroOffsets;
+	
+
 	linAcc currAcc;
 	linAcc prevAcc;
+
+	linAcc accOffsets;
 
 	//Create instances of the rPosition struct
 	//for all both reference frames
@@ -111,6 +136,7 @@ protected:
 	rPosition globalCurrentPos;
 	rPosition globalPreviousPos;
 
+	rVelocities rVel;
 
 	L3G rGyro;
 	LSM303 rAccel;
@@ -154,9 +180,12 @@ public:
 	void convGyroVals();
 	void convAccVals();
 
+
+
 	float compFilter(unsigned long deltaTime);
 
 
+	void calcRDistances();
 
 	void calcTurnVel(float);
 
@@ -189,6 +218,17 @@ public:
 	rPosition getWaypointFour() {
 		return this->rWaypoints.wpfour;
 	}
+
+	
+
+	void calcRVelocities(float &leftDist, float &rightDist, unsigned long &dT);
+	
+	void setLeftWheelVelocity(float);
+	void setRightWheelVelocity(float);
+
+
+	void gyroCalibration();
+	void accCalibration();
 };
 
 

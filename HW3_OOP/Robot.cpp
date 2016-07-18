@@ -90,25 +90,40 @@ void RobotClass::init()
 	rAccel.init();
 	rAccel.enableDefault();
 
+	gyroCalibration();
+	accCalibration();
+
 	wheelEncoders.getCountsAndResetLeft();
 	wheelEncoders.getCountsAndResetRight();
 	
 }
 
+void RobotClass::calcRDistances() {
+
+	encoderLeftCounts = wheelEncoders.getCountsAndResetLeft();
+	encoderRightCounts = wheelEncoders.getCountsAndResetRight();
+
+	if (isnan(encoderLeftCounts)) encoderLeftCounts = 0;
+	if (isnan(encoderRightCounts)) encoderRightCounts = 0;
+
+	//First, determine distance traveled via the encoder sensors
+	 leftDistance = encoderLeftCounts*rWheelCirc / encoderRes;
+	 rightDistance = encoderRightCounts*rWheelCirc / encoderRes;
+	 centerDistance = 0.5f*(rightDistance + leftDistance);
+
+}
 
 void RobotClass::updatePosition(RobotClass::sensorsAllowed sensors) {
+	
 	deltaTime = millis() - lastTime;
 
 	if (sensors = RobotClass::sensorsAllowed::IMU_ENC) {
 		
-		if (isnan(encoderLeftCounts)) encoderLeftCounts = 0;
-		if (isnan(encoderRightCounts)) encoderRightCounts = 0;
+		//Calculate distances based on encoders
+		calcRDistances();
 
-		//First, determine distance traveled via the encoder sensors
-		float leftDistance = encoderLeftCounts*rWheelCirc/encoderRes;
-		float rightDistance = encoderRightCounts*rWheelCirc / encoderRes;
-		float centerDistance = 0.5f*(rightDistance + leftDistance);
-
+		//Calculate Velocities based on encoders
+		calcRVelocities(leftDistance, rightDistance, deltaTime);
 
 		//Update total distance counters
 		updateDistances(leftDistance, rightDistance, centerDistance);
@@ -154,33 +169,31 @@ void RobotClass::updateDistances(float &leftDist, float &rightDist, float &total
 }
 
 
+
 //Update robots position in the local coordinate frame
 void RobotClass::updateRobotPose(float &centerDist, float &leftDist, float &rightDist, float &dTheta) {
 	
 
 	float deltaThetaEncoder = (rightDist - leftDist) / rWheelBase;
 
-	float thetaDiff = deltaThetaEncoder - dTheta;
+	float thetaDiff = deltaThetaEncoder - (dTheta);
 	
-	thetaAvg = 0.5f*(deltaThetaEncoder + dTheta);
+	thetaAvg = 0.5f*(deltaThetaEncoder + (dTheta));
 	
 	currentRPos.x = previousRPos.x + centerDist;
 	currentRPos.y = 0.0f;
-	currentRPos.theta = previousRPos.theta + thetaAvg;
+	currentRPos.theta = previousRPos.theta + (dTheta);
 
 
 
 	//Constrain anglular position to be between 0 and 2pi
-	if (currentRPos.theta > 2.0f*M_PI) {
-
-		currentRPos.theta -= 2.0f*M_PI;
-
+	if (currentRPos.theta > 2.0f * M_PI) {
+		currentRPos.theta -= 2.0f * M_PI;
 	}
 	else if (currentRPos.theta < 0.0f) {
-
 		currentRPos.theta += 2.0f*M_PI;
-
 	}
+	
 	
 	//Save for use in the next loop
 	previousRPos.x = currentRPos.x;
@@ -208,18 +221,30 @@ void RobotClass::readIMU() {
 	
 	rGyro.read();
 	
+	
+	//if (rGyro.g.z >= gyroNoise || rGyro.g.z <= -gyroNoise) {
+	
+		currGyro.xRot = rGyro.g.x;
+		currGyro.xRot -= gyroOffsets.xRot*GYRO_X_OFFSET_GAIN;
+
+		currGyro.yRot = rGyro.g.y;
+		currGyro.yRot -= gyroOffsets.yRot*GYRO_Y_OFFSET_GAIN;
+
+		currGyro.zRot = rGyro.g.z;
+		currGyro.zRot -= gyroOffsets.zRot;
+	//}
+	
 	rAccel.read();
 
-	currGyro.xRot = rGyro.g.x;
-	currGyro.yRot = rGyro.g.y;
-	currGyro.zRot = rGyro.g.z;
+	currAcc.xAcc = rAccel.a.x - accOffsets.xAcc;
 
-	currAcc.xAcc = rAccel.a.x;
-	currAcc.yAcc = rAccel.a.y;
+	currAcc.yAcc = rAccel.a.y - accOffsets.yAcc;
+	
 	currAcc.zAcc = rAccel.a.z;
 
 	convAccVals();
 	convGyroVals();	
+
 
 }
 
@@ -240,11 +265,63 @@ void RobotClass::convAccVals() {
 }
 
 
+void RobotClass::gyroCalibration() {
+
+	gyroNoise = 0;
+	
+	int nSamples = 500;
+
+	for (int i = 0; i < nSamples; i++) {
+		rGyro.read();
+		currGyro.xRot += rGyro.g.x;
+		currGyro.yRot += rGyro.g.y;
+		currGyro.zRot += rGyro.g.z;
+	}
+
+	gyroOffsets.xRot = currGyro.xRot / nSamples;
+	gyroOffsets.yRot = currGyro.yRot / nSamples;
+	gyroOffsets.zRot = currGyro.zRot / nSamples;
+
+	
+
+	/*for (int i = 0; i < nSamples; i++) {
+		rGyro.read();
+		if (rGyro.g.z - gyroOffsets.zRot > gyroNoise) gyroNoise = rGyro.g.z - gyroOffsets.zRot;
+		else if (rGyro.g.z - gyroOffsets.zRot < -gyroNoise) gyroNoise = -rGyro.g.z - gyroOffsets.zRot;
+	}*/   
+
+	gyroNoise /= nSamples;
+
+	currGyro.xRot = 0.0;
+	currGyro.yRot = 0.0;
+	currGyro.zRot = 0.0;
+
+
+}
+
+void RobotClass::accCalibration() {
+
+	int nSamples = 500;
+
+	for (int i = 0; i < nSamples; i++) {
+		rAccel.read();
+		currAcc.xAcc += rAccel.a.x;
+		currAcc.yAcc += rAccel.a.y;
+		currAcc.zAcc += rAccel.a.z;
+	}
+
+	accOffsets.xAcc = currAcc.xAcc / nSamples;
+	
+	accOffsets.yAcc = currAcc.yAcc / nSamples;
+
+	accOffsets.zAcc = currAcc.zAcc / nSamples;
+}
+
 float RobotClass::compFilter(unsigned long deltaTime) {
 
 	float accAngle = atan2(currAcc.yAcc, currAcc.xAcc);
 
-	float angVal = COMP_F*(currentRPos.theta + currGyro.zRot*deltaTime) + (1.0f - COMP_F)*accAngle;
+	float angVal = COMP_F*(currentRPos.theta + currGyro.zRot*(deltaTime/1000.0f)) + (1.0f - COMP_F)*accAngle;
 
 	//Filtered angular position, works poorly
 	return angVal;
@@ -284,8 +361,6 @@ void RobotClass::moveTo(RobotClass::rPosition waypoint, RobotClass::pathType pat
 
 			motors.setLeftMotorSpeed(leftMotorSpeed);
 			motors.setRightMotorSpeed(rightMotorSpeed);
-			encoderLeftCounts = wheelEncoders.getCountsAndResetLeft();
-			encoderRightCounts = wheelEncoders.getCountsAndResetRight();
 			updatePosition(RobotClass::IMU_ENC);
 			
 			delay(20);
@@ -399,6 +474,71 @@ void RobotClass::setWaypoint(float x, float y, float theta, waypointNames name) 
 		rWaypoints.wptwo.y = y;
 		rWaypoints.wptwo.theta = theta;
 		break;
+	}
+
+
+}
+
+
+void RobotClass::calcRVelocities(float &lDist, float &rDist, unsigned long &dTime) {
+
+	rVel.rightWheel = 1000.0f*rDist/ dTime;
+	rVel.leftWheel = 1000.0f*lDist / dTime;
+	rVel.center = 0.5*(rVel.rightWheel + rVel.leftWheel);
+	rVel.angular = (1.0 / rWheelBase)*(rVel.rightWheel - rVel.leftWheel);
+
+}
+
+
+//Set velocity of the left wheel in inches/second
+void RobotClass::setLeftWheelVelocity(float vel) {
+
+
+	while (rVel.leftWheel > vel + 0.2 || rVel.leftWheel < vel - 0.2) {
+		
+		updatePosition(RobotClass::IMU_ENC);
+		if (vel - rVel.leftWheel > 0) {
+
+			leftWheelVel++;
+			motors.setLeftMotorSpeed(leftWheelVel);
+
+		}
+		else if (vel - rVel.leftWheel < 0) {
+			
+			leftWheelVel--;
+			motors.setLeftMotorSpeed(leftWheelVel);
+			
+
+		}
+		delay(100);
+	}
+
+}
+
+//Set Velocity of the right wheel in inches/second
+void RobotClass::setRightWheelVelocity(float vel) {
+	rightWheelVel = 50;
+	leftWheelVel = 50;
+
+	unsigned long last;
+
+	while (rVel.rightWheel > vel + 0.5 || rVel.leftWheel < vel - 0.5) {
+		unsigned long dT = millis() - last;
+
+		updatePosition(RobotClass::IMU_ENC);
+		if (vel - rVel.rightWheel > 0) {
+
+			rightWheelVel++;
+			motors.setRightMotorSpeed(rightWheelVel);
+		}
+		else if (vel - rVel.rightWheel < 0) {
+			rightWheelVel--;
+			motors.setRightMotorSpeed(rightWheelVel);
+
+		}
+
+		last = millis();
+		delay(100);
 	}
 
 
