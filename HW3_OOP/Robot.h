@@ -33,6 +33,7 @@ protected:
 	const float encoderRes = 75.81*12.0; //Encoder resolution
 	const float rWheelCirc = 2 * M_PI*rWheelRad; //Wheel circumference in inches
 
+	const float goalRadius = 1; // +/- 1 inch of goal
 	//Conversion factors for gyro and accelerometer
 
 	float totalDistance;
@@ -51,6 +52,8 @@ protected:
 
 	int encoderDeltaLeft;
 	int encoderDeltaRight;
+
+
 
 	struct rotVel {
 		float xRot;
@@ -173,6 +176,18 @@ public:
 
 	rPosition getWaypointOne() {
 		return this->rWaypoints.wpone;
+	}
+
+	rPosition getWaypointTwo() {
+		return this->rWaypoints.wptwo;
+	}
+
+	rPosition getWaypointThree() {
+		return this->rWaypoints.wpthree;
+	}
+
+	rPosition getWaypointFour() {
+		return this->rWaypoints.wpfour;
 	}
 };
 

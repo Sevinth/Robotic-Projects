@@ -11,12 +11,17 @@
 Zumo32U4Encoders wheelEncoders;
 Zumo32U4LCD lcd;
 
+float deltaTheta;
+float thetaAvg;
+
 void RobotClass::init()
 {
 
 	lastTime = 0.0;
 	deltaTime = 0.0;
 
+	encoderLeftCounts = 0.0;
+	encoderRightCounts = 0.0;
 
 	//Initiate wheel velocity variables
 	rightWheelVel = 0.0f;
@@ -112,7 +117,7 @@ void RobotClass::updatePosition(RobotClass::sensorsAllowed sensors) {
 		readIMU();
 		
 		//Calculate change in orientation using IMU
-		float deltaTheta = currGyro.zRot*deltaTime/1000.0f;
+		deltaTheta = currGyro.zRot*deltaTime/1000.0f;
 		
 		//testing out the complimentary filter
 		float test = compFilter(deltaTime);
@@ -157,7 +162,7 @@ void RobotClass::updateRobotPose(float &centerDist, float &leftDist, float &righ
 
 	float thetaDiff = deltaThetaEncoder - dTheta;
 	
-	float thetaAvg = 0.5f*(deltaThetaEncoder + dTheta);
+	thetaAvg = 0.5f*(deltaThetaEncoder + dTheta);
 	
 	currentRPos.x = previousRPos.x + centerDist;
 	currentRPos.y = 0.0f;
@@ -266,30 +271,52 @@ void RobotClass::moveTo(RobotClass::rPosition waypoint, RobotClass::pathType pat
 
 		leftMotorSpeed = 75;
 		rightMotorSpeed = 75;
+		float distVec[2] = { 0,0 };
 
-
-
+		float dist = 10;
+		float global;
+		
 		
 		//Update the robots position in global and local coordinate frames
 		
-		while (globalCurrentPos.x <= waypoint.x) {
+		while (abs(dist) > 4.0 && abs(dist) < 24.0) {
 			
-			encoderLeftCounts = wheelEncoders.getCountsAndResetLeft();
-			encoderRightCounts = wheelEncoders.getCountsAndResetRight();
 
 			motors.setLeftMotorSpeed(leftMotorSpeed);
 			motors.setRightMotorSpeed(rightMotorSpeed);
-
+			encoderLeftCounts = wheelEncoders.getCountsAndResetLeft();
+			encoderRightCounts = wheelEncoders.getCountsAndResetRight();
 			updatePosition(RobotClass::IMU_ENC);
+			
+			delay(20);
+			float deltaEncoderCounts = encoderRightCounts - encoderLeftCounts;
 
-			float deltaEncoderCounts = encoderRightCounts - encoderRightCounts;
+			distVec[0] = globalCurrentPos.x - waypoint.x;
+			distVec[1] = globalCurrentPos.y - waypoint.y;
 
+			for (int i = 0; i < 2; i++) {
+				dist += pow(distVec[i],2);
+			}
+			dist = sqrt(dist);
+
+			if (globalCurrentPos.theta > waypoint.theta + 0.2) {
+
+				leftMotorSpeed += 2;
+				rightMotorSpeed -= 2;
+
+			}
+			else if (globalCurrentPos.theta < waypoint.theta - 0.2) {
+				leftMotorSpeed -= 2;
+				rightMotorSpeed += 2;
+			}
+
+			
 			//Adjust motor PWM based on the difference in encoder counts every loop
-			if (deltaEncoderCounts > 0) {
+			if (deltaEncoderCounts > 0 ) {
 				leftMotorSpeed += 2;
 				rightMotorSpeed -= 2;
 			}
-			else if (deltaEncoderCounts < 0) {
+			else if (deltaEncoderCounts < 0 ) {
 				leftMotorSpeed -= 2;
 				rightMotorSpeed += 2;
 			}
@@ -302,14 +329,19 @@ void RobotClass::moveTo(RobotClass::rPosition waypoint, RobotClass::pathType pat
 		//Maintain the proper turn radius
 		 calcTurnVel(11.0f);
 		 
-		 leftMotorSpeed = turnVel.leftVel;
-		 rightMotorSpeed = turnVel.right;
+		 leftMotorSpeed = 1.2 *turnVel.leftVel;
+		 rightMotorSpeed = 0.9*turnVel.right;
+		 
+		
 
-		 float velRatio = leftMotorSpeed / rightMotorSpeed;
+		 
+  			 
+		 float velRatio =	 leftMotorSpeed / rightMotorSpeed;
 
 		 float currentTurnRadius;
-
+		 
 			  while (globalCurrentPos.theta >= M_PI + 0.1 || globalCurrentPos.theta <= M_PI - 0.1) {
+				
 
 				  encoderLeftCounts = wheelEncoders.getCountsAndResetLeft();
 				  encoderRightCounts = wheelEncoders.getCountsAndResetRight();
@@ -320,22 +352,26 @@ void RobotClass::moveTo(RobotClass::rPosition waypoint, RobotClass::pathType pat
 				  updatePosition(RobotClass::IMU_ENC);
 				  lcd.gotoXY(0, 0);
 				  lcd.print(globalCurrentPos.theta);
-	
-				  currentTurnRadius = (rWheelBase / 2.0f)*(encoderLeftCounts + encoderRightCounts) / fabs((encoderLeftCounts - encoderRightCounts));
+			
+				  float centerDist = (0.5f*rWheelCirc / encoderRes)*(encoderLeftCounts + encoderRightCounts);
+				  currentTurnRadius = fabs((centerDist / thetaAvg));
+				 
 				  lcd.gotoXY(0, 1);
 				  lcd.print(currentTurnRadius);
 
-				  if (leftMotorSpeed/rightMotorSpeed > velRatio) {
+				   
 
-					  leftMotorSpeed -= 1;
-					  rightMotorSpeed += 1;
-					
-				  }
-				  else if (leftMotorSpeed/rightMotorSpeed < velRatio) {
+				  if (currentTurnRadius > 11.0f) {
 					  leftMotorSpeed += 1;
 					  rightMotorSpeed -= 1;
-					
 				  }
+				  else if (currentTurnRadius < 11.0f) {
+					  leftMotorSpeed -= 1;
+					  rightMotorSpeed += 1;
+				  }
+
+
+				  if (globalCurrentPos.theta <= M_PI + 0.5 && globalCurrentPos.theta >= M_PI - 0.5) exit;
 
 				 
 
@@ -344,7 +380,6 @@ void RobotClass::moveTo(RobotClass::rPosition waypoint, RobotClass::pathType pat
 			  motors.setRightMotorSpeed(0);
 			  motors.setLeftMotorSpeed(0);
 		
-
 	}
 
 
