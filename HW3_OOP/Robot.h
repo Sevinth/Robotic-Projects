@@ -18,7 +18,7 @@
 #include <Zumo32U4Encoders.h>
 
 
-#define GYRO_CONV (8.75/1000.0f) //* (M_PI/180.0f) //Convert Gyro output to radians/second
+#define GYRO_CONV (0.00875)*(M_PI/180.0f) //Convert Gyro output to radians/second
 #define GYRO_X_OFFSET_GAIN 1.0
 #define GYRO_Y_OFFSET_GAIN 1.0
 #define GYRO_Z_OFFSET_GAIN 2.0
@@ -30,6 +30,7 @@
 #define ACC_Z_OFFSET_GAIN 1.0
 
 #define COMP_F 0.98f
+#define COMP_F_B 0.4
 #define GYRO_OFFEST 0.0015f
 
 class RobotClass
@@ -67,6 +68,9 @@ protected:
 	float centerDistance;
 
 	float gyroNoise;
+	float accXNoise;
+	float accYNoise;
+	float accZNoise;
 
 	struct rotVel {
 		float xRot;
@@ -161,7 +165,7 @@ public:
 	void updateDistances(float &leftDist, float &rightDist, float &totalDist);
 
 
-	void updateRobotPose(float &centerDist, float &leftDist, float &rightDist, float &dTheta);
+	void updateRobotPose(float &centerDist, float &leftDist, float &rightDist, float &dTheta, unsigned long &dTime);
 	void updateGlobalPose(float &centerDist, float &leftDist, float &rightDist);
 
 	int getLeftCounts();
@@ -182,7 +186,7 @@ public:
 
 
 
-	float compFilter(unsigned long deltaTime);
+	float compFilter(unsigned long deltaTime, float sensor1, float sensor2);
 
 
 	void calcRDistances();
@@ -220,15 +224,24 @@ public:
 	}
 
 	
+	rotVel getGyroData() {
+
+		return this->currGyro;
+	}
 
 	void calcRVelocities(float &leftDist, float &rightDist, unsigned long &dT);
 	
 	void setLeftWheelVelocity(float);
 	void setRightWheelVelocity(float);
-
+	
 
 	void gyroCalibration();
 	void accCalibration();
+
+	void robotStop() {
+		motors.setLeftMotorSpeed(0);
+		motors.setRightMotorSpeed(0);
+	}
 };
 
 

@@ -34,7 +34,7 @@ RobotClass::pathType path4 = RobotClass::DIRECT;
 
 void setup()
 {
-	Serial.begin(9600);
+	Serial.begin(115200);
 
 
 
@@ -52,22 +52,25 @@ void setup()
 
 void loop()
 {
-
+	
 	float batt = readBatteryMillivolts();
 
 	robot.motors.setLeftMotorSpeed(0);
 	robot.motors.setRightMotorSpeed(0);
 	robot.updatePosition(RobotClass::IMU_ENC);
+	float globalPos;
 
 
 
-	//delay(100);
-	//robot.moveTo(robot.getWaypointTwo(), path2);
-	//delay(100);
-	//robot.moveTo(robot.getWaypointThree(), path3);
-	//delay(100);
-	//robot.moveTo(robot.getWaypointFour(), path4);
 
-	delay(150);
+	robot.moveTo(robot.getWaypointOne(), path1);
+	delay(100);
+	robot.moveTo(robot.getWaypointTwo(), path2);
+	delay(100);
+	robot.moveTo(robot.getWaypointThree(), path3);
+	delay(100);
+	robot.moveTo(robot.getWaypointFour(), path4);
+
+	
 
 }
