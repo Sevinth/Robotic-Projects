@@ -140,6 +140,15 @@ void RobotClass::updatePosition(RobotClass::sensorsAllowed sensors) {
 		updateRobotPose(centerDistance, leftDistance, rightDistance, deltaTheta, deltaTime);
 		updateGlobalPose(centerDistance, leftDistance, rightDistance);
 	
+		lcd.gotoXY(0, 0);
+		lcd.print("X:");
+		lcd.gotoXY(2, 0);
+		lcd.print(globalCurrentPos.x);
+
+		lcd.gotoXY(0, 1);
+		lcd.print("Y:");
+		lcd.gotoXY(2, 1);
+		lcd.print(globalCurrentPos.y);
 	}
 
 
@@ -384,87 +393,95 @@ int RobotClass::getLeftCounts() {
 	return encoderLeftCounts;
 }
 
+void RobotClass::rotateInPlace(float angle) {
 
+
+	if (angle > 2 * M_PI) {
+		angle -= 2 * M_PI;
+	}
+	else if (angle < 0) {
+		angle += 2 * M_PI;
+	}
+
+	float tempAng = globalCurrentPos.theta;
+
+	while (globalCurrentPos.theta > angle + 0.08 || globalCurrentPos.theta < angle - 0.08 ) {
+
+		motors.setRightMotorSpeed(-75);
+		motors.setLeftMotorSpeed(75);
+		updatePosition(RobotClass::IMU_ENC);
+	}
+
+	//Stop robot turning once it gets to the correct angle
+	robotStop();
+
+
+}
 void RobotClass::moveTo(RobotClass::rPosition waypoint, RobotClass::pathType path) {
 
 	if (path == RobotClass::DIRECT) {
-		//Make sure the robot drives in a straight line
+	
+		//Determine where the robot is
+		updatePosition(RobotClass::IMU_ENC);
 
-		leftMotorSpeed = 75;
-		rightMotorSpeed = 75;
+		//Distance and direction to objective
 		float distVec[2] = { 0,0 };
+		float distMag;
 
-		float dist = 10;
-		float global;
+		//Distance vector to waypoint
 
+			distVec[0] = waypoint.x - globalCurrentPos.x;
+			distVec[1] = waypoint.y - globalCurrentPos.y;
 
-		//Update the robots position in global and local coordinate frames
+		//Magnitude of distance vector
+		for (int i = 0; i < 2; i++) {
+			distMag += pow(distVec[i], 2);
+		}
+		distMag = sqrt(distMag);
 
-		while (abs(dist) > 4.0 && abs(dist) < 30.0) {
+		//Angle to face directly at waypoint
+		float angleToWP;
+		float alphaAngle;
 
+		alphaAngle = atan2(distVec[1], distVec[2]);
+		angleToWP = globalCurrentPos.theta + alphaAngle;
+		//Turn to face the waypoint
+		rotateInPlace(angleToWP);
 
-			motors.setLeftMotorSpeed(leftMotorSpeed);
-			motors.setRightMotorSpeed(rightMotorSpeed);
+		leftWheelVel = 75;
+		rightWheelVel = 75;
+
+		while (distMag >= 1.75) {
+
+			motors.setLeftMotorSpeed(leftWheelVel);
+			motors.setRightMotorSpeed(leftWheelVel);
 			updatePosition(RobotClass::IMU_ENC);
 
+			if (encoderLeftCounts < encoderRightCounts) {
+				leftWheelVel++;
+				rightWheelVel--;
+			}
+			else if (encoderLeftCounts > encoderRightCounts) {
+				rightWheelVel++;
+				leftWheelVel--;
+			}
 
-			float deltaEncoderCounts = encoderRightCounts - encoderLeftCounts;
-
-			distVec[0] = globalCurrentPos.x - waypoint.x;
-			distVec[1] = globalCurrentPos.y - waypoint.y;
-
+			distVec[0] = waypoint.x - globalCurrentPos.x;
+			distVec[1] = waypoint.y - globalCurrentPos.y;
+			
 			for (int i = 0; i < 2; i++) {
-				dist += pow(distVec[i], 2);
+				distMag += pow(distVec[i], 2);
 			}
-			dist = sqrt(dist);
-
-			lcd.gotoXY(0, 0);
-			lcd.print(globalCurrentPos.theta);
-
-			if (globalCurrentPos.y > waypoint.y + 0.5 && waypoint.x == getWaypointThree().x) {
-
-				float lmult = 1;
-				float rmult = 1;
-
-				(waypoint.y < 0) ? lmult = -1 : rmult = 1;
-
-				leftMotorSpeed += lmult * 4;
-				rightMotorSpeed += rmult * 4;
-
-			}
-			else if (globalCurrentPos.y < waypoint.y - 0.5 && waypoint.x == getWaypointThree().x) {
+			distMag = sqrt(distMag);
 
 
-				float lmult = 1;
-				float rmult = 1;
-
-				(waypoint.y < 0) ? lmult = 1 : rmult = -1;
-
-				leftMotorSpeed += lmult * 4;
-				rightMotorSpeed += rmult * 2;
-
-				if (globalCurrentPos.y < waypoint.y - 1.0) robotStop();
-
-				motors.setLeftMotorSpeed(75);
-				motors.setRightMotorSpeed(45);
-				delay(250);
-			}
-
-
-			//Adjust motor PWM based on the difference in encoder counts every loop
-			if (deltaEncoderCounts > 0) {
-				leftMotorSpeed += 3;
-				rightMotorSpeed -= 2;
-			}
-			else if (deltaEncoderCounts < 0) {
-				leftMotorSpeed -= 2;
-				rightMotorSpeed += 2;
-			}
-			lastTime = millis();
+			
 		}
 
 
+
 	}
+
 	else if (path == RobotClass::CURVED) {
 		//Maintain the proper turn radius
 		calcTurnVel(11.0f);
@@ -565,7 +582,6 @@ void RobotClass::setLeftWheelVelocity(float vel) {
 			leftWheelVel--;
 			motors.setLeftMotorSpeed(leftWheelVel);
 			
-
 		}
 		delay(100);
 	}

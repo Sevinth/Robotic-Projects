@@ -36,12 +36,6 @@ void setup()
 {
 	Serial.begin(115200);
 
-
-
-	robot.motors.setRightMotorDirection(true);
-	robot.motors.setLeftMotorDirection(true);
-
-
 	robot.init();
 	
 	robot.setWaypoint(22.0f, 0.0f, 0.0f, RobotClass::WaypointOne);
@@ -53,23 +47,15 @@ void setup()
 void loop()
 {
 	
-	float batt = readBatteryMillivolts();
-
-	robot.motors.setLeftMotorSpeed(0);
-	robot.motors.setRightMotorSpeed(0);
-	robot.updatePosition(RobotClass::IMU_ENC);
-	float globalPos;
 
 
+	
 
-
-	robot.moveTo(robot.getWaypointOne(), path1);
-	delay(100);
-	robot.moveTo(robot.getWaypointTwo(), path2);
-	delay(100);
-	robot.moveTo(robot.getWaypointThree(), path3);
-	delay(100);
-	robot.moveTo(robot.getWaypointFour(), path4);
+	//robot.moveTo(robot.getWaypointTwo(), path2);
+	//delay(100);
+	//robot.moveTo(robot.getWaypointThree(), path3);
+	//delay(100);
+	//robot.moveTo(robot.getWaypointFour(), path4);
 
 	
 

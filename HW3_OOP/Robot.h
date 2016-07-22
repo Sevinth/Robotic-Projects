@@ -72,6 +72,7 @@ protected:
 	float accYNoise;
 	float accZNoise;
 
+	
 	struct rotVel {
 		float xRot;
 		float yRot;
@@ -242,6 +243,8 @@ public:
 		motors.setLeftMotorSpeed(0);
 		motors.setRightMotorSpeed(0);
 	}
+
+	void rotateInPlace(float angle);
 };
 
 
