@@ -116,7 +116,7 @@ void RobotClass::calcRDistances() {
 void RobotClass::updatePosition(RobotClass::sensorsAllowed sensors) {
 	
 	deltaTime = millis() - lastTime;
-
+	delay(1);
 	if (sensors = RobotClass::sensorsAllowed::IMU_ENC) {
 		
 		//Calculate distances based on encoders
@@ -213,16 +213,18 @@ void RobotClass::updateRobotPose(float &centerDist, float &leftDist, float &righ
 
 
 void RobotClass::updateGlobalPose(float &centerDist, float &leftDist, float &rightDist) {
+	//Save for use in the next loop
+	globalPreviousPos.x = globalCurrentPos.x;
+	globalPreviousPos.y = globalCurrentPos.y;
+	globalPreviousPos.theta = globalCurrentPos.theta;
+
 
 	//Update robots position in the global coordinate frame
 	globalCurrentPos.x = globalPreviousPos.x + centerDist*cosf(currentRPos.theta);
 	globalCurrentPos.y = globalPreviousPos.y + centerDist*sinf(currentRPos.theta);
 	globalCurrentPos.theta = currentRPos.theta;
 
-	//Save for use in the next loop
-	globalPreviousPos.x = globalCurrentPos.x;
-	globalPreviousPos.y = globalCurrentPos.y;
-	globalPreviousPos.theta = globalCurrentPos.theta;
+
 }
 
 
@@ -349,6 +351,10 @@ void RobotClass::accCalibration() {
 
 	accOffsets.zAcc = currAcc.zAcc / nSamples;
 
+
+	//Code modified version of code available from:
+	// L3GD20 3 Axis Gyro La
+	//Website: http://web.csulb.edu/~hill/ee444/Labs/5%20Gyro/5%20Arduino%20IDE%20Gyro.pdf
 	for (int i = 0; i < nSamples; i++) {
 		rGyro.read();
 		if (rAccel.a.x - accOffsets.xAcc > accXNoise) accXNoise = rAccel.a.x - accOffsets.xAcc;
@@ -396,27 +402,29 @@ int RobotClass::getLeftCounts() {
 
 void RobotClass::rotateInPlace(float angle) {
 
-
-	if (angle > 2 * M_PI) {
-		angle -= 2 * M_PI;
-	}
-	else if (angle < 0) {
-		angle += 2 * M_PI;
-	}
-
 	lcd.clear();
+	float startAngle = globalCurrentPos.theta;
+	float temp;
+	//Positive angle = left turn
+	if (angle > 0) {
+		motors.setRightMotorSpeed(100);
+		motors.setLeftMotorSpeed(-100);
+	}
+	//negative angle = right turn
+	else if (angle < 0) {
+		motors.setRightMotorSpeed(-100);
+		motors.setLeftMotorSpeed(100);
+	}
 
-	while (globalCurrentPos.theta > angle + 0.08 || globalCurrentPos.theta < angle - 0.08 ) {
-		lcd.gotoXY(0, 0);
-		lcd.print(globalCurrentPos.theta);
-		motors.setRightMotorSpeed(-45);
-		motors.setLeftMotorSpeed(45);
+	while (fabs(globalCurrentPos.theta - startAngle) < fabs(angle) - 0.05 || fabs(globalCurrentPos.theta - startAngle) > fabs(angle) + 0.05) {
 		updatePosition(RobotClass::IMU_ENC);
-		
+		temp = abs(globalCurrentPos.theta - startAngle);
+		Serial.println(temp);
 	}
 
 	//Stop robot turning once it gets to the correct angle
 	robotStop();
+	delay(5000000);
 
 }
 void RobotClass::moveTo(RobotClass::rPosition waypoint, RobotClass::pathType path) {
