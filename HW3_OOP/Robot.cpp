@@ -181,8 +181,11 @@ void RobotClass::updateDistances(float &leftDist, float &rightDist, float &total
 //Update robots position in the local coordinate frame
 void RobotClass::updateRobotPose(float &centerDist, float &leftDist, float &rightDist, float &dTheta, unsigned long &dTime) {
 	
-	previousRPos.theta = currentRPos.theta;
 
+	//Save for use in the next loop
+	previousRPos.x = currentRPos.x;
+	previousRPos.y = currentRPos.y;
+	previousRPos.theta = currentRPos.theta;
 
 	float deltaThetaEncoder = (rightDist - leftDist) / rWheelBase;
 
@@ -204,10 +207,7 @@ void RobotClass::updateRobotPose(float &centerDist, float &leftDist, float &righ
 		currentRPos.theta += 2.0f*M_PI;
 	}
 	
-	
-	//Save for use in the next loop
-	previousRPos.x = currentRPos.x;
-	previousRPos.y = currentRPos.y;
+
 
 }
 
@@ -371,15 +371,27 @@ void RobotClass::accCalibration() {
 float RobotClass::compFilter(unsigned long deltaTime, float sensor1, float sensor2) {
 
 	float accAngle;
-	if (currAcc.yAcc > 0.05 || currAcc.xAcc > 0.05) {
-		accAngle = atan2(currAcc.yAcc, currAcc.xAcc);
+	float yAcc;
+	float xAcc;
+	if (fabs(currAcc.yAcc) > 0.03){
+		
+		yAcc = currAcc.yAcc;
 	}
 	else {
-		accAngle = 0;
+		
+		yAcc = 0.0;
 	}
 
-	float angVal = COMP_F*(sensor1)+(1.0f - COMP_F)*accAngle;
+	if (fabs(currAcc.xAcc) > 0.03) {
+		xAcc = currAcc.xAcc;
+	}
+	else {
+		xAcc = 0.0;
+	}
 
+	accAngle = atan2(yAcc, xAcc);
+	
+	float angVal = COMP_F*(sensor1)+(1.0f - COMP_F)*accAngle;
 
 	angVal = COMP_F_B*(angVal)+(1.0f - COMP_F_B)*sensor2;
 
@@ -418,8 +430,6 @@ void RobotClass::rotateInPlace(float angle) {
 
 	while (fabs(globalCurrentPos.theta - startAngle) < fabs(angle) - 0.05 || fabs(globalCurrentPos.theta - startAngle) > fabs(angle) + 0.05) {
 		updatePosition(RobotClass::IMU_ENC);
-		temp = abs(globalCurrentPos.theta - startAngle);
-		Serial.println(temp);
 	}
 
 	//Stop robot turning once it gets to the correct angle
@@ -462,8 +472,8 @@ void RobotClass::moveTo(RobotClass::rPosition waypoint, RobotClass::pathType pat
 		float alphaAngle;
 		
 		alphaAngle = atan2(distVec[1], distVec[0]);
+		
 		//Turn to face the waypoint
-	
 		rotateInPlace(alphaAngle);
 
 		

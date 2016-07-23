@@ -54,17 +54,17 @@ void loop()
 
 
 
-	robot.rotateInPlace(M_PI / 2.0);
+	//robot.rotateInPlace(M_PI / 2.0);
 
 	//robot.moveTo(robot.getWaypointOne(), path1);
 	//robot.robotStop();
-	//delay(100);
-	//robot.moveTo(robot.getWaypointTwo(), path2);
-	//delay(100);
-	//robot.robotStop();
-	//robot.moveTo(robot.getWaypointThree(), path3);
-	//delay(100);
-	//robot.moveTo(robot.getWaypointFour(), path4);
+	delay(100);
+	robot.moveTo(robot.getWaypointTwo(), path1);
+	delay(100);
+	robot.robotStop();
+	robot.moveTo(robot.getWaypointThree(), path3);
+	delay(100);
+	robot.moveTo(robot.getWaypointFour(), path4);
 
 	
 
