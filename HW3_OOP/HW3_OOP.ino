@@ -38,6 +38,10 @@ void setup()
 
 	robot.init();
 	
+
+
+	robot.motors.setLeftMotorDirection(true);
+	robot.motors.setRightMotorDirection(true);
 	robot.setWaypoint(22.0f, 0.0f, 0.0f, RobotClass::WaypointOne);
 	robot.setWaypoint(22.0f, -22.0f, M_PI, RobotClass::WaypointTwo);
 	robot.setWaypoint(0.0f, -22.0f, M_PI, RobotClass::WaypointThree);
@@ -49,13 +53,15 @@ void loop()
 	
 
 
-	
-
-	//robot.moveTo(robot.getWaypointTwo(), path2);
-	//delay(100);
-	//robot.moveTo(robot.getWaypointThree(), path3);
-	//delay(100);
-	//robot.moveTo(robot.getWaypointFour(), path4);
+	robot.moveTo(robot.getWaypointOne(), path1);
+	robot.robotStop();
+	delay(100);
+	robot.moveTo(robot.getWaypointTwo(), path2);
+	delay(100);
+	robot.robotStop();
+	robot.moveTo(robot.getWaypointThree(), path3);
+	delay(100);
+	robot.moveTo(robot.getWaypointFour(), path4);
 
 	
 

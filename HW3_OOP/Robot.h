@@ -30,7 +30,7 @@
 #define ACC_Z_OFFSET_GAIN 1.0
 
 #define COMP_F 0.98f
-#define COMP_F_B 0.4
+#define COMP_F_B 0.1
 #define GYRO_OFFEST 0.0015f
 
 class RobotClass
