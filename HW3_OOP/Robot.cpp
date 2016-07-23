@@ -158,10 +158,10 @@ void RobotClass::updatePosition(RobotClass::sensorsAllowed sensors) {
 
 void RobotClass::calcTurnVel(float turnRadius) {
 
-	float angular = 10;  //"desired speed"
+	float desiredV = 10;  //"desired speed"
 
-	turnVel.right = angular*(1.0 - rWheelBase/(2.0f*turnRadius));
-	turnVel.leftVel = angular*(1.0 + rWheelBase / (2.0f*turnRadius));
+	turnVel.right = desiredV*(1.0 - rWheelBase/(2.0f*turnRadius));
+	turnVel.leftVel = desiredV*(1.0 + rWheelBase / (2.0f*turnRadius));
 	
 }
 
@@ -404,20 +404,20 @@ void RobotClass::rotateInPlace(float angle) {
 		angle += 2 * M_PI;
 	}
 
-	float tempAng = globalCurrentPos.theta;
+	lcd.clear();
 
 	while (globalCurrentPos.theta > angle + 0.08 || globalCurrentPos.theta < angle - 0.08 ) {
-
+		lcd.gotoXY(0, 0);
+		lcd.print(globalCurrentPos.theta);
 		motors.setRightMotorSpeed(-45);
 		motors.setLeftMotorSpeed(45);
 		updatePosition(RobotClass::IMU_ENC);
-
+		
 	}
 
 	//Stop robot turning once it gets to the correct angle
 	robotStop();
 
-	delay(50);
 }
 void RobotClass::moveTo(RobotClass::rPosition waypoint, RobotClass::pathType path) {
 
@@ -497,7 +497,7 @@ void RobotClass::moveTo(RobotClass::rPosition waypoint, RobotClass::pathType pat
 			}
 			
 
-			
+	
 		}
 
 
@@ -508,6 +508,7 @@ void RobotClass::moveTo(RobotClass::rPosition waypoint, RobotClass::pathType pat
 	else if (path == RobotClass::CURVED) {
 		//Maintain the proper turn radius
 
+		lcd.clear();
 		calcTurnVel(11.0f);
 
 		rightWheelVel = turnVel.right;
@@ -515,7 +516,6 @@ void RobotClass::moveTo(RobotClass::rPosition waypoint, RobotClass::pathType pat
 
 		float velRatio = leftWheelVel / rightWheelVel;
 
-		float currentTurnRadius;
 
 	
 		rightWheelVel = 75.0;
@@ -525,45 +525,15 @@ void RobotClass::moveTo(RobotClass::rPosition waypoint, RobotClass::pathType pat
 		
 		while (globalCurrentPos.theta >= M_PI + 0.1 || globalCurrentPos.theta <= M_PI) {
 
-			delay(100);
 			motors.setLeftMotorSpeed(1.3*leftWheelVel);
-			motors.setRightMotorSpeed(rightWheelVel);
-
-			//if (rVel.leftWheel > turnVel.leftVel + 1 ) {
-			//	leftWheelVel--;
-			//}
-			//else if (rVel.leftWheel < turnVel.leftVel - 1) {
-			//	leftWheelVel++;
-			//}
-
-			//if (rVel.rightWheel > turnVel.right + 1) {
-			//	rightWheelVel--;
-			//}
-			//else if (rVel.rightWheel < turnVel.right - 1) {
-			//	rightWheelVel++;
-			//}
+			motors.setRightMotorSpeed(0.9*rightWheelVel);
 
 			updatePosition(RobotClass::IMU_ENC);
 
-			/*lcd.gotoXY(0, 0);
-			lcd.print(globalCurrentPos.theta);*/
+			lcd.gotoXY(0, 0);
+			lcd.print(globalCurrentPos.theta);
 
 			float centerDist = (0.5f*rWheelCirc / encoderRes)*(encoderLeftCounts + encoderRightCounts);
-
-			currentTurnRadius = fabs((centerDist / abs((currentRPos.theta - previousRPos.theta))));
-		
-			if (currentTurnRadius > 11.0 + 0.5) {
-				leftWheelVel++;
-				rightWheelVel--;
-			}
-			else if (currentTurnRadius < 11.0 - 0.5) {
-				leftWheelVel--;
-				rightWheelVel++;
-			}
-
-
-			lcd.gotoXY(0, 1);
-			lcd.print(currentTurnRadius);
 
 
 		}
