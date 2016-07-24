@@ -23,12 +23,21 @@
 #define GYRO_Y_OFFSET_GAIN 1.0
 #define GYRO_Z_OFFSET_GAIN 2.0
 
+/*
+ACC_CONV is conversion for the +/- 2g default setting
 
+OFFSET gains are currently unused
+
+*/
 #define ACC_CONV 0.061f/1000.0f
 #define ACC_X_OFFSET_GAIN 1.0
 #define ACC_Y_OFFSET_GAIN 1.0
 #define ACC_Z_OFFSET_GAIN 1.0
 
+/*
+COMP_F coeffecient for the first complimentary filter
+COMP_F_B coeffecient for the first complimentary filter
+*/
 #define COMP_F 0.98f
 #define COMP_F_B 0.1
 #define GYRO_OFFEST 0.0015f
@@ -38,14 +47,14 @@ class RobotClass
 protected:
 
 	//Physical parameters of the robot
-	const float rWheelBase = 3.351; //Wheel base in inches
-	const float rWheelRad = 0.691;  //Wheel radius in inches
-	const float encoderRes = 75.81*12.0; //Encoder resolution
+	const float rWheelBase = 3.351;				 //Wheel base in inches
+	const float rWheelRad = 0.691;				 //Wheel radius in inches
+	const float encoderRes = 75.81*12.0;		 //Encoder resolution
 	const float rWheelCirc = 2 * M_PI*rWheelRad; //Wheel circumference in inches
 
-	const float goalRadius = 1; // +/- 1 inch of goal
-	//Conversion factors for gyro and accelerometer
-
+	const float goalRadius = 1;					 // get within some distance of the target
+	
+												 
 	float totalDistance;
 	float totalLeftWheelDistance;
 	float totalRightWheelDistance;
@@ -123,15 +132,31 @@ protected:
 
 	wayPoints rWaypoints;
 
+
+
+	/*
+	currGyro holds current rotation read from the gyro
+	prevGYro holds previous rotation data from last read of the gyro
+	*/
 	rotVel currGyro;
 	rotVel prevGyro;
 
+	/*
+	All offsets for the gyro calibration
+	*/
 	rotVel gyroOffsets;
 	
+	/*
+	currAcc holds current acceleration data from IMU
+	prevAcc holds previous acceleration data from IMU
 
+	*/
 	linAcc currAcc;
 	linAcc prevAcc;
 
+	/*
+	 All offsets for accelerometer calibration
+	*/
 	linAcc accOffsets;
 
 	//Create instances of the rPosition struct
@@ -141,28 +166,49 @@ protected:
 	rPosition globalCurrentPos;
 	rPosition globalPreviousPos;
 
+
 	rVelocities rVel;
 
+
+	/*
+	Create instances of L3G & LSM303 classes to be used
+	Shouldn't need to be accessed from outside the class, so they are
+	in the protected section for now
+	*/
 	L3G rGyro;
 	LSM303 rAccel;
 	
 
 public:
 
+	//Create instance of motors class, used outside class occasionally
 	Motors motors;
 
+
+	/*
+	deltaTime holds the time since the last loop ended
+	lastTime holds the time the last loop ended
+	*/
 	unsigned long deltaTime;
 	unsigned long lastTime;
 
+	/*
+	sensorsAllowed sets two possibilities for sensors combinations
+	pathType defines the path to be traveled between waypoints
+	
+	*/
 	enum sensorsAllowed { IMU, IMU_ENC };
 	enum pathType {DIRECT, CURVED};
 	enum waypointNames { WaypointOne, WaypointTwo, WaypointThree, WaypointFour };
 
+	//initiate the class ( constructor, essentially)
 	void init();
 
 	//Update the robots position according to available sensors
 	void updatePosition(RobotClass::sensorsAllowed sensors);
 
+	//UpdateDistances reads all sensor data and estimates the robots new position
+	//Calls multiple other functions
 	void updateDistances(float &leftDist, float &rightDist, float &totalDist);
 
 

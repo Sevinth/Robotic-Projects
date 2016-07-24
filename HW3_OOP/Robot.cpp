@@ -189,10 +189,14 @@ void RobotClass::updateRobotPose(float &centerDist, float &leftDist, float &righ
 
 	float deltaThetaEncoder = (rightDist - leftDist) / rWheelBase;
 
+	//Not used
 	float thetaDiff = deltaThetaEncoder - (dTheta);
 	
+	//Not used
 	thetaAvg = 0.5f*(deltaThetaEncoder + (dTheta));
 	
+
+	// update robot pose
 	currentRPos.x = previousRPos.x + centerDist;
 	currentRPos.y = 0.0f;
 	currentRPos.theta = previousRPos.theta + compFilter(dTime, dTheta, deltaThetaEncoder);
@@ -233,7 +237,9 @@ void RobotClass::readIMU() {
 	rGyro.read();
 	
 	
-	
+	//If values read from gyro are not larger than the noise value
+	//determined during calibration, sets rotation value to 0
+	//Acceleration noise behaves the same way
 	if (rGyro.g.z >= gyroNoise || rGyro.g.z <= -gyroNoise) {
 	
 		currGyro.xRot = rGyro.g.x;
@@ -275,6 +281,8 @@ void RobotClass::readIMU() {
 		currAcc.zAcc = rAccel.a.z - accOffsets.zAcc;
 	}
 
+
+	//Convert raw values to something more useful
 	convAccVals();
 	convGyroVals();	
 
@@ -311,6 +319,7 @@ void RobotClass::gyroCalibration() {
 		currGyro.zRot += rGyro.g.z;
 	}
 
+	//Average over the sample range
 	gyroOffsets.xRot = currGyro.xRot / nSamples;
 	gyroOffsets.yRot = currGyro.yRot / nSamples;
 	gyroOffsets.zRot = currGyro.zRot / nSamples;
@@ -345,6 +354,8 @@ void RobotClass::accCalibration() {
 		currAcc.zAcc += rAccel.a.z;
 	}
 
+
+	//Average over the sample range
 	accOffsets.xAcc = currAcc.xAcc / nSamples;
 	
 	accOffsets.yAcc = currAcc.yAcc / nSamples;
@@ -368,6 +379,11 @@ void RobotClass::accCalibration() {
 	}
 }
 
+
+/*
+Computational filter used to combine acc + gyro data, then (acc+gyro) + encoder data
+in order to provide a delta angle estimation
+*/
 float RobotClass::compFilter(unsigned long deltaTime, float sensor1, float sensor2) {
 
 	float accAngle;
@@ -412,6 +428,7 @@ int RobotClass::getLeftCounts() {
 	return encoderLeftCounts;
 }
 
+//Zero point turn
 void RobotClass::rotateInPlace(float angle) {
 
 	lcd.clear();
@@ -428,6 +445,7 @@ void RobotClass::rotateInPlace(float angle) {
 		motors.setLeftMotorSpeed(50);
 	}
 
+	//Check angle rotated agains magnitude of angle argument
 	while (fabs(globalCurrentPos.theta - startAngle) < fabs(angle) - 0.08 || fabs(globalCurrentPos.theta - startAngle) > fabs(angle) + 0.08) {
 		updatePosition(RobotClass::IMU_ENC);
 	}
@@ -439,10 +457,13 @@ void RobotClass::rotateInPlace(float angle) {
 }
 void RobotClass::moveTo(RobotClass::rPosition waypoint, RobotClass::pathType path) {
 
+
+	//If moving in a straight line, path will be DIRECT
 	if (path == RobotClass::DIRECT) {
 	
 		int heading;
 
+		//Give each motor an equal speed
 		motors.setLeftMotorSpeed(75);
 		motors.setRightMotorSpeed(75);
 
@@ -464,6 +485,7 @@ void RobotClass::moveTo(RobotClass::rPosition waypoint, RobotClass::pathType pat
 		}
 		distMag = sqrt(distMag);
 
+		//Not doing anything with the heading variable right now
 		if (abs(distVec[0]) > abs(distVec[1])) heading = 0;
 		else heading = 1;
 
@@ -471,9 +493,20 @@ void RobotClass::moveTo(RobotClass::rPosition waypoint, RobotClass::pathType pat
 		float angleToWP;
 		float alphaAngle;
 		
+		//Calculate angle to the waypoint from current position
 		alphaAngle = atan2(distVec[1], distVec[0]);
+		//Determine how far the robot should rotate
 		angleToWP = globalCurrentPos.theta - alphaAngle;
 
+		/*
+		If the current angle is larger than PI a positive angle
+		results from the atan2 function
+
+		However in a situation where the robot has an orientation of
+		theta = 3*PI/2 and the alphaAngle is PI, the robot should make a right zero
+		point turn, but it will make a left since the resultant angle is positive
+		So we multiply it by a negative 1
+		*/
 		if (globalCurrentPos.theta > M_PI) angleToWP = -angleToWP;
 
 		//Turn to face the waypoint
@@ -484,12 +517,19 @@ void RobotClass::moveTo(RobotClass::rPosition waypoint, RobotClass::pathType pat
 		rightWheelVel = 75;
 
 		float prevDistMag;
+		//Get within some distance of the target waypoint
 		while (distMag >= 2.50) {
+
 
 			motors.setLeftMotorSpeed(leftWheelVel);
 			motors.setRightMotorSpeed(leftWheelVel);
+
+
 			updatePosition(RobotClass::IMU_ENC);
 
+
+			//Adjust wheel speeds based on encoder count differences
+			//Helps maintain a straight line course
 			if (encoderLeftCounts < encoderRightCounts) {
 				leftWheelVel++;
 				rightWheelVel--;
@@ -509,6 +549,9 @@ void RobotClass::moveTo(RobotClass::rPosition waypoint, RobotClass::pathType pat
 			}
 			distMag = sqrt(distMag);
 			
+			//Check the gyro readout and adjust wheel speeds to try and keep a 0 rotation
+
+
 			if(currGyro.zRot > 0.0) {
 				leftWheelVel++;
 				rightWheelVel--;
@@ -521,7 +564,7 @@ void RobotClass::moveTo(RobotClass::rPosition waypoint, RobotClass::pathType pat
 	
 		}
 
-
+		//Stop at the waypoint
 		robotStop();
 
 	}
@@ -530,6 +573,8 @@ void RobotClass::moveTo(RobotClass::rPosition waypoint, RobotClass::pathType pat
 		//Maintain the proper turn radius
 
 		lcd.clear();
+
+		//Calculate the turn velocities for a given turn radius
 		calcTurnVel(11.0f);
 
 		rightWheelVel = turnVel.right;
@@ -539,17 +584,21 @@ void RobotClass::moveTo(RobotClass::rPosition waypoint, RobotClass::pathType pat
 
 
 	
-		rightWheelVel = 50.0
-			;
+		rightWheelVel = 50.0;
 		leftWheelVel = rightWheelVel*velRatio;
 		lcd.clear();
 
-		
+		//Keep turning until robot is facing PI direction
 		while (globalCurrentPos.theta >= M_PI + 0.1 || globalCurrentPos.theta <= M_PI) {
 
+			//Set the motor speeds.  The scalar multiples are used
+			//since the ration from the calcTurnVel() function
+			//doesn't seem to be quite right. 
+			//The values sent to setLeftMotorSpeed are not
+			//actual wheel velocities, just a PWM value
 			motors.setLeftMotorSpeed(1.2*leftWheelVel);
 			motors.setRightMotorSpeed(0.9*rightWheelVel);
-
+			//Need to know where we are
 			updatePosition(RobotClass::IMU_ENC);
 
 			lcd.gotoXY(0, 0);
@@ -587,7 +636,9 @@ void RobotClass::setWaypoint(float x, float y, float theta, waypointNames name) 
 
 }
 
-
+/*
+Calculat Robot velocities, not used for anything currently
+*/
 void RobotClass::calcRVelocities(float &lDist, float &rDist, unsigned long &dTime) {
 
 	rVel.rightWheel = 1000.0f*rDist/ dTime;
@@ -599,6 +650,7 @@ void RobotClass::calcRVelocities(float &lDist, float &rDist, unsigned long &dTim
 
 
 //Set velocity of the left wheel in inches/second
+//Not currently used
 void RobotClass::setLeftWheelVelocity(float vel) {
 
 	if (rVel.leftWheel < vel) {
@@ -612,6 +664,7 @@ void RobotClass::setLeftWheelVelocity(float vel) {
 }
 
 //Set Velocity of the right wheel in inches/second
+//Not currently used
 void RobotClass::setRightWheelVelocity(float vel) {
 	
 	if (rVel.rightWheel < vel) {
