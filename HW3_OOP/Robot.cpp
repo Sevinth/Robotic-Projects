@@ -419,22 +419,22 @@ void RobotClass::rotateInPlace(float angle) {
 	float temp;
 	//Positive angle = left turn
 	if (angle > 0) {
-		motors.setRightMotorSpeed(100);
-		motors.setLeftMotorSpeed(-100);
+		motors.setRightMotorSpeed(50);
+		motors.setLeftMotorSpeed(-50);
 	}
 	//negative angle = right turn
 	else if (angle < 0) {
-		motors.setRightMotorSpeed(-100);
-		motors.setLeftMotorSpeed(100);
+		motors.setRightMotorSpeed(-50);
+		motors.setLeftMotorSpeed(50);
 	}
 
-	while (fabs(globalCurrentPos.theta - startAngle) < fabs(angle) - 0.05 || fabs(globalCurrentPos.theta - startAngle) > fabs(angle) + 0.05) {
+	while (fabs(globalCurrentPos.theta - startAngle) < fabs(angle) - 0.08 || fabs(globalCurrentPos.theta - startAngle) > fabs(angle) + 0.08) {
 		updatePosition(RobotClass::IMU_ENC);
 	}
 
 	//Stop robot turning once it gets to the correct angle
 	robotStop();
-	delay(5000000);
+	
 
 }
 void RobotClass::moveTo(RobotClass::rPosition waypoint, RobotClass::pathType path) {
@@ -472,9 +472,12 @@ void RobotClass::moveTo(RobotClass::rPosition waypoint, RobotClass::pathType pat
 		float alphaAngle;
 		
 		alphaAngle = atan2(distVec[1], distVec[0]);
-		
+		angleToWP = globalCurrentPos.theta - alphaAngle;
+
+		if (globalCurrentPos.theta > M_PI) angleToWP = -angleToWP;
+
 		//Turn to face the waypoint
-		rotateInPlace(alphaAngle);
+		rotateInPlace(angleToWP);
 
 		
 		leftWheelVel = 75;
@@ -536,14 +539,15 @@ void RobotClass::moveTo(RobotClass::rPosition waypoint, RobotClass::pathType pat
 
 
 	
-		rightWheelVel = 75.0;
+		rightWheelVel = 50.0
+			;
 		leftWheelVel = rightWheelVel*velRatio;
 		lcd.clear();
 
 		
 		while (globalCurrentPos.theta >= M_PI + 0.1 || globalCurrentPos.theta <= M_PI) {
 
-			motors.setLeftMotorSpeed(1.3*leftWheelVel);
+			motors.setLeftMotorSpeed(1.2*leftWheelVel);
 			motors.setRightMotorSpeed(0.9*rightWheelVel);
 
 			updatePosition(RobotClass::IMU_ENC);
